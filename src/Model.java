@@ -84,7 +84,6 @@ public class Model {
         shader.setFloat(gl3, "material.shininess", material.getShininess());
 
         if (textureId1 != null) {
-//            System.out.println("texture01");
             shader.setInt(gl3, "first_texture", 0);
             gl3.glActiveTexture(GL.GL_TEXTURE0);
             gl3.glBindTexture(GL.GL_TEXTURE_2D, textureId1[0]);
@@ -99,6 +98,5 @@ public class Model {
 
     public void render(GL3 gl3) {
         render(gl3, modelMatrix);
-//        System.out.println("render model");
     }
 }

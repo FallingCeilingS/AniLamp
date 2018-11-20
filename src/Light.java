@@ -55,7 +55,7 @@ public class Light {
         material.setSpecular(0.8f, 0.8f, 0.8f);
         position = new Vec3(3f,2f,1f);
         modelMatrix = new Mat4(1);
-        shader = new Shader(gl3, "vs_light_01.txt", "fs_light_01.txt");
+        shader = new Shader(gl3, "shader/vs_light_01.txt", "shader/fs_light_01.txt");
         fillBuffers(gl3);
     }
 

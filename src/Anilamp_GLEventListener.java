@@ -56,7 +56,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light.setCamera(camera);
 
         Mesh mesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-        Shader shader = new Shader(gl3, "vs_tt_05.txt", "fs_tt_05.txt");
+        Shader shader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 32.0f);
         Mat4 modelMatrix = Mat4Transform.scale(16,1f,16);
         floor = new Model(gl3, camera, light, shader, material, modelMatrix, mesh, textureId0);

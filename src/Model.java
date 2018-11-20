@@ -1,7 +1,6 @@
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import gmaths.Mat4;
-import gmaths.Vec3;
 
 public class Model {
     private Camera camera;
@@ -64,18 +63,17 @@ public class Model {
     }
 
     public void render(GL3 gl3, Mat4 modelMatrix) {
-//        Mat4 mvpMatrix = Mat4.multiply(
-//                camera.getPerspectiveMatrix(),
-//                Mat4.multiply(
-//                        camera.getViewMatrix(),
-//                        modelMatrix
-//                )
-//                );
-        mesh.render(gl3);
+        Mat4 mvpMatrix = Mat4.multiply(
+                camera.getPerspectiveMatrix(),
+                Mat4.multiply(
+                        camera.getViewMatrix(),
+                        modelMatrix
+                )
+                );
         shader.use(gl3);
         shader.setFloatArray(gl3, "model", modelMatrix.toFloatArrayForGLSL());
-        shader.setFloatArray(gl3, "mvpMatrix", modelMatrix.toFloatArrayForGLSL());
-        shader.setVec3(gl3, "viewPos", new Vec3(2, 3, -1));
+        shader.setFloatArray(gl3, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());
+        shader.setVec3(gl3, "viewPos", camera.getPosition());
         shader.setVec3(gl3, "light.position", light.getPosition());
         shader.setVec3(gl3, "light.ambient", light.getMaterial().getAmbient());
         shader.setVec3(gl3, "light.diffuse", light.getMaterial().getDiffuse());
@@ -86,6 +84,7 @@ public class Model {
         shader.setFloat(gl3, "material.shininess", material.getShininess());
 
         if (textureId1 != null) {
+//            System.out.println("texture01");
             shader.setInt(gl3, "first_texture", 0);
             gl3.glActiveTexture(GL.GL_TEXTURE0);
             gl3.glBindTexture(GL.GL_TEXTURE_2D, textureId1[0]);
@@ -95,9 +94,11 @@ public class Model {
             gl3.glActiveTexture(GL.GL_TEXTURE1);
             gl3.glBindTexture(GL.GL_TEXTURE_2D, textureId2[0]);
         }
+        mesh.render(gl3);
     }
 
     public void render(GL3 gl3) {
         render(gl3, modelMatrix);
+//        System.out.println("render model");
     }
 }

@@ -9,20 +9,21 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class FinalScene extends JFrame {
+public class Anilamp extends JFrame {
     private static final int WIDTH = 1920;
     private static final int HEIGHT = 1080;
     private static final Dimension dimension = new Dimension(WIDTH, HEIGHT);
     private static GLCanvas glCanvas;
     private static GLEventListener glEventListener;
     private final FPSAnimator fpsAnimator;
+    private Camera camera;
 
-    public FinalScene(String textForTitleBar) {
+    public Anilamp(String textForTitleBar) {
         super(textForTitleBar);
         GLCapabilities glCapabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
         glCanvas = new GLCanvas(glCapabilities);
         Camera camera = new Camera(Camera.DEFAULT_POSITION, Camera.DEFAULT_TARGET, Camera.DEFAULT_UP);
-        glEventListener = new FinalScene_GLEventListener();
+        glEventListener = new Anilamp_GLEventListener(camera);
         glCanvas.addGLEventListener(glEventListener);
         glCanvas.addKeyListener(new MyKeyboardInput(camera));
         glCanvas.addMouseMotionListener(new MyMouseInput(camera));
@@ -42,9 +43,9 @@ public class FinalScene extends JFrame {
     }
 
     public static void main(String[] args) {
-        FinalScene finalScene = new FinalScene("Final Scene");
-        finalScene.getContentPane().setPreferredSize(dimension);
-        finalScene.pack();
-        finalScene.setVisible(true);
+        Anilamp aniLamp = new Anilamp("Final Scene");
+        aniLamp.getContentPane().setPreferredSize(dimension);
+        aniLamp.pack();
+        aniLamp.setVisible(true);
     }
 }

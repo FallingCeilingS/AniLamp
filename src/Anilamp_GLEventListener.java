@@ -24,9 +24,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         gl3.glClearDepth(1.0f);
         gl3.glEnable(GL.GL_DEPTH_TEST);
         gl3.glDepthFunc(GL.GL_LESS);
-        gl3.glFrontFace(GL.GL_CCW);    // default is 'CCW'
-        gl3.glEnable(GL.GL_CULL_FACE); // default is 'not enabled'
-        gl3.glCullFace(GL.GL_BACK);   // default is 'back', assuming CCW
+//        gl3.glFrontFace(GL.GL_CCW);    // default is 'CCW'
+//        gl3.glEnable(GL.GL_CULL_FACE); // default is 'not enabled'
+//        gl3.glCullFace(GL.GL_BACK);   // default is 'back', assuming CCW
         initialise(gl3);
     }
 
@@ -59,7 +59,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Shader shader = new Shader(gl3, "vs_tt_05.txt", "fs_tt_05.txt");
         Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 32.0f);
         Mat4 modelMatrix = Mat4Transform.scale(16,1f,16);
-//        System.out.println("modelMatrix" + modelMatrix);
         floor = new Model(gl3, camera, light, shader, material, modelMatrix, mesh);
     }
 

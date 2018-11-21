@@ -5,13 +5,20 @@ import com.jogamp.opengl.GLEventListener;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
 import gmaths.Vec3;
+import gmaths.Vec4;
 
 public class Anilamp_GLEventListener implements GLEventListener {
     private Camera camera;
     private Model floor, table_body;
     private Light light;
+    private MovingLight movingLight;
     private SGNode tableRoot;
     private TransformNode tablePositionTranslate;
+    private float currentTime;
+
+    private double getCurrentTime() {
+        return System.currentTimeMillis() / 1000.0;
+    }
 
     public Anilamp_GLEventListener(Camera camera) {
         this.camera = camera;
@@ -72,12 +79,27 @@ public class Anilamp_GLEventListener implements GLEventListener {
         tablePositionTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
         NameNode tableBody = new NameNode("body");
         ModelNode tableBodyNode = new ModelNode("table body", table_body);
+        Mat4 lt = Mat4Transform.scale(0.1f, 0.1f, 0.1f);
+        lt = Mat4.multiply(Mat4Transform.translate(0, 6f, 0), lt);
+        TransformNode translateTableLegLT = new TransformNode("transform table lt", lt);
+        ModelNode tableLegLT = new ModelNode("table leg lt", table_body);
 
         tableRoot.addChild(tablePositionTranslate);
         tablePositionTranslate.addChild(tableBody);
         tableBody.addChild(tableBodyNode);
+        tableBodyNode.addChild(translateTableLegLT);
+        translateTableLegLT.addChild(tableLegLT);
+
 
         tableBody.update();
+//        tableBody.print(0, false);
+        System.out.println(tableLegLT.worldTransform.toString());
+
+        Mat4 modelMatrix2 = new Mat4(1);
+        modelMatrix2 = Mat4.multiply(Mat4Transform.scale(4f, 4f, 4f), modelMatrix2);
+        Mat4 worldT = Mat4.multiply(tableLegLT.worldTransform, modelMatrix2);
+        movingLight = new MovingLight(gl3, worldT);
+        movingLight.setCamera(camera);
     }
 
     public void render(GL3 gl3) {
@@ -85,5 +107,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light.render(gl3);
         floor.render(gl3);
         tableRoot.draw(gl3);
+        movingLight.render(gl3);
     }
 }

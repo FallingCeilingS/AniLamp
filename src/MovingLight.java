@@ -6,12 +6,12 @@ import gmaths.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public class Light {
+public class MovingLight {
     private Material material;
     public Shader shader;
     private Camera camera;
     private Vec3 position;
-//    private Mat4 worldMatrix;
+    private Mat4 worldMatrix;
     private int[] vertexBufferId = new int[1];
     private int[] vertexArrayId = new int[1];
     private int[] elementBufferId = new int[1];
@@ -48,13 +48,13 @@ public class Light {
     private int vertexStride = 3;
     private int vertexXYZFloats = 3;
 
-    public Light(GL3 gl3) {
+    public MovingLight(GL3 gl3, Mat4 worldMatrix) {
         material = new Material();
         material.setAmbient(0.5f, 0.5f, 0.5f);
         material.setDiffuse(0.8f, 0.8f, 0.8f);
         material.setSpecular(0.8f, 0.8f, 0.8f);
         position = new Vec3(3f,2f,1f);
-//        modelMatrix = new Mat4(1);
+        this.worldMatrix = worldMatrix;
         shader = new Shader(gl3, "shader/vs_light_01.txt", "shader/fs_light_01.txt");
         fillBuffers(gl3);
     }
@@ -116,11 +116,8 @@ public class Light {
     }
 
     public void render(GL3 gl3) {
-        Mat4 modelMatrix = new Mat4(1);
-        modelMatrix = Mat4.multiply(Mat4Transform.scale(0.3f,0.3f,0.3f), modelMatrix);
-        Mat4 worldMatrix = Mat4.multiply(Mat4Transform.translate(position), modelMatrix);
-
         Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldMatrix));
+        System.out.println(mvpMatrix.toString());
 
         shader.use(gl3);
         shader.setFloatArray(gl3, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());

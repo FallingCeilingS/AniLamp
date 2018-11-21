@@ -13,7 +13,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private Light light;
     private MovingLight movingLight;
     private SGNode tableRoot;
-    private TransformNode tablePositionTranslate;
+    private ModelNode tableLegLT;
+    private TransformNode translateTableLegLT;
     private float currentTime;
 
     private double getCurrentTime() {
@@ -76,13 +77,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         table_body = new Model(gl3, camera, light, tableBodyShader, floorMaterial, modelMatrix, tableBodyMesh);
         tableRoot = new NameNode("root");
-        tablePositionTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
+        TransformNode tablePositionTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
         NameNode tableBody = new NameNode("body");
         ModelNode tableBodyNode = new ModelNode("table body", table_body);
         Mat4 lt = Mat4Transform.scale(0.1f, 0.1f, 0.1f);
         lt = Mat4.multiply(Mat4Transform.translate(0, 6f, 0), lt);
-        TransformNode translateTableLegLT = new TransformNode("transform table lt", lt);
-        ModelNode tableLegLT = new ModelNode("table leg lt", table_body);
+        translateTableLegLT = new TransformNode("transform table lt", lt);
+        tableLegLT = new ModelNode("table leg lt", table_body);
 
         tableRoot.addChild(tablePositionTranslate);
         tablePositionTranslate.addChild(tableBody);
@@ -102,11 +103,22 @@ public class Anilamp_GLEventListener implements GLEventListener {
         movingLight.setCamera(camera);
     }
 
+    public void updateLightPosition() {
+        double currentTime = getCurrentTime();
+        translateTableLegLT.setTransform(Mat4Transform.translate(0, 5 * (float) Math.sin(currentTime), 0));
+        translateTableLegLT.update();
+    }
+
     public void render(GL3 gl3) {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         light.render(gl3);
         floor.render(gl3);
-        tableRoot.draw(gl3);
+//        tableRoot.draw(gl3);
+        updateLightPosition();
+        Mat4 modelMatrix2 = new Mat4(1);
+////        modelMatrix2 = Mat4.multiply(Mat4Transform.scale(1f, 1f, 1f), modelMatrix2);
+//        Mat4 worldT = Mat4.multiply(translateTableLegLT.worldTransform, modelMatrix2);
+        movingLight.setWorldMatrix(tableLegLT.worldTransform);
         movingLight.render(gl3);
     }
 }

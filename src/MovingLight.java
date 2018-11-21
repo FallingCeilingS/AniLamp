@@ -93,6 +93,10 @@ public class MovingLight {
         position.z = z;
     }
 
+    public void setWorldMatrix(Mat4 worldMatrix) {
+        this.worldMatrix = worldMatrix;
+    }
+
     public Vec3 getPosition() {
         return position;
     }
@@ -117,6 +121,7 @@ public class MovingLight {
 
     public void render(GL3 gl3) {
         Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldMatrix));
+        System.out.println(worldMatrix.toString());
         System.out.println(mvpMatrix.toString());
 
         shader.use(gl3);

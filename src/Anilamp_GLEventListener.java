@@ -8,8 +8,10 @@ import gmaths.Vec3;
 
 public class Anilamp_GLEventListener implements GLEventListener {
     private Camera camera;
-    private Model floor;
+    private Model floor, table_body;
     private Light light;
+    private SGNode tableRoot;
+    private TransformNode tablePositionTranslate;
 
     public Anilamp_GLEventListener(Camera camera) {
         this.camera = camera;
@@ -55,16 +57,33 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light = new Light(gl3);
         light.setCamera(camera);
 
-        Mesh mesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-        Shader shader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
-        Material material = new Material(new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 32.0f);
+        Mesh floorMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
+        Shader floorShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Material floorMaterial = new Material(
+                new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+        );
         Mat4 modelMatrix = Mat4Transform.scale(16,1f,16);
-        floor = new Model(gl3, camera, light, shader, material, modelMatrix, mesh, textureId0);
+        floor = new Model(gl3, camera, light, floorShader, floorMaterial, modelMatrix, floorMesh, textureId0);
+
+        Mesh tableBodyMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+        Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        table_body = new Model(gl3, camera, light, tableBodyShader, floorMaterial, modelMatrix, tableBodyMesh);
+        tableRoot = new NameNode("root");
+        tablePositionTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
+        NameNode tableBody = new NameNode("body");
+        ModelNode tableBodyNode = new ModelNode("table body", table_body);
+
+        tableRoot.addChild(tablePositionTranslate);
+        tablePositionTranslate.addChild(tableBody);
+        tableBody.addChild(tableBodyNode);
+
+        tableBody.update();
     }
 
     public void render(GL3 gl3) {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         light.render(gl3);
         floor.render(gl3);
+        tableRoot.draw(gl3);
     }
 }

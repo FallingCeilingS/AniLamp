@@ -65,36 +65,55 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light = new Light(gl3);
         light.setCamera(camera);
 
+        /*
+        floor
+         */
         Mesh floorMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader floorShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material floorMaterial = new Material(
-                new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.0f, 0.5f, 0.81f), new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.0f, 0.5f, 0.81f),
+                new Vec3(0.0f, 0.5f, 0.81f),
+                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Mat4 modelMatrix = Mat4Transform.scale(16,1f,16);
-        floor = new Model(gl3, camera, light, floorShader, floorMaterial, modelMatrix, floorMesh, textureId0);
+        Mat4 floorModelMatrix = Mat4Transform.scale(20f,1f,20);
+        floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -5f, 0), floorModelMatrix);
+        floor = new Model(gl3, camera, light, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId0);
 
+        /*
+        table
+         */
         Mesh tableBodyMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
-        table_body = new Model(gl3, camera, light, tableBodyShader, floorMaterial, modelMatrix, tableBodyMesh);
+        Mat4 tableBodyModelMatrix = new Mat4(1);
+        Material tableBodyMaterial = new Material(
+                new Vec3(1.0f, 0.5f, 0.5f),
+                new Vec3(0.5f, 0.5f, 0.4f),
+                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+        );
+        table_body = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableBodyMesh);
         tableRoot = new NameNode("root");
         TransformNode tablePositionTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
-        NameNode tableBody = new NameNode("body");
+        tableBodyModelMatrix = Mat4.multiply(Mat4Transform.scale(10, 10, 10), tableBodyModelMatrix);
+        TransformNode tableBodyTranslate = new TransformNode("table body transform", tableBodyModelMatrix);
+        System.out.println("tableBodyTranslateNode\n" + tableBodyTranslate.worldTransform.toString());
+        NameNode tableBodyName = new NameNode("body");
         ModelNode tableBodyNode = new ModelNode("table body", table_body);
-        Mat4 lt = Mat4Transform.scale(0.1f, 0.1f, 0.1f);
-        lt = Mat4.multiply(Mat4Transform.translate(0, 6f, 0), lt);
+        Mat4 lt = Mat4Transform.scale(1f, 1f, 0.1f);
+        lt = Mat4.multiply(Mat4Transform.translate(0, 0f, 0), lt);
         translateTableLegLT = new TransformNode("transform table lt", lt);
-        tableLegLT = new ModelNode("table leg lt", table_body);
+        tableLegLT = new ModelNode("table leg lt", floor);
 
         tableRoot.addChild(tablePositionTranslate);
-        tablePositionTranslate.addChild(tableBody);
-        tableBody.addChild(tableBodyNode);
-        tableBodyNode.addChild(translateTableLegLT);
-        translateTableLegLT.addChild(tableLegLT);
+            tablePositionTranslate.addChild(tableBodyName);
+                tableBodyName.addChild(tableBodyTranslate);
+                    tableBodyTranslate.addChild(tableBodyNode);
+                tableBodyName.addChild(translateTableLegLT);
+                    translateTableLegLT.addChild(tableLegLT);
 
 
-        tableBody.update();
+        tableRoot.update();
 //        tableBody.print(0, false);
-        System.out.println(tableLegLT.worldTransform.toString());
+//        System.out.println(tableLegLT.worldTransform.toString());
 
         Mat4 modelMatrix2 = new Mat4(1);
         modelMatrix2 = Mat4.multiply(Mat4Transform.scale(4f, 4f, 4f), modelMatrix2);
@@ -113,7 +132,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         light.render(gl3);
         floor.render(gl3);
-//        tableRoot.draw(gl3);
+        tableRoot.draw(gl3);
         updateLightPosition();
         Mat4 modelMatrix2 = new Mat4(1);
 ////        modelMatrix2 = Mat4.multiply(Mat4Transform.scale(1f, 1f, 1f), modelMatrix2);

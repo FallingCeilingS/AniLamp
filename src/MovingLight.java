@@ -121,8 +121,8 @@ public class MovingLight {
 
     public void render(GL3 gl3) {
         Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldMatrix));
-        System.out.println(worldMatrix.toString());
-        System.out.println(mvpMatrix.toString());
+//        System.out.println(worldMatrix.toString());
+//        System.out.println(mvpMatrix.toString());
 
         shader.use(gl3);
         shader.setFloatArray(gl3, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());

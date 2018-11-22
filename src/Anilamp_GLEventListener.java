@@ -9,7 +9,7 @@ import gmaths.Vec4;
 
 public class Anilamp_GLEventListener implements GLEventListener {
     private Camera camera;
-    private Model floor, table_body;
+    private Model floor;
     private Light light;
     private MovingLight movingLight;
     private SGNode tableRoot;
@@ -90,23 +90,38 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 new Vec3(0.5f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        table_body = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableBodyMesh);
+        Model table_body = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableBodyMesh);
         tableRoot = new NameNode("root");
-        TransformNode tablePositionTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
-        tableBodyModelMatrix = Mat4.multiply(Mat4Transform.scale(10, 10, 10), tableBodyModelMatrix);
+        TransformNode tableTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
+        tableBodyModelMatrix = Mat4.multiply(Mat4Transform.scale(10, 0.5f, 10), tableBodyModelMatrix);
         TransformNode tableBodyTranslate = new TransformNode("table body transform", tableBodyModelMatrix);
         System.out.println("tableBodyTranslateNode\n" + tableBodyTranslate.worldTransform.toString());
         NameNode tableBodyName = new NameNode("body");
         ModelNode tableBodyNode = new ModelNode("table body", table_body);
+
+        Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+        Model table_leg = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh);
+        ModelNode tableLegNode = new ModelNode("table leg", table_leg);
+        Mat4 tableLegTranslateMatrix = Mat4Transform.scale(1, 5, 1);
+        tableLegTranslateMatrix = Mat4.multiply(Mat4Transform.translate(-5, 0, 0), tableLegTranslateMatrix);
+        TransformNode tableLegTranslate = new TransformNode("table leg translate", tableLegTranslateMatrix);
+        NameNode tableLegLeftTop = new NameNode("table leg left top");
+        Mat4 ltTranslateMatrix = Mat4Transform.translate(0, 0, 0);
+        TransformNode ltTranslate = new TransformNode("table leg left top translate", ltTranslateMatrix);
+
         Mat4 lt = Mat4Transform.scale(1f, 1f, 0.1f);
         lt = Mat4.multiply(Mat4Transform.translate(0, 0f, 0), lt);
         translateTableLegLT = new TransformNode("transform table lt", lt);
         tableLegLT = new ModelNode("table leg lt", floor);
 
-        tableRoot.addChild(tablePositionTranslate);
-            tablePositionTranslate.addChild(tableBodyName);
+        tableRoot.addChild(tableTranslate);
+            tableTranslate.addChild(tableBodyName);
                 tableBodyName.addChild(tableBodyTranslate);
                     tableBodyTranslate.addChild(tableBodyNode);
+                tableBodyName.addChild(tableLegTranslate);
+                    tableLegTranslate.addChild(tableLegLeftTop);
+                        tableLegLeftTop.addChild(ltTranslate);
+                            ltTranslate.addChild(tableLegNode);
                 tableBodyName.addChild(translateTableLegLT);
                     translateTableLegLT.addChild(tableLegLT);
 

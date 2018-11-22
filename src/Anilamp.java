@@ -43,7 +43,7 @@ public class Anilamp extends JFrame {
     }
 
     public static void main(String[] args) {
-        Anilamp aniLamp = new Anilamp("Final Scene");
+        Anilamp aniLamp = new Anilamp("ANILAMP -- Final Scene");
         aniLamp.getContentPane().setPreferredSize(dimension);
         aniLamp.pack();
         aniLamp.setVisible(true);

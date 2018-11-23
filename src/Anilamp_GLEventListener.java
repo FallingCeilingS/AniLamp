@@ -12,9 +12,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private Model floor;
     private Light light;
     private MovingLight movingLight;
-    private SGNode tableRoot;
+    private SGNode tableRoot, lampRoot;
     private ModelNode tableLegLT;
-    private TransformNode translateTableLegLT;
+    private TransformNode translateTableLegLT, lampLowerJointYRotate, lampLowerJointZRotate;
     private float currentTime;
     private float floor_Y = -8;
 
@@ -80,29 +80,35 @@ public class Anilamp_GLEventListener implements GLEventListener {
         floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, floor_Y, 0), floorModelMatrix);
         floor = new Model(gl3, camera, light, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId0);
 
+        /**
+         * table
+         */
+        tableRoot = new NameNode("root");
+        TransformNode tableTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
+
         /*
-        table
+        table body
          */
         float TABLE_BODY_LENGTH = 20;
         float TABLE_BODY_WIDTH = 10;
         float TABLE_BODY_HEIGHT = 0.4f;
         Mesh tableBodyMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
-        Mat4 tableBodyModelMatrix = new Mat4(1);
         Material tableBodyMaterial = new Material(
                 new Vec3(1.0f, 0.5f, 0.5f),
                 new Vec3(0.5f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model table_body = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableBodyMesh);
-        tableRoot = new NameNode("root");
-        TransformNode tableTranslate = new TransformNode("table transform", Mat4Transform.translate(0, 0, 0));
-        tableBodyModelMatrix = Mat4.multiply(Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH), tableBodyModelMatrix);
+        Model table_body = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
+        Mat4 tableBodyModelMatrix = Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH);
         TransformNode tableBodyTranslate = new TransformNode("table body transform", tableBodyModelMatrix);
-        System.out.println("tableBodyTranslateNode\n" + tableBodyTranslate.worldTransform.toString());
+//        System.out.println("tableBodyTranslateNode\n" + tableBodyTranslate.worldTransform.toString());
         NameNode tableBodyName = new NameNode("body");
         ModelNode tableBodyNode = new ModelNode("table body", table_body);
 
+        /*
+        table legs
+         */
         float TABLE_LEG_LENGTH = 0.6f;
         float TABLE_LEG_WIDTH = TABLE_LEG_LENGTH;
         Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
@@ -154,7 +160,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 tableBodyName.addChild(translateTableLegLT);
                     translateTableLegLT.addChild(tableLegLT);
 
-
         tableRoot.update();
 //        tableBody.print(0, false);
 //        System.out.println(tableLegLT.worldTransform.toString());
@@ -164,12 +169,103 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Mat4 worldT = Mat4.multiply(tableLegLT.worldTransform, modelMatrix2);
         movingLight = new MovingLight(gl3, worldT);
         movingLight.setCamera(camera);
+
+        /**
+         * lamp
+         */
+        lampRoot = new NameNode("lamp root");
+        TransformNode lampTranslate = new TransformNode("lamp transform", Mat4Transform.translate(0, 3, 0));
+
+        /*
+        lamp base
+         */
+        float LAMP_BASE_LENGTH = 1.25f;
+        float LAMP_BASE_WIDTH = LAMP_BASE_LENGTH;
+        float LAMP_BASE_HEIGHT = 0.225f;
+        Mesh lampBaseMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+        Shader lampBaseShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Material lampBaseMaterial = new Material(
+                new Vec3(0.1f, 0.5f, 0.1f),
+                new Vec3(0.2f, 0.5f, 0.4f),
+                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+        );
+        Model lamp_base = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh);
+        Mat4 lampBaseModelMatrix = Mat4Transform.scale(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
+        TransformNode lampBaseTranslate = new TransformNode("lamp base transform", lampBaseModelMatrix);
+        NameNode lampBaseName = new NameNode("lamp base");
+        Mat4 lampBaseModelMatrix2 = Mat4Transform.rotateAroundY(45);
+        TransformNode lampBaseTranslate2 = new TransformNode("lamp base transform", lampBaseModelMatrix2);
+        ModelNode lampBaseNode_1 = new ModelNode("lamp base 1", lamp_base);
+        ModelNode lampBaseNode_2 = new ModelNode("lamp base 2", lamp_base);
+
+        /*
+        lamp joints
+         */
+        float LAMP_JOINT_DIAMETER = 0.65f;
+        Mesh lampJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
+        Model lamp_joint = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial, new Mat4(1), lampJointMesh);
+        Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
+        TransformNode lampJointTranslate = new TransformNode("lamp joint translate", lampJointModelMatrix);
+
+        /*
+        lamp lower joint
+         */
+        Mat4 lampLowerJointMatrix = Mat4Transform.translate(0, 0.4f, 0);
+        TransformNode lampLowerJointTranslate = new TransformNode("lamp lower joint transform", lampLowerJointMatrix);
+        NameNode lampLowerJointName = new NameNode("lamp lower joint");
+        Mat4 lampLowerJointYRotateMatrix = Mat4Transform.rotateAroundY(45);
+        Mat4 lampLowerJointZRotateMatrix = Mat4Transform.rotateAroundZ(45);
+        lampLowerJointYRotate = new TransformNode("lamp lower joint y rotate", lampLowerJointYRotateMatrix);
+        lampLowerJointZRotate = new TransformNode("lamp lower joint z rotate", lampLowerJointZRotateMatrix);
+        ModelNode lampLowerJointNode = new ModelNode("lamp lower joint", lamp_joint);
+
+        /**
+         * lamp tails
+         */
+        float LAMP_TAIL_LENGTH = LAMP_JOINT_DIAMETER * 0.65f;
+        float LAMP_TAIL_WIDTH = LAMP_TAIL_LENGTH;
+        float LAMP_TAIL_HEIGHT = 2;
+        Mesh lampTailMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+        Model lamp_tail = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial, new Mat4(1), lampTailMesh);
+        Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_LENGTH, LAMP_TAIL_HEIGHT, LAMP_TAIL_WIDTH);
+        TransformNode lampTailTranslate = new TransformNode("lamp tail translate", lampTailModelMatrix);
+
+        /*
+        lamp lower tail
+         */
+        Mat4 lampLowerTailMatrix = Mat4Transform.translate(0, 0.4f, 0);
+        TransformNode lampLowerTailTranslate = new TransformNode("lamp lower tail transform", lampLowerTailMatrix);
+        NameNode lampLowerTailName = new NameNode("lamp lower tail");
+        ModelNode lampLowerTailNode = new ModelNode("lamp lower tail", lamp_tail);
+
+        lampRoot.addChild(lampTranslate);
+            lampTranslate.addChild(lampBaseTranslate);
+                lampBaseTranslate.addChild(lampBaseName);
+                    lampBaseName.addChild(lampBaseNode_1);
+                    lampBaseName.addChild(lampBaseTranslate2);
+                        lampBaseTranslate2.addChild(lampBaseNode_2);
+            lampTranslate.addChild(lampJointTranslate);
+                lampJointTranslate.addChild(lampLowerJointName);
+                    lampLowerJointName.addChild(lampLowerJointTranslate);
+                        lampLowerJointTranslate.addChild(lampLowerJointYRotate);
+                            lampLowerJointYRotate.addChild(lampLowerJointZRotate);
+                                lampLowerJointZRotate.addChild(lampLowerJointNode);
+                                lampLowerJointZRotate.addChild(lampTailTranslate);
+                                    lampTailTranslate.addChild(lampLowerTailName);
+                                        lampLowerTailName.addChild(lampLowerTailTranslate);
+                                            lampLowerTailTranslate.addChild(lampLowerTailNode);
+
+
+        lampRoot.update();
     }
 
     public void updateLightPosition() {
         double currentTime = getCurrentTime();
         translateTableLegLT.setTransform(Mat4Transform.translate(0, 5 * (float) Math.sin(currentTime), 0));
         translateTableLegLT.update();
+        lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(currentTime)));
+        lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ(50 * (float) Math.sin(currentTime)));
+        lampRoot.update();
     }
 
     public void render(GL3 gl3) {
@@ -178,10 +274,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         floor.render(gl3);
         tableRoot.draw(gl3);
         updateLightPosition();
-        Mat4 modelMatrix2 = new Mat4(1);
-////        modelMatrix2 = Mat4.multiply(Mat4Transform.scale(1f, 1f, 1f), modelMatrix2);
-//        Mat4 worldT = Mat4.multiply(translateTableLegLT.worldTransform, modelMatrix2);
         movingLight.setWorldMatrix(tableLegLT.worldTransform);
         movingLight.render(gl3);
+//        System.out.println(lampLowerJointZRotate.worldTransform);
+//        lampLowerJointZRotate.setTransform(lampLowerJointZRotate.worldTransform);
+        lampRoot.draw(gl3);
     }
 }

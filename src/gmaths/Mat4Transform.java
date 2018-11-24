@@ -150,8 +150,8 @@ public final class Mat4Transform {   // row column formulation
     }
 
     /**
-     * Creates a view matrix corresponding to a camera at a given position, looking at a particular target point, with a specified worldup direction.
-     * The worldup direction will be changed using the Gram-Schmidt process to be perpendicular to the vector joining the position to the target.
+     * Creates a view matrix corresponding to a camera at a given currentPosition, looking at a particular target point, with a specified worldup direction.
+     * The worldup direction will be changed using the Gram-Schmidt process to be perpendicular to the vector joining the currentPosition to the target.
      *
      * @param from    The camera postion.
      * @param to      The target that the camera is looking at.

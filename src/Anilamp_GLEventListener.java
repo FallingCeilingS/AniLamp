@@ -9,7 +9,7 @@ import gmaths.Vec3;
 public class Anilamp_GLEventListener implements GLEventListener {
     private Camera camera;
     private Model floor;
-    private Light light;
+    private Light light1, light2;
     private MovingLight movingLight, lightBulb;
     private SGNode tableRoot, lampRoot;
     private ModelNode tableLegLT;
@@ -46,7 +46,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     @Override
     public void dispose(GLAutoDrawable glAutoDrawable) {
-
+        GL3 gl3 = glAutoDrawable.getGL().getGL3();
     }
 
     @Override
@@ -66,11 +66,25 @@ public class Anilamp_GLEventListener implements GLEventListener {
     public void initialise(GL3 gl3) {
         int[] textureId0 = TextureLibrary.loadTexture(gl3, "textures/chequerboard.jpg");
 
-        light = new Light(gl3);
-        light.setCamera(camera);
+        /**
+         * static lights
+         */
+        /*
+        light1
+         */
+        light1 = new Light(gl3);
+        light1.setPosition(new Vec3(3f,2f,1f));
+        light1.setCamera(camera);
 
         /*
-        floor
+        light2
+         */
+        light2 = new Light(gl3);
+        light2.setCamera(camera);
+        light2.setPosition(new Vec3(-3f,2f,1f));
+
+        /**
+         * floor
          */
         Mesh floorMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader floorShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
@@ -81,7 +95,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
         Mat4 floorModelMatrix = Mat4Transform.scale(40f,1f,40);
         floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, floor_Y, 0), floorModelMatrix);
-        floor = new Model(gl3, camera, light, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId0);
+        floor = new Model(gl3, camera, light1, light2, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId0);
 
         /**
          * table
@@ -102,7 +116,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 new Vec3(0.5f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model table_body = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
+        Model table_body = new Model(gl3, camera, light1, light2, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
         Mat4 tableBodyModelMatrix = Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH);
         TransformNode tableBodyTranslate = new TransformNode("table body transform", tableBodyModelMatrix);
 //        System.out.println("tableBodyTranslateNode\n" + tableBodyTranslate.worldTransform.toString());
@@ -115,7 +129,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float TABLE_LEG_LENGTH = 0.6f;
         float TABLE_LEG_WIDTH = TABLE_LEG_LENGTH;
         Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Model table_leg = new Model(gl3, camera, light, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh);
+        Model table_leg = new Model(gl3, camera, light1, light2, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh);
         ModelNode tableLeg_LT_Node = new ModelNode("table leg", table_leg);
         ModelNode tableLeg_LB_Node = new ModelNode("table leg", table_leg);
         ModelNode tableLeg_RT_Node = new ModelNode("table leg", table_leg);
@@ -143,6 +157,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         translateTableLegLT = new TransformNode("transform table lt", lt);
         tableLegLT = new ModelNode("table leg lt", floor);
 
+        /*
+        table scene graph
+         */
         tableRoot.addChild(tableTranslate);
             tableTranslate.addChild(tableBodyName);
                 tableBodyName.addChild(tableBodyTranslate);
@@ -192,7 +209,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_base = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh);
+        Model lamp_base = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh);
         Mat4 lampBaseModelMatrix = Mat4Transform.scale(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
         TransformNode lampBaseTranslate = new TransformNode("lamp base transform", lampBaseModelMatrix);
         NameNode lampBaseName = new NameNode("lamp base");
@@ -206,7 +223,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         float LAMP_JOINT_DIAMETER = 0.65f;
         Mesh lampJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Model lamp_joint = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial, new Mat4(1), lampJointMesh);
+        Model lamp_joint = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampJointMesh);
         Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
         TransformNode lampJointTranslate = new TransformNode("lamp joint translate", lampJointModelMatrix);
 
@@ -229,7 +246,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_TAIL_WIDTH = LAMP_TAIL_LENGTH;
         float LAMP_TAIL_HEIGHT = 3.5f;
         Mesh lampTailMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Model lamp_tail = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial, new Mat4(1), lampTailMesh);
+        Model lamp_tail = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampTailMesh);
         Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_LENGTH, LAMP_TAIL_HEIGHT, LAMP_TAIL_WIDTH);
         TransformNode lampTailTranslate = new TransformNode("lamp tail translate", lampTailModelMatrix);
 
@@ -267,9 +284,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         float LAMP_HEAD_JOINT_DIAMETER = 0.75f;
         float LAMP_HEAD_XZ_SCALE = 2.5f;
-        Model head_joint = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial,new Mat4(1), lampJointMesh);
+        Model head_joint = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial,new Mat4(1), lampJointMesh);
         Mesh lampHeadMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Model lamp_head = new Model(gl3, camera, light, lampBaseShader, lampBaseMaterial, new Mat4(1), lampHeadMesh);
+        Model lamp_head = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampHeadMesh);
 
         /*
         lamp head joint
@@ -299,7 +316,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lampHeadZRotate = new TransformNode("lamp head joint z rotate", lampHeadZRotateMatrix);
         ModelNode lampHeadNode = new ModelNode("lamp head joint", lamp_head);
 
-
+        /*
+        lamp scene graph
+         */
         lampRoot.addChild(lampTranslate);
             lampTranslate.addChild(lampBaseTranslate);
                 lampBaseTranslate.addChild(lampBaseName);
@@ -338,10 +357,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
                                                                                             lampHeadSelfTranslate.addChild(lampHeadNode);
 
         lampRoot.update();
+//        print scene graph nodes
         lampRoot.print(0, false);
 
         /*
-        light bulb
+        light1 bulb
          */
         lightBulb = new MovingLight(gl3, lampHeadNode.worldTransform);
         lightBulb.setCamera(camera);
@@ -365,7 +385,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     public void render(GL3 gl3) {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        light.render(gl3);
+        light1.render(gl3);
+        light2.render(gl3);
         floor.render(gl3);
         tableRoot.draw(gl3);
         updateMotion();

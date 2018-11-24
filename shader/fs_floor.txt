@@ -16,7 +16,8 @@ struct Light {
     vec3 specular;
 };
 
-uniform Light light;  
+uniform Light light1;
+uniform Light light2;
 
 struct Material {
     vec3 ambient;
@@ -29,21 +30,29 @@ uniform Material material;
 
 void main() {
     // ambient
-    vec3 ambient = light.ambient * material.ambient * texture(first_texture, aTexCoord).rgb;
-    // vec3 ambient = light.ambient * material.ambient;
+    vec3 ambient = (light1.ambient + light2.ambient) * material.ambient * texture(first_texture, aTexCoord).rgb;
+    // vec3 ambient = light1.ambient * material.ambient;
 
     // diffuse
     vec3 norm = normalize(aNormal);
-    vec3 lightDir = normalize(light.position - aPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * (diff * material.diffuse) * texture(first_texture, aTexCoord).rgb;
-    // vec3 diffuse = light.diffuse * (diff * material.diffuse);
+    vec3 lightDir1 = normalize(light1.position - aPos);
+    vec3 lightDir2 = normalize(light2.position - aPos);
+    float diff1 = max(dot(norm, lightDir1), 0.0);
+    float diff2 = max(dot(norm, lightDir2), 0.0);
+    vec3 diffuse1 = light1.diffuse * (diff1 * material.diffuse) * texture(first_texture, aTexCoord).rgb;
+    vec3 diffuse2 = light2.diffuse * (diff2 * material.diffuse) * texture(first_texture, aTexCoord).rgb;
+    vec3 diffuse = diffuse1 + diffuse2;
+    // vec3 diffuse = light1.diffuse * (diff * material.diffuse);
 
     // specular
     vec3 viewDir = normalize(viewPos - aPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = light.specular * (spec * material.specular);
+    vec3 reflectDir1 = reflect(-lightDir1, norm);
+    vec3 reflectDir2 = reflect(-lightDir2, norm);
+    float spec1 = pow(max(dot(viewDir, reflectDir1), 0.0), material.shininess);
+    float spec2 = pow(max(dot(viewDir, reflectDir2), 0.0), material.shininess);
+    vec3 specular1 = light1.specular * (spec1 * material.specular);
+    vec3 specular2 = light2.specular * (spec2 * material.specular);
+    vec3 specular = specular1 + specular2;
 
     vec3 result = ambient + diffuse + specular;
     // vec3 result = ambient;

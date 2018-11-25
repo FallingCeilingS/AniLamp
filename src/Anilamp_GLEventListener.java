@@ -20,9 +20,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
             lampHeadJointYRotate, lampHeadJointZRotate,
             lampHeadYRotate, lampHeadZRotate;
     private Animator animator;
-    private float currentTime;
+    private double startTime = 0;
 
-    private double getCurrentTime() {
+    private double getStartTime() {
         return System.currentTimeMillis() / 1000.0;
     }
 
@@ -121,7 +121,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
         Model table_body = new Model(gl3, camera, light1, light2, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
         Mat4 tableBodyModelMatrix = Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH);
-        TransformNode tableBodyTranslate = new TransformNode("table body transform", tableBodyModelMatrix);
+        TransformNode tableBodyScale = new TransformNode("table body transform", tableBodyModelMatrix);
 //        System.out.println("tableBodyTranslateNode\n" + tableBodyTranslate.worldTransform.toString());
         NameNode tableBodyName = new NameNode("body");
         ModelNode tableBodyNode = new ModelNode("table body", table_body);
@@ -139,9 +139,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         ModelNode tableLeg_RT_Node = new ModelNode("table leg", table_leg);
         ModelNode tableLeg_RB_Node = new ModelNode("table leg", table_leg);
 
-        Mat4 tableLegTranslateMatrix = Mat4Transform.scale(TABLE_LEG_LENGTH, TABLE_LEG_HEIGHT, TABLE_LEG_WIDTH);
-        tableLegTranslateMatrix = Mat4.multiply(Mat4Transform.translate(0, -4, 0), tableLegTranslateMatrix);
-        TransformNode tableLegTranslate = new TransformNode("table leg translate", tableLegTranslateMatrix);
+        Mat4 tableLegTransformMatrix = Mat4Transform.scale(TABLE_LEG_LENGTH, TABLE_LEG_HEIGHT, TABLE_LEG_WIDTH);
+        tableLegTransformMatrix = Mat4.multiply(Mat4Transform.translate(0, -4, 0), tableLegTransformMatrix);
+        TransformNode tableLegTransform = new TransformNode("table leg transform (scale then translate)", tableLegTransformMatrix);
         NameNode tableLegLeftTop = new NameNode("table leg left top");
         Mat4 ltTranslateMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 1.6f, 0, -TABLE_BODY_WIDTH / 2);
         TransformNode ltTranslate = new TransformNode("table leg left top translate", ltTranslateMatrix);
@@ -166,19 +166,19 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         tableRoot.addChild(tableTranslate);
             tableTranslate.addChild(tableBodyName);
-                tableBodyName.addChild(tableBodyTranslate);
-                    tableBodyTranslate.addChild(tableBodyNode);
-                tableBodyName.addChild(tableLegTranslate);
-                    tableLegTranslate.addChild(tableLegLeftTop);
+                tableBodyName.addChild(tableBodyScale);
+                    tableBodyScale.addChild(tableBodyNode);
+                tableBodyName.addChild(tableLegTransform);
+                    tableLegTransform.addChild(tableLegLeftTop);
                         tableLegLeftTop.addChild(ltTranslate);
                             ltTranslate.addChild(tableLeg_LT_Node);
-                    tableLegTranslate.addChild(tableLegLeftBtm);
+                    tableLegTransform.addChild(tableLegLeftBtm);
                         tableLegLeftBtm.addChild(lbTranslate);
                             lbTranslate.addChild(tableLeg_LB_Node);
-                    tableLegTranslate.addChild(tableLegRightTop);
+                    tableLegTransform.addChild(tableLegRightTop);
                         tableLegRightTop.addChild(rtTranslate);
                             rtTranslate.addChild(tableLeg_RT_Node);
-                    tableLegTranslate.addChild(tableLegRightBtm);
+                    tableLegTransform.addChild(tableLegRightBtm);
                         tableLegRightBtm.addChild(rbTranslate);
                             rbTranslate.addChild(tableLeg_RB_Node);
                 tableBodyName.addChild(translateTableLegLT);
@@ -215,10 +215,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
         Model lamp_base = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh);
         Mat4 lampBaseModelMatrix = Mat4Transform.scale(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
-        TransformNode lampBaseTranslate = new TransformNode("lamp base transform", lampBaseModelMatrix);
+        TransformNode lampBaseScale = new TransformNode("lamp base scale", lampBaseModelMatrix);
         NameNode lampBaseName = new NameNode("lamp base");
         Mat4 lampBaseModelMatrix2 = Mat4Transform.rotateAroundY(45);
-        TransformNode lampBaseTranslate2 = new TransformNode("lamp base transform", lampBaseModelMatrix2);
+        TransformNode lampBaseScale2 = new TransformNode("lamp base scale", lampBaseModelMatrix2);
         ModelNode lampBaseNode_1 = new ModelNode("lamp base 1", lamp_base);
         ModelNode lampBaseNode_2 = new ModelNode("lamp base 2", lamp_base);
 
@@ -229,13 +229,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Mesh lampJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         Model lamp_joint = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampJointMesh);
         Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
-        TransformNode lampJointTranslate = new TransformNode("lamp joint translate", lampJointModelMatrix);
+        TransformNode lampJointScale = new TransformNode("lamp joint scale", lampJointModelMatrix);
 
         /*
         lamp lower joint
          */
         Mat4 lampLowerJointMatrix = Mat4Transform.translate(0, 0.4f, 0);
-        TransformNode lampLowerJointTranslate = new TransformNode("lamp lower joint transform", lampLowerJointMatrix);
+        TransformNode lampLowerJointTranslate = new TransformNode("lamp lower joint translate", lampLowerJointMatrix);
         NameNode lampLowerJointName = new NameNode("lamp lower joint");
         Mat4 lampLowerJointYRotateMatrix = Mat4Transform.rotateAroundY(0);
         Mat4 lampLowerJointZRotateMatrix = Mat4Transform.rotateAroundZ(30);
@@ -252,13 +252,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Mesh lampTailMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Model lamp_tail = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampTailMesh);
         Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_LENGTH, LAMP_TAIL_HEIGHT, LAMP_TAIL_WIDTH);
-        TransformNode lampTailTranslate = new TransformNode("lamp tail translate", lampTailModelMatrix);
+        TransformNode lampTailScale = new TransformNode("lamp tail scale", lampTailModelMatrix);
 
         /*
         lamp lower tail
          */
         Mat4 lampLowerTailMatrix = Mat4Transform.translate(0, 0.4f, 0);
-        TransformNode lampLowerTailTranslate = new TransformNode("lamp lower tail transform", lampLowerTailMatrix);
+        TransformNode lampLowerTailTranslate = new TransformNode("lamp lower tail translate", lampLowerTailMatrix);
         NameNode lampLowerTailName = new NameNode("lamp lower tail");
         ModelNode lampLowerTailNode = new ModelNode("lamp lower tail", lamp_tail);
 
@@ -266,7 +266,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lamp upper joint
          */
         Mat4 lampUpperJointMatrix = Mat4Transform.translate(0, LAMP_TAIL_HEIGHT, 0);
-        TransformNode lampUpperJointTranslate = new TransformNode("lamp upper joint transform", lampUpperJointMatrix);
+        TransformNode lampUpperJointTranslate = new TransformNode("lamp upper joint translate", lampUpperJointMatrix);
         NameNode lampUpperJointName = new NameNode("lamp upper joint");
         Mat4 lampUpperJointYRotateMatrix = Mat4Transform.rotateAroundY(0);
         Mat4 lampUpperJointZRotateMatrix = Mat4Transform.rotateAroundZ(-75);
@@ -279,7 +279,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         Mat4 lampUpperTailMatrix = Mat4Transform.translate(0, LAMP_TAIL_HEIGHT / 2, 0);
         lampUpperTailMatrix = Mat4.multiply(lampUpperTailMatrix, lampTailModelMatrix);
-        TransformNode lampUpperTailTranslate = new TransformNode("lamp upper tail transform", lampUpperTailMatrix);
+        TransformNode lampUpperTailTranslate = new TransformNode("lamp upper tail translate", lampUpperTailMatrix);
         NameNode lampUpperTailName = new NameNode("lamp upper tail");
         ModelNode lampUpperTailNode = new ModelNode("lamp upper tail", lamp_tail);
 
@@ -298,8 +298,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         Mat4 lampHeadJointMatrix = Mat4Transform.translate(0, LAMP_TAIL_HEIGHT, 0);
         Mat4 lampHeadJointSelfMatrix = Mat4Transform.scale(LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_JOINT_DIAMETER);
-        TransformNode lampHeadJointTranslate = new TransformNode("lamp head joint transform", lampHeadJointMatrix);
-        TransformNode lampHeadJointSelfTranslate = new TransformNode("lamp head joint self transform", lampHeadJointSelfMatrix);
+        TransformNode lampHeadJointTranslate = new TransformNode("lamp head joint translate", lampHeadJointMatrix);
+        TransformNode lampHeadJointSelfScale = new TransformNode("lamp head joint self scale", lampHeadJointSelfMatrix);
         NameNode lampHeadJointName = new NameNode("lamp head joint");
         Mat4 lampHeadJointYRotateMatrix = Mat4Transform.rotateAroundY(0);
         Mat4 lampHeadJointZRotateMatrix = Mat4Transform.rotateAroundZ(50);
@@ -312,8 +312,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         Mat4 lampHeadMatrix = Mat4Transform.translate(1f, LAMP_HEAD_JOINT_DIAMETER / 2, 0);
         Mat4 lampHeadSelfMatrix = Mat4Transform.scale(LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, LAMP_HEAD_XZ_SCALE);
-        TransformNode lampHeadTranslate = new TransformNode("lamp head transform", lampHeadMatrix);
-        TransformNode lampHeadSelfTranslate = new TransformNode("lamp head self transform", lampHeadSelfMatrix);
+        TransformNode lampHeadTranslate = new TransformNode("lamp head translate", lampHeadMatrix);
+        TransformNode lampHeadSelfScale = new TransformNode("lamp head self scale", lampHeadSelfMatrix);
         lampHeadName = new NameNode("lamp head");
         Mat4 lampHeadYRotateMatrix = Mat4Transform.rotateAroundY(0);
         Mat4 lampHeadZRotateMatrix = Mat4Transform.rotateAroundZ(0);
@@ -325,20 +325,20 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lamp scene graph
          */
         lampRoot.addChild(lampTranslate);
-            lampTranslate.addChild(lampBaseTranslate);
-                lampBaseTranslate.addChild(lampBaseName);
+            lampTranslate.addChild(lampBaseScale);
+                lampBaseScale.addChild(lampBaseName);
                     lampBaseName.addChild(lampBaseNode_1);
-                    lampBaseName.addChild(lampBaseTranslate2);
-                        lampBaseTranslate2.addChild(lampBaseNode_2);
-            lampTranslate.addChild(lampJointTranslate);
-                lampJointTranslate.addChild(lampLowerJointName);
+                    lampBaseName.addChild(lampBaseScale2);
+                        lampBaseScale2.addChild(lampBaseNode_2);
+            lampTranslate.addChild(lampJointScale);
+                lampJointScale.addChild(lampLowerJointName);
                     lampLowerJointName.addChild(lampLowerJointTranslate);
                         lampLowerJointTranslate.addChild(lampLowerJointYRotate);
                             lampLowerJointYRotate.addChild(lampLowerJointZRotate);
                                 lampLowerJointZRotate.addChild(lampLowerJointNode);
                                 lampLowerJointZRotate.addChild(lampLowerTailName);
-                                    lampLowerTailName.addChild(lampTailTranslate);
-                                        lampTailTranslate.addChild(lampLowerTailTranslate);
+                                    lampLowerTailName.addChild(lampTailScale);
+                                        lampTailScale.addChild(lampLowerTailTranslate);
                                             lampLowerTailTranslate.addChild(lampLowerTailNode);
                                     lampLowerTailName.addChild(lampUpperJointTranslate);
                                         lampUpperJointTranslate.addChild(lampUpperJointYRotate);
@@ -352,14 +352,14 @@ public class Anilamp_GLEventListener implements GLEventListener {
                                                             lampHeadJointTranslate.addChild(lampHeadJointYRotate);
                                                                 lampHeadJointYRotate.addChild(lampHeadJointZRotate);
                                                                     lampHeadJointZRotate.addChild(lampHeadJointName);
-                                                                        lampHeadJointName.addChild(lampHeadJointSelfTranslate);
-                                                                            lampHeadJointSelfTranslate.addChild(lampHeadJointNode);
+                                                                        lampHeadJointName.addChild(lampHeadJointSelfScale);
+                                                                            lampHeadJointSelfScale.addChild(lampHeadJointNode);
                                                                         lampHeadJointName.addChild(lampHeadTranslate);
                                                                             lampHeadTranslate.addChild(lampHeadYRotate);
                                                                                 lampHeadYRotate.addChild(lampHeadZRotate);
                                                                                     lampHeadZRotate.addChild(lampHeadName);
-                                                                                        lampHeadName.addChild(lampHeadSelfTranslate);
-                                                                                            lampHeadSelfTranslate.addChild(lampHeadNode);
+                                                                                        lampHeadName.addChild(lampHeadSelfScale);
+                                                                                            lampHeadSelfScale.addChild(lampHeadNode);
 
         lampRoot.update();
 //        print scene graph nodes
@@ -384,24 +384,27 @@ public class Anilamp_GLEventListener implements GLEventListener {
     }
 
     public void setAnimationBegin() {
-        animator.ANIMATION = true;
-//        System.out.println(animator.ANIMATION);
+        animator.ANIMATION_GENERATION = true;
+//        System.out.println(animator.ANIMATION_GENERATION);
+        startTime = getStartTime();
     }
 
     public void updateMotion() {
-        double currentTime = getCurrentTime();
-//        translateTableLegLT.setTransform(animator.jumpZ());
+        double currentTime = getStartTime();
+//        translateTableLegLT.setTransform(animator.jumpY());
 //        translateTableLegLT.update();
-        lampTranslate.setTransform(animator.generateTranslateMatrix());
-        testCube.setModelMatrix(animator.generateTranslateMatrix());
-//        lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY(360 * (float) Math.sin(currentTime)));
-//        lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ(100 * (float) Math.sin(currentTime)));
-//        lampUpperJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(currentTime)));
-//        lampUpperJointZRotate.setTransform(Mat4Transform.rotateAroundZ(-50 * (float) Math.sin(currentTime)));
-//        lampHeadJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(currentTime)));
-//        lampHeadJointZRotate.setTransform(Mat4Transform.rotateAroundZ(-50 * (float) Math.sin(currentTime)));
-//        lampHeadYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(currentTime)));
-//        lampHeadZRotate.setTransform(Mat4Transform.rotateAroundZ(-5 * (float) Math.sin(currentTime)));
+//        lampTranslate.setTransform(animator.generateRandomJump());
+        testCube.setModelMatrix(animator.generateRandomJump());
+
+        lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.updateRotateDegree(startTime))));
+        lampTranslate.setTransform(animator.previousTranslateMatrix);
+//        lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ();
+//        lampUpperJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));
+//        lampUpperJointZRotate.setTransform(Mat4Transform.rotateAroundZ(-50 * (float) Math.sin(startTime)));
+//        lampHeadJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));
+//        lampHeadJointZRotate.setTransform(Mat4Transform.rotateAroundZ(-50 * (float) Math.sin(startTime)));
+//        lampHeadYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));
+//        lampHeadZRotate.setTransform(Mat4Transform.rotateAroundZ(-5 * (float) Math.sin(startTime)));
         lightBulb.setWorldMatrix(lampHeadName.worldTransform);
         lampRoot.update();
     }

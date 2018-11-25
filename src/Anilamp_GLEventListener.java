@@ -393,10 +393,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         double currentTime = getStartTime();
 //        translateTableLegLT.setTransform(animator.jumpY());
 //        translateTableLegLT.update();
-//        lampTranslate.setTransform(animator.generateRandomJump());
-        testCube.setModelMatrix(animator.generateRandomJump());
-
-        lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.updateRotateDegree(startTime))));
+//        lampTranslate.setTransform(animator.generateRandomTarget());
+        animator.generateRandomTarget();
+        testCube.setModelMatrix(animator.currentTranslateMatrix);
+        animator.updateLowerJointYRotateDegree(startTime);
+        lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.lowerJointCurrentRotateDegree)));
         lampTranslate.setTransform(animator.previousTranslateMatrix);
 //        lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ();
 //        lampUpperJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));

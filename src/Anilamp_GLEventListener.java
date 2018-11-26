@@ -199,6 +199,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         lampRoot = new NameNode("lamp root");
         lampTranslate = new TransformNode("lamp transform", Mat4Transform.translate(0, 0, 0));
+        double lowerPressZInitialDegree = 30;
+        double upperPressZInitialDegree = -75;
 
         /*
         lamp base
@@ -238,7 +240,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         TransformNode lampLowerJointTranslate = new TransformNode("lamp lower joint translate", lampLowerJointMatrix);
         NameNode lampLowerJointName = new NameNode("lamp lower joint");
         Mat4 lampLowerJointYRotateMatrix = Mat4Transform.rotateAroundY(0);
-        Mat4 lampLowerJointZRotateMatrix = Mat4Transform.rotateAroundZ(30);
+        Mat4 lampLowerJointZRotateMatrix = Mat4Transform.rotateAroundZ((float) lowerPressZInitialDegree);
         lampLowerJointYRotate = new TransformNode("lamp lower joint y rotate", lampLowerJointYRotateMatrix);
         lampLowerJointZRotate = new TransformNode("lamp lower joint z rotate", lampLowerJointZRotateMatrix);
         ModelNode lampLowerJointNode = new ModelNode("lamp lower joint", lamp_joint);
@@ -269,7 +271,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         TransformNode lampUpperJointTranslate = new TransformNode("lamp upper joint translate", lampUpperJointMatrix);
         NameNode lampUpperJointName = new NameNode("lamp upper joint");
         Mat4 lampUpperJointYRotateMatrix = Mat4Transform.rotateAroundY(0);
-        Mat4 lampUpperJointZRotateMatrix = Mat4Transform.rotateAroundZ(-75);
+        Mat4 lampUpperJointZRotateMatrix = Mat4Transform.rotateAroundZ((float) upperPressZInitialDegree);
         lampUpperJointYRotate = new TransformNode("lamp upper joint y rotate", lampUpperJointYRotateMatrix);
         lampUpperJointZRotate = new TransformNode("lamp upper joint z rotate", lampUpperJointZRotateMatrix);
         ModelNode lampUpperJointNode = new ModelNode("lamp upper joint", lamp_joint);
@@ -380,7 +382,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /*
         animation
          */
-        animator = new Animator(TABLE_BODY_LENGTH, TABLE_BODY_WIDTH);
+        animator = new Animator(TABLE_BODY_LENGTH, TABLE_BODY_WIDTH, lowerPressZInitialDegree, upperPressZInitialDegree);
     }
 
     public void setAnimationBegin() {
@@ -393,15 +395,16 @@ public class Anilamp_GLEventListener implements GLEventListener {
         double currentTime = getStartTime();
 //        translateTableLegLT.setTransform(animator.jumpY());
 //        translateTableLegLT.update();
-//        lampTranslate.setTransform(animator.generateRandomTarget());
-        animator.generateRandomTarget();
+//        lampTranslate.setTransform(animator.generateRandomTargetAngle());
+        animator.generateRandomTargetAngle();
         testCube.setModelMatrix(animator.currentTranslateMatrix);
         animator.updateLowerJointYRotateDegree(startTime);
-        lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.lowerJointCurrentRotateDegree)));
+        lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.lowerJointYCurrentRotateDegree)));
         lampTranslate.setTransform(animator.previousTranslateMatrix);
-//        lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ();
+        animator.updateJointJumpZRotateDegree();
+        lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ((float) (animator.lowerJointZCurrentRotateDegree)));
 //        lampUpperJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));
-//        lampUpperJointZRotate.setTransform(Mat4Transform.rotateAroundZ(-50 * (float) Math.sin(startTime)));
+        lampUpperJointZRotate.setTransform(Mat4Transform.rotateAroundZ((float) (animator.upperJointZCurrentRotateDegree)));
 //        lampHeadJointYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));
 //        lampHeadJointZRotate.setTransform(Mat4Transform.rotateAroundZ(-50 * (float) Math.sin(startTime)));
 //        lampHeadYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));

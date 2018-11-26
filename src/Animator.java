@@ -10,35 +10,52 @@ public class Animator {
     private Vec3 currentDirection = new Vec3(1, 0 ,0);
     private Vec3 crossProduct;
     public double lowerJointDeltaRotateDegree = 0;
-    public double lowerJointCurrentRotateDegree;
+    public double lowerJointYCurrentRotateDegree;
     public double lowerJointRotateYVelocity = 0;
+    private double lowerJointInitialDegree, upperJointInitialDegree;
+    private double LOWER_PRESS_MAX_DELTA_DEGREE = 60;
+    private double LOWER_STRETCH_MAX_DELTA_DEGREE = 30;
+    private double UPPER_PRESS_MAX_DELTA_DEGREE = 45;
+    private double UPPER_STRETCH_MAX_DELTA_DEGREE = 75;
+    private double lowerPressTargetDegree;
+    private double lowerStretchTargetDegree;
+    public double lowerJointZCurrentRotateDegree;
+    private double lowerJointRotateZVelocity = 1;
+    private double upperPressTargetDegree;
+    private double upperStretchTargetDegree;
+    public double upperJointZCurrentRotateDegree;
     public double tmpMaxVelocity = 0;
     public double rotateDegreeCount = 0;
     public Mat4 previousTranslateMatrix = new Mat4(1);
     public Mat4 currentTranslateMatrix = new Mat4(1);
     public boolean ANIMATION_GENERATION = false;
-    public boolean ANIMATION_PREP_01 = false;
-    public boolean ANIMATION_PREP_02 = false;
+    public boolean ANIMATION_PREP_Z_ROTATE = false;
+    public boolean ANIMATION_PREP_PRESS = false;
+    public boolean ANIMATION_PREP_STRETCH = false;
     public double currentTime;
 
     private double getCurrentSecond() {
         return System.currentTimeMillis() / 1000.0;
     }
 
-    public Animator(float MAX_LENGTH, float MAX_WIDTH) {
+    public Animator(float MAX_LENGTH, float MAX_WIDTH, double lowerJointInitialDegree, double upperJointInitialDegree) {
         this.MAX_LENGTH = MAX_LENGTH;
         this.MAX_WIDTH = MAX_WIDTH;
         this.MAX_DISTANCE = (float) Math.sqrt(Math.pow((double) this.MAX_LENGTH, 2) + Math.pow((double) this.MAX_WIDTH, 2));
+        this.lowerJointInitialDegree = lowerJointInitialDegree;
+        this.upperJointInitialDegree = upperJointInitialDegree;
+        this.lowerJointZCurrentRotateDegree = lowerJointInitialDegree;
+        this.upperJointZCurrentRotateDegree = upperJointInitialDegree;
     }
 
-    public void generateRandomTarget() {
+    public void generateRandomTargetAngle() {
         if (ANIMATION_GENERATION) {
             generateRandomPosition();
             previousTranslateMatrix = currentTranslateMatrix;
             currentTranslateMatrix = Mat4Transform.translate(currentPosition.x, 0, currentPosition.z);
             generateLowerJointYRotateDegree();
             ANIMATION_GENERATION = false;
-            ANIMATION_PREP_01 = true;
+            ANIMATION_PREP_Z_ROTATE = true;
         }
     }
 
@@ -46,6 +63,18 @@ public class Animator {
         double randomX = Math.random() * MAX_LENGTH - MAX_LENGTH / 2;
         double randomZ = Math.random() * MAX_WIDTH - MAX_WIDTH / 2;
         currentPosition = new Vec3((float) randomX, 0, (float) randomZ);
+        generatePressAngle();
+    }
+
+    public void generatePressAngle() {
+        double ratio = Vec3.magnitude(Vec3.subtract(previousPosition, currentPosition)) / MAX_DISTANCE;
+        System.out.println("ratio"  + ratio);
+        lowerPressTargetDegree = LOWER_PRESS_MAX_DELTA_DEGREE * ratio + lowerJointInitialDegree;
+        lowerStretchTargetDegree = lowerJointInitialDegree - LOWER_STRETCH_MAX_DELTA_DEGREE * ratio;
+        upperPressTargetDegree = upperJointInitialDegree - UPPER_PRESS_MAX_DELTA_DEGREE * ratio;
+        upperStretchTargetDegree = UPPER_STRETCH_MAX_DELTA_DEGREE * ratio + upperJointInitialDegree;
+        System.out.println("initial degree" + upperJointInitialDegree);
+        System.out.println("target degree" + upperPressTargetDegree);
     }
 
     public void generateLowerJointYRotateDegree() {
@@ -58,7 +87,6 @@ public class Animator {
             System.out.println("current dir n = " + Vec3.subtract(currentPosition, previousPosition));
             System.out.println("current dir   = " + currentDirection);
             double cosineDegree = Vec3.dotProduct(previousDirection, currentDirection) / (Vec3.magnitude(previousDirection) * Vec3.magnitude(currentDirection));
-//        System.out.println("previous.x > 0?" + (previousDirection.x > 0));
             System.out.println("cosine degree = " + cosineDegree);
             lowerJointDeltaRotateDegree = Math.toDegrees(Math.acos(cosineDegree));
             System.out.println("degree        = " + lowerJointDeltaRotateDegree);
@@ -70,7 +98,7 @@ public class Animator {
     }
 
     public double easeAnimation(double startTime, double delta, double ratio) {
-        double v = 0;
+        double v;
         if (rotateDegreeCount <= delta / 1.98888888888) {
             v = (getCurrentSecond() - startTime) * ratio;
             tmpMaxVelocity = v;
@@ -88,33 +116,69 @@ public class Animator {
     /**
      * this function will be executed 60 times per second so we do not need loop
      * @param startTime
-     * @return
+     * @return void
      */
     public void updateLowerJointYRotateDegree(double startTime) {
-        if (ANIMATION_PREP_01) {
+        if (ANIMATION_PREP_Z_ROTATE) {
 //            System.out.println("start time" + startTime);
             if (rotateDegreeCount <= lowerJointDeltaRotateDegree) {
                 System.out.println("(getCurrentSecond() - startTime) = " + (getCurrentSecond() - startTime));
                 lowerJointRotateYVelocity = easeAnimation(startTime, lowerJointDeltaRotateDegree, 2);
                 if (crossProduct.y >= 0) {
-                    lowerJointCurrentRotateDegree = lowerJointCurrentRotateDegree + lowerJointRotateYVelocity;
+                    lowerJointYCurrentRotateDegree = lowerJointYCurrentRotateDegree + lowerJointRotateYVelocity;
                 } else {
-                    lowerJointCurrentRotateDegree = lowerJointCurrentRotateDegree - lowerJointRotateYVelocity;
+                    lowerJointYCurrentRotateDegree = lowerJointYCurrentRotateDegree - lowerJointRotateYVelocity;
                 }
                 currentTime = getCurrentSecond();
 //                TODO: turning head
             } else {
-                ANIMATION_PREP_01 = false;
+                ANIMATION_PREP_Z_ROTATE = false;
                 rotateDegreeCount = 0;
-                ANIMATION_PREP_02 = true;
+                ANIMATION_PREP_PRESS = true;
             }
-            System.out.println("rotate degree                    =    " + lowerJointCurrentRotateDegree);
+            System.out.println("rotate degree                    =    " + lowerJointYCurrentRotateDegree);
         }
     }
 
-    public void updateJointZRotateDegree() {
-        if (ANIMATION_PREP_02) {
+    public void lowerJointPress() {
+        if (lowerJointZCurrentRotateDegree < lowerPressTargetDegree) {
+            lowerJointZCurrentRotateDegree = lowerJointZCurrentRotateDegree + lowerJointRotateZVelocity;
+        } else {
+            if (ANIMATION_PREP_PRESS) {
+                ANIMATION_PREP_PRESS = false;
+                ANIMATION_PREP_STRETCH = true;
+            }
+        }
+    }
 
+    public void lowerJointStretch() {
+        if (lowerJointZCurrentRotateDegree > lowerStretchTargetDegree) {
+            lowerJointZCurrentRotateDegree = lowerJointZCurrentRotateDegree - lowerJointRotateZVelocity;
+        } else {
+            ANIMATION_PREP_STRETCH = false;
+        }
+    }
+
+    public void upperJointPress() {
+        if (upperJointZCurrentRotateDegree > upperPressTargetDegree) {
+//            System.out.println("small");
+            upperJointZCurrentRotateDegree = upperJointZCurrentRotateDegree - lowerJointRotateZVelocity;
+        }
+    }
+
+    public void upperJointStretch() {
+        if (upperJointInitialDegree < upperStretchTargetDegree) {
+            upperJointZCurrentRotateDegree = upperJointZCurrentRotateDegree + lowerJointRotateZVelocity;
+        }
+    }
+
+    public void updateJointJumpZRotateDegree() {
+        if (ANIMATION_PREP_PRESS) {
+            lowerJointPress();
+            upperJointPress();
+        } else if (ANIMATION_PREP_STRETCH) {
+            lowerJointStretch();
+            upperJointStretch();
         }
     }
 

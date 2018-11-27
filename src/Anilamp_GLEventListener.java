@@ -382,7 +382,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /*
         animation
          */
-        animator = new Animator(TABLE_BODY_LENGTH, TABLE_BODY_WIDTH, lowerPressZInitialDegree, upperPressZInitialDegree);
+        animator = new Animator(TABLE_BODY_LENGTH, TABLE_BODY_WIDTH, lowerPressZInitialDegree, upperPressZInitialDegree, LAMP_BASE_LENGTH);
     }
 
     public void setAnimationBegin() {

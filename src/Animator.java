@@ -9,12 +9,12 @@ public class Animator {
     private Vec3 previousDirection = new Vec3(1, 0, 0);
     private Vec3 currentDirection = new Vec3(1, 0 ,0);
     private Vec3 crossProduct;
-    public double lowerJointDeltaRotateDegree = 0;
+    private double lowerJointDeltaRotateDegree = 0;
     public double lowerJointYCurrentRotateDegree;
-    public double lowerJointRotateYVelocity = 0;
+    private double lowerJointRotateYVelocity = 0;
     private double lowerJointInitialDegree, upperJointInitialDegree;
     private double LOWER_PRESS_MAX_DELTA_DEGREE = 60;
-    private double LOWER_STRETCH_MAX_DELTA_DEGREE = 30;
+    private double LOWER_STRETCH_MAX_DELTA_DEGREE = 45;
     private double UPPER_PRESS_MAX_DELTA_DEGREE = 60;
     private double UPPER_STRETCH_MAX_DELTA_DEGREE = 75;
     private double lowerPressTargetDegree;
@@ -31,7 +31,6 @@ public class Animator {
     private double rotateZStretchDegreeCount = 0;
     private double ratio;
     private double jumpHorizonVelocity = 0.05;
-    private double jumpVerticalVelocity = 1;
     public Mat4 previousTranslateMatrix = new Mat4(1);
     public Mat4 currentTranslateMatrix = new Mat4(1);
     public boolean ANIMATION_GENERATION = false;
@@ -39,6 +38,8 @@ public class Animator {
     public boolean ANIMATION_PREP_PRESS = false;
     public boolean ANIMATION_PREP_STRETCH = false;
     public boolean ANIMATION_JUMP = false;
+    public boolean ANIMATION_POST_PRESS = false;
+    public boolean ANIMATION_POST_STRETCH = false;
     public double startJumpTime;
     public double startPressTime;
     public double startStretchTime;
@@ -174,13 +175,18 @@ public class Animator {
     public void upperJointPress() {
         if (upperJointZCurrentRotateDegree > upperPressTargetDegree) {
             upperJointZCurrentRotateDegree = upperJointZCurrentRotateDegree - lowerJointRotateZVelocity;
+        } else {
+            if (ANIMATION_POST_PRESS) {
+                ANIMATION_POST_PRESS = false;
+                ANIMATION_POST_STRETCH = true;
+            }
         }
     }
 
     public void upperJointStretch() {
         if (upperJointZCurrentRotateDegree < upperStretchTargetDegree) {
             upperJointZCurrentRotateDegree = upperJointZCurrentRotateDegree + lowerJointRotateZVelocity;
-            if (!ANIMATION_JUMP) {
+            if (!ANIMATION_JUMP && ANIMATION_PREP_STRETCH) {
                 if (upperJointZCurrentRotateDegree >= upperJointInitialDegree) {
                     ANIMATION_JUMP = true;
 //                    ANIMATION_PREP_STRETCH = false;
@@ -188,8 +194,12 @@ public class Animator {
                 }
             }
         } else {
-            ANIMATION_PREP_STRETCH = false;
-            rotateYDegreeCount = 0;
+            if (ANIMATION_PREP_STRETCH) {
+                ANIMATION_PREP_STRETCH = false;
+                rotateYDegreeCount = 0;
+            } else if (ANIMATION_POST_STRETCH) {
+                ANIMATION_POST_STRETCH = false;
+            }
         }
     }
 
@@ -199,6 +209,16 @@ public class Animator {
             upperJointPress();
         } else if (ANIMATION_PREP_STRETCH) {
             lowerJointStretch();
+            upperJointStretch();
+        } else if (ANIMATION_POST_PRESS) {
+            lowerPressTargetDegree = 0.6 * LOWER_PRESS_MAX_DELTA_DEGREE * ratio + lowerJointInitialDegree;
+            lowerJointPress();
+            upperPressTargetDegree = upperJointInitialDegree - UPPER_PRESS_MAX_DELTA_DEGREE * ratio * 0.8;
+            upperJointPress();
+        } else if (ANIMATION_POST_STRETCH) {
+            lowerStretchTargetDegree = lowerJointInitialDegree;
+            lowerJointStretch();
+            upperStretchTargetDegree = upperJointInitialDegree;
             upperJointStretch();
         }
     }
@@ -220,6 +240,7 @@ public class Animator {
             if (previousPosition.y == 0 && distance >= MAX_DISTANCE * ratio) {
                 System.out.println("stop");
                 ANIMATION_JUMP = false;
+                ANIMATION_POST_PRESS = true;
                 previousPosition = currentPosition;
                 previousDirection = currentDirection;
             }

@@ -21,6 +21,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
             lampHeadYRotate, lampHeadZRotate;
     private Animator animator;
     private double startTime = 0;
+    public boolean jumpButtonEnable = true;
 
     private double getStartSecond() {
         return System.currentTimeMillis() / 1000.0;
@@ -165,10 +166,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
         NameNode tableLegRightBtm = new NameNode("table let right bottom");
         Mat4 rbTranslateMatrix = Mat4Transform.translate(TABLE_BODY_LENGTH / 1.6f, 0, TABLE_BODY_WIDTH / 2);
         TransformNode rbTranslate = new TransformNode("table leg right bottom translate", rbTranslateMatrix);
-
-
-        Mat4 lt = Mat4Transform.scale(1f, 1f, 0.1f);
-        lt = Mat4.multiply(Mat4Transform.translate(0, 0f, 0), lt);
 
         /*
         table scene graph
@@ -372,9 +369,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
          * test/reference cube
          */
         Mat4 testCube1ModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
-        Mat4 testCube2ModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
         testCube1 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, tableBodyMesh, textureId0);
-        testCube2 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, tableBodyMesh, textureId0);
 
         /*
         animation
@@ -384,7 +379,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     public void setAnimationBegin() {
         animator.ANIMATION_GENERATION = true;
-//        System.out.println(animator.ANIMATION_GENERATION);
+        jumpButtonEnable = false;
         startTime = getStartSecond();
     }
 

@@ -27,16 +27,9 @@ public class Animator {
     public double upperJointZCurrentRotateDegree;
     private double tmpMaxVelocity = 0;
     private double rotateYDegreeCount = 0;
-    private double lowerRotateZPressDegreeCount = 0;
-    private double upperRotateZPressDegreeCount = 0;
-    private double lowerRotateZStretchDegreeCount = 0;
-    private double upperRotateZStretchDegreeCount = 0;
     private double ratio;
     private double postLowerPressRatio = 0.6;
-    private double postLowerPressDeltaDegree;
     private double postLowerStretchRatio = 0.8;
-    private double postLowerStretchDeltaDegree;
-    private double postUpperPressDeltaDegree;
     private double jumpHorizonVelocity = 0.24;
     public Mat4 previousTranslateMatrix = new Mat4(1);
     public Mat4 currentTranslateMatrix = new Mat4(1);
@@ -47,9 +40,22 @@ public class Animator {
     public boolean ANIMATION_JUMP = false;
     public boolean ANIMATION_POST_PRESS = false;
     public boolean ANIMATION_POST_STRETCH = false;
+    public boolean ANIMATION_END = false;
     public double startJumpTime;
     public double startPressTime;
     public double startStretchTime;
+
+    /**
+     * some variables that never used
+     */
+    private double lowerRotateZPressDegreeCount = 0;
+    private double upperRotateZPressDegreeCount = 0;
+    private double lowerRotateZStretchDegreeCount = 0;
+    private double upperRotateZStretchDegreeCount = 0;
+    private double postLowerPressDeltaDegree;
+    private double postUpperPressDeltaDegree;
+    private double postLowerStretchDeltaDegree;
+    private double postUpperStretchDeltaDegree;
 
     private double getCurrentSecond() {
         return System.currentTimeMillis() / 1000.0;
@@ -69,7 +75,6 @@ public class Animator {
     public void generateRandomTargetAngle() {
         if (ANIMATION_GENERATION) {
             generateRandomPosition();
-//            previousTranslateMatrix = currentTranslateMatrix;
             currentTranslateMatrix = Mat4Transform.translate(currentPosition.x, 0, currentPosition.z);
             generateLowerJointYRotateDegree();
             ANIMATION_GENERATION = false;
@@ -86,11 +91,11 @@ public class Animator {
 
     public void generateLowerJointYRotateDegree() {
         if (ANIMATION_GENERATION) {
+            ANIMATION_END = false;
             System.out.println("previous pos  = " + previousPosition);
             System.out.println("current pos   = " + currentPosition);
 //            System.out.println("previous dir  = " + previousDirection);
             currentDirection = Vec3.normalize(Vec3.subtract(currentPosition, previousPosition));
-//            System.out.println("current dir n = " + Vec3.subtract(currentPosition, previousPosition));
             System.out.println("current dir   = " + currentDirection);
             double cosineDegree = Vec3.dotProduct(previousDirection, currentDirection);
 //            System.out.println("cosine degree = " + cosineDegree);
@@ -134,7 +139,6 @@ public class Animator {
             if (rotateYDegreeCount <= lowerJointDeltaRotateDegree) {
                 lowerJointRotateYVelocity = easeAnimation(startTime, rotateYDegreeCount, lowerJointDeltaRotateDegree, 5);
                 rotateYDegreeCount = rotateYDegreeCount + lowerJointRotateYVelocity;
-//                System.out.println("rotate y velocity                        = " + lowerJointRotateYVelocity);
                 if (crossProduct.y >= 0) {
                     lowerJointYCurrentRotateDegree = lowerJointYCurrentRotateDegree + lowerJointRotateYVelocity;
                 } else {
@@ -147,23 +151,23 @@ public class Animator {
                 ANIMATION_PREP_PRESS = true;
                 startPressTime = getCurrentSecond();
             }
-//            System.out.println("rotate y degree                          = " + lowerJointYCurrentRotateDegree);
         }
     }
 
     public void lowerJointPress() {
         if (lowerJointZCurrentRotateDegree < lowerPressTargetDegree) {
-//            if (ANIMATION_PREP_PRESS) {
-//                lowerJointRotateZVelocity = easeAnimation(startPressTime, lowerRotateZPressDegreeCount,LOWER_PRESS_MAX_DELTA_DEGREE * ratio, 2);
-//
-//            } else if (ANIMATION_POST_PRESS) {
-//                lowerJointRotateZVelocity = easeAnimation(startPressTime, lowerRotateZPressDegreeCount,postLowerPressDeltaDegree, 2);
-//            }
-//            lowerRotateZPressDegreeCount = lowerRotateZPressDegreeCount + lowerJointRotateZVelocity;
+            /**
+             * ease in/out
+             * not used but keep codes in comments
+             *             if (ANIMATION_PREP_PRESS) {
+             *                 lowerJointRotateZVelocity = easeAnimation(startPressTime, lowerRotateZPressDegreeCount,LOWER_PRESS_MAX_DELTA_DEGREE * ratio, 2);
+             *
+             *             } else if (ANIMATION_POST_PRESS) {
+             *                 lowerJointRotateZVelocity = easeAnimation(startPressTime, lowerRotateZPressDegreeCount,postLowerPressDeltaDegree, 2);
+             *             }
+             *             lowerRotateZPressDegreeCount = lowerRotateZPressDegreeCount + lowerJointRotateZVelocity;
+             */
             lowerJointZCurrentRotateDegree = lowerJointZCurrentRotateDegree + lowerJointRotateZVelocity;
-//            System.out.println("rotate z press velocity                  = " + lowerJointRotateZVelocity);
-//            System.out.println("rotate z press degree                    = " + lowerJointZCurrentRotateDegree);
-//            System.out.println("count                                    = " + lowerRotateZPressDegreeCount);
         } else {
             if (ANIMATION_PREP_PRESS) {
                 ANIMATION_PREP_PRESS = false;
@@ -177,15 +181,17 @@ public class Animator {
 
     public void lowerJointStretch() {
         if (lowerJointZCurrentRotateDegree > lowerStretchTargetDegree) {
-//            if (ANIMATION_PREP_STRETCH) {
-//                lowerJointRotateZVelocity = easeAnimation(startStretchTime, lowerRotateZStretchDegreeCount,LOWER_STRETCH_MAX_DELTA_DEGREE * ratio, 2);
-////                lowerJointRotateZVelocity = 1;
-//
-//            } else if (ANIMATION_POST_STRETCH) {
-//                lowerJointRotateZVelocity = easeAnimation(startStretchTime, lowerRotateZPressDegreeCount, postLowerStretchDeltaDegree, 2);
-////                lowerJointRotateZVelocity = 1;
-//            }
-//            lowerRotateZStretchDegreeCount = lowerRotateZStretchDegreeCount + lowerJointRotateZVelocity;
+            /**
+             * ease in/out
+             * not used but keep codes in comments
+             *             if (ANIMATION_PREP_STRETCH) {
+             *                 lowerJointRotateZVelocity = easeAnimation(startStretchTime, lowerRotateZStretchDegreeCount,LOWER_STRETCH_MAX_DELTA_DEGREE * ratio, 2);
+             *
+             *             } else if (ANIMATION_POST_STRETCH) {
+             *                 lowerJointRotateZVelocity = easeAnimation(startStretchTime, lowerRotateZPressDegreeCount, postLowerStretchDeltaDegree, 2);
+             *             }
+             *             lowerRotateZStretchDegreeCount = lowerRotateZStretchDegreeCount + lowerJointRotateZVelocity;
+             */
             lowerJointZCurrentRotateDegree = lowerJointZCurrentRotateDegree - lowerJointRotateZVelocity;
         } else {
             lowerRotateZPressDegreeCount = 0;
@@ -195,12 +201,16 @@ public class Animator {
 
     public void upperJointPress() {
         if (upperJointZCurrentRotateDegree > upperPressTargetDegree) {
-//            if (ANIMATION_PREP_PRESS) {
-//                upperJointRotateZVelocity = easeAnimation(startPressTime, upperRotateZPressDegreeCount, UPPER_PRESS_MAX_DELTA_DEGREE * ratio, 2);
-//            } else if (ANIMATION_POST_PRESS) {
-//                upperJointRotateZVelocity = easeAnimation(startPressTime, upperRotateZPressDegreeCount, postUpperPressDeltaDegree, 2);
-//            }
-//            upperRotateZPressDegreeCount = upperRotateZPressDegreeCount + upperJointRotateZVelocity;
+            /**
+             * ease in/out
+             * not used but keep codes in comments
+             *             if (ANIMATION_PREP_PRESS) {
+             *                 upperJointRotateZVelocity = easeAnimation(startPressTime, upperRotateZPressDegreeCount, UPPER_PRESS_MAX_DELTA_DEGREE * ratio, 2);
+             *             } else if (ANIMATION_POST_PRESS) {
+             *                 upperJointRotateZVelocity = easeAnimation(startPressTime, upperRotateZPressDegreeCount, postUpperPressDeltaDegree, 2);
+             *             }
+             *             upperRotateZPressDegreeCount = upperRotateZPressDegreeCount + upperJointRotateZVelocity;
+             */
             upperJointZCurrentRotateDegree = upperJointZCurrentRotateDegree - upperJointRotateZVelocity;
         } else {
             if (ANIMATION_POST_PRESS) {
@@ -216,22 +226,28 @@ public class Animator {
     public void upperJointStretch() {
         if (upperJointZCurrentRotateDegree < upperStretchTargetDegree) {
             if (ANIMATION_PREP_STRETCH) {
-//                System.out.println("prep stretch");
-//                upperJointRotateZVelocity = easeAnimation(startStretchTime, upperRotateZStretchDegreeCount, UPPER_STRETCH_MAX_DELTA_DEGREE * ratio, 2);
+                /**
+                 * ease in/out
+                 * not used but keep codes in comments
+                 *                 System.out.println("prep stretch");
+                 *                 upperJointRotateZVelocity = easeAnimation(startStretchTime, upperRotateZStretchDegreeCount, UPPER_STRETCH_MAX_DELTA_DEGREE * ratio, 2);
+                 */
                 upperJointRotateZVelocity = 2.4;
             } else if (ANIMATION_POST_STRETCH) {
-//                System.out.println("post stretch");
-//                upperJointRotateZVelocity = easeAnimation(startStretchTime, upperRotateZStretchDegreeCount, postUpperPressDeltaDegree, 2);
-//                upperRotateZStretchDegreeCount = upperRotateZStretchDegreeCount + upperJointRotateZVelocity;
+                /**
+                 * ease in/out
+                 * not used but keep codes in comments
+                 *                 System.out.println("post stretch");
+                 *                 upperJointRotateZVelocity = easeAnimation(startStretchTime, upperRotateZStretchDegreeCount, postUpperPressDeltaDegree, 2);
+                 *                 upperRotateZStretchDegreeCount = upperRotateZStretchDegreeCount + upperJointRotateZVelocity;
+                 */
                 upperJointRotateZVelocity = 4;
             }
-//            System.out.println("upper rotate z stretch degree count" + upperRotateZStretchDegreeCount);
             upperJointZCurrentRotateDegree = upperJointZCurrentRotateDegree + upperJointRotateZVelocity;
             if (!ANIMATION_JUMP && ANIMATION_PREP_STRETCH) {
                 System.out.println("jump!");
                 if (upperJointZCurrentRotateDegree >= upperJointInitialDegree) {
                     ANIMATION_JUMP = true;
-//                    ANIMATION_PREP_STRETCH = false;
                     startJumpTime = getCurrentSecond();
                 }
             }
@@ -243,6 +259,7 @@ public class Animator {
                 upperRotateZStretchDegreeCount = 0;
             } else if (ANIMATION_POST_STRETCH) {
                 ANIMATION_POST_STRETCH = false;
+                ANIMATION_END = true;
             }
         }
     }

@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Handler;
 
 public class Anilamp extends JFrame implements ActionListener {
     private static final int WIDTH = 1920;
@@ -18,6 +19,7 @@ public class Anilamp extends JFrame implements ActionListener {
     private static Anilamp_GLEventListener glEventListener;
     private final FPSAnimator fpsAnimator;
     private Camera camera;
+    public JButton jumpButton;
 
     public Anilamp(String textForTitleBar) {
         super(textForTitleBar);
@@ -39,9 +41,9 @@ public class Anilamp extends JFrame implements ActionListener {
         jMenuBar.add(fileMenu);
 
         JPanel jPanel = new JPanel();
-        JButton jButton = new JButton("Jump");
-        jButton.addActionListener(this);
-        jPanel.add(jButton);
+        jumpButton = new JButton("Jump");
+        jumpButton.addActionListener(this);
+        jPanel.add(jumpButton);
         this.add(jPanel, BorderLayout.SOUTH);
 
         addWindowListener(new WindowAdapter() {
@@ -67,8 +69,17 @@ public class Anilamp extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        int delay = 3000;
+        Timer timer = new Timer(delay, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jumpButton.setEnabled(true);
+            }
+        });
+        timer.setRepeats(false);
         if (e.getActionCommand().equalsIgnoreCase("Jump")) {
             glEventListener.setAnimationBegin();
+            jumpButton.setEnabled(glEventListener.jumpButtonEnable);
+            timer.start();
         }
     }
 }

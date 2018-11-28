@@ -10,7 +10,10 @@ public class MovingLight {
     private Material material;
     public Shader shader;
     private Camera camera;
-    private Vec3 position;
+    private Vec3 localPosition;
+    private Vec3 worldPosition;
+    private Vec3 localDirection;
+    private Vec3 worldDirection;
     private Mat4 worldMatrix;
     private int[] vertexBufferId = new int[1];
     private int[] vertexArrayId = new int[1];
@@ -48,13 +51,14 @@ public class MovingLight {
     private int vertexStride = 3;
     private int vertexXYZFloats = 3;
 
-    public MovingLight(GL3 gl3, Mat4 worldMatrix) {
+    public MovingLight(GL3 gl3, Vec3 localPosition, Mat4 worldMatrix, Vec3 localDirection) {
         material = new Material();
         material.setAmbient(0.5f, 0.5f, 0.5f);
         material.setDiffuse(0.8f, 0.8f, 0.8f);
         material.setSpecular(0.8f, 0.8f, 0.8f);
-        position = new Vec3(3f,2f,1f);
+        this.localPosition = localPosition;
         this.worldMatrix = worldMatrix;
+        this.localDirection = localDirection;
         shader = new Shader(gl3, "shader/vs_light_01.txt", "shader/fs_light_01.txt");
         fillBuffers(gl3);
     }
@@ -81,24 +85,35 @@ public class MovingLight {
         gl3.glBindVertexArray(0);
     }
 
-    public void setPosition(Vec3 v) {
-        position.x = v.x;
-        position.y = v.y;
-        position.z = v.z;
+    public void setWorldPosition() {
+        Vec4 position = new Vec4(this.localPosition, 1);
+        Vec4 result = Vec4.multiplyMatrix(this.worldMatrix, position);
+        this.worldPosition = result.toVec3();
     }
 
-    public void setPosition(float x, float y, float z) {
-        position.x = x;
-        position.y = y;
-        position.z = z;
+    public Vec3 getWorldPosition() {
+        return worldPosition;
     }
 
     public void setWorldMatrix(Mat4 worldMatrix) {
         this.worldMatrix = worldMatrix;
     }
 
-    public Vec3 getPosition() {
-        return position;
+    public Mat4 getWorldMatrix() {
+        return worldMatrix;
+    }
+
+    public void setWorldDirection() {
+//        Mat4 matrix = Mat4Transform.rotateAroundZ(180);
+//        matrix = Mat4.multiply(matrix, this.worldMatrix);
+        Vec4 result = Vec4.multiplyMatrix(this.worldMatrix, new Vec4(localDirection, 0));
+        result.x = result.x * 0.285f;
+        result.z = result.z * -0.01f;
+        this.worldDirection = result.toVec3();
+    }
+
+    public Vec3 getWorldDirection() {
+        return worldDirection;
     }
 
     public void setMaterial(Material material) {
@@ -120,6 +135,8 @@ public class MovingLight {
     }
 
     public void render(GL3 gl3) {
+        setWorldPosition();
+        setWorldDirection();
         Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldMatrix));
 //        System.out.println(worldMatrix.toString());
 //        System.out.println(mvpMatrix.toString());

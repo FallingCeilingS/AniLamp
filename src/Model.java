@@ -5,6 +5,7 @@ import gmaths.Mat4;
 public class Model {
     private Camera camera;
     private Light light1, light2;
+    private MovingLight movingLight;
     private Shader shader;
     private Material material;
     private Mat4 modelMatrix;
@@ -14,12 +15,13 @@ public class Model {
     private int[] textureId2;
 
     public Model(
-            GL3 gl3, Camera camera, Light light1, Light light2, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
+            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
             int[] textureId1, int[] textureId2
     ) {
         this.camera = camera;
         this.light1 = light1;
         this.light2 = light2;
+        this.movingLight = movingLight;
         this.shader = shader;
         this.material = material;
         this.modelMatrix = modelMatrix;
@@ -29,16 +31,16 @@ public class Model {
     }
 
     public Model(
-            GL3 gl3, Camera camera, Light light1, Light light2, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
+            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
             int[] textureId1
     ) {
-        this(gl3, camera, light1, light2, shader, material, modelMatrix, mesh, textureId1, null);
+        this(gl3, camera, light1, light2, movingLight, shader, material, modelMatrix, mesh, textureId1, null);
     }
 
     public Model(
-            GL3 gl3, Camera camera, Light light1, Light light2, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh
+            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh
     ) {
-        this(gl3, camera, light1, light2, shader, material, modelMatrix, mesh, null, null);
+        this(gl3, camera, light1, light2, movingLight, shader, material, modelMatrix, mesh, null, null);
     }
 
     public void setCamera(Camera camera) {
@@ -87,6 +89,16 @@ public class Model {
         shader.setVec3(gl3, "light2.ambient", light2.getMaterial().getAmbient());
         shader.setVec3(gl3, "light2.diffuse", light2.getMaterial().getDiffuse());
         shader.setVec3(gl3, "light2.specular", light2.getMaterial().getSpecular());
+        shader.setVec3(gl3, "lightBulb.position", movingLight.getWorldPosition());
+        shader.setVec3(gl3, "lightBulb.direction", movingLight.getWorldDirection());
+        shader.setVec3(gl3, "lightBulb.ambient", movingLight.getMaterial().getAmbient());
+        shader.setVec3(gl3, "lightBulb.diffuse", movingLight.getMaterial().getDiffuse());
+        shader.setVec3(gl3, "lightBulb.specular", movingLight.getMaterial().getSpecular());
+        shader.setFloat(gl3, "lightBulb.constant", 1.0f);
+        shader.setFloat(gl3, "lightBulb.linear", 0.09f);
+        shader.setFloat(gl3, "lightBulb.quadratic", 0.032f);
+        shader.setFloat(gl3, "lightBulb.cutOff", (float) Math.cos(Math.toRadians(12.5)));
+        shader.setFloat(gl3, "lightBulb.outerCutOff", (float) Math.cos(Math.toRadians(12.5)));
         shader.setVec3(gl3, "material.ambient", material.getAmbient());
         shader.setVec3(gl3, "material.diffuse", material.getDiffuse());
         shader.setVec3(gl3, "material.specular", material.getSpecular());

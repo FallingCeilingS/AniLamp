@@ -25,6 +25,15 @@ public final class Vec4 {
         this.w = w;
     }
 
+    public static Vec4 multiplyMatrix(Mat4 matrix, Vec4 v) {
+        Vec4 result = new Vec4();
+        result.x = matrix.values[0][0] * v.x + matrix.values[0][1] * v.y + matrix.values[0][2] * v.z + matrix.values[0][3] * v.w;
+        result.y = matrix.values[1][0] * v.x + matrix.values[1][0] * v.y + matrix.values[1][2] * v.z + matrix.values[1][3] * v.w;
+        result.z = matrix.values[2][0] * v.x + matrix.values[2][0] * v.y + matrix.values[2][2] * v.z + matrix.values[2][3] * v.w;
+        result.w = matrix.values[3][0] * v.x + matrix.values[3][0] * v.y + matrix.values[3][2] * v.z + matrix.values[3][3] * v.w;
+        return result;
+    }
+
     public Vec3 toVec3() {
         return new Vec3(x, y, z);
     }

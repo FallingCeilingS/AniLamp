@@ -8,13 +8,13 @@ import gmaths.Vec3;
 
 public class Anilamp_GLEventListener implements GLEventListener {
     private Camera camera;
-    private Model floor, testCube;
+    private Model floor, testCube1, testCube2;
     private Light light1, light2;
-    private MovingLight movingLight, lightBulb;
+    private MovingLight lightBulb;
+    private Mat4 lightBulbSelfTranslate;
     private SGNode tableRoot, lampRoot;
-    private ModelNode tableLegLT;
     private NameNode lampHeadName;
-    private TransformNode translateTableLegLT, lampTranslate,
+    private TransformNode lampTranslate,
             lampLowerJointYRotate, lampLowerJointZRotate,
             lampUpperJointYRotate, lampUpperJointZRotate,
             lampHeadJointYRotate, lampHeadJointZRotate,
@@ -84,6 +84,17 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light2.setCamera(camera);
         light2.setPosition(new Vec3(-3f,2f,1f));
 
+        /*
+        light bulb
+         */
+        Vec3 lightBulbLocalPosition = new Vec3(0, -0.5f, 0);
+        lightBulbSelfTranslate = Mat4Transform.translate(new Vec3(0, -0.5f, 0));
+        Vec3 lightBulbLocalDirection = new Vec3(0f, -1f, 0f);
+        lightBulb = new MovingLight(gl3, lightBulbLocalPosition, lightBulbSelfTranslate, lightBulbLocalDirection);
+        lightBulb.setWorldPosition();
+        lightBulb.setWorldDirection();
+        lightBulb.setCamera(camera);
+
         /**
          * floor
          */
@@ -98,7 +109,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
         Mat4 floorModelMatrix = Mat4Transform.scale(40f,1f,40);
         floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, floor_Y, 0), floorModelMatrix);
-        floor = new Model(gl3, camera, light1, light2, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId0);
+        floor = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId0);
 
         /**
          * table
@@ -113,13 +124,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float TABLE_BODY_WIDTH = 10;
         float TABLE_BODY_HEIGHT = 0.4f;
         Mesh tableBodyMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt");
         Material tableBodyMaterial = new Material(
                 new Vec3(1.0f, 0.5f, 0.5f),
                 new Vec3(0.5f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model table_body = new Model(gl3, camera, light1, light2, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
+        Model table_body = new Model(gl3, camera, light1, light2, lightBulb, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
         Mat4 tableBodyModelMatrix = Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH);
         TransformNode tableBodyScale = new TransformNode("table body transform", tableBodyModelMatrix);
 //        System.out.println("tableBodyTranslateNode\n" + tableBodyTranslate.worldTransform.toString());
@@ -133,7 +144,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float TABLE_LEG_WIDTH = TABLE_LEG_LENGTH;
         float TABLE_LEG_HEIGHT = 8;
         Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Model table_leg = new Model(gl3, camera, light1, light2, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh);
+        Model table_leg = new Model(gl3, camera, light1, light2, lightBulb, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh);
         ModelNode tableLeg_LT_Node = new ModelNode("table leg", table_leg);
         ModelNode tableLeg_LB_Node = new ModelNode("table leg", table_leg);
         ModelNode tableLeg_RT_Node = new ModelNode("table leg", table_leg);
@@ -158,8 +169,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
         Mat4 lt = Mat4Transform.scale(1f, 1f, 0.1f);
         lt = Mat4.multiply(Mat4Transform.translate(0, 0f, 0), lt);
-        translateTableLegLT = new TransformNode("transform table lt", lt);
-        tableLegLT = new ModelNode("table leg lt", floor);
 
         /*
         table scene graph
@@ -181,18 +190,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
                     tableLegTransform.addChild(tableLegRightBtm);
                         tableLegRightBtm.addChild(rbTranslate);
                             rbTranslate.addChild(tableLeg_RB_Node);
-                tableBodyName.addChild(translateTableLegLT);
-                    translateTableLegLT.addChild(tableLegLT);
 
         tableRoot.update();
 //        tableBody.print(0, false);
 //        System.out.println(tableLegLT.worldTransform.toString());
-
-        Mat4 modelMatrix2 = new Mat4(1);
-        modelMatrix2 = Mat4.multiply(Mat4Transform.scale(4f, 4f, 4f), modelMatrix2);
-        Mat4 worldT = Mat4.multiply(tableLegLT.worldTransform, modelMatrix2);
-        movingLight = new MovingLight(gl3, worldT);
-        movingLight.setCamera(camera);
 
         /**
          * lamp
@@ -215,7 +216,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_base = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh);
+        Model lamp_base = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh);
         Mat4 lampBaseModelMatrix = Mat4Transform.scale(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
         TransformNode lampBaseScale = new TransformNode("lamp base scale", lampBaseModelMatrix);
         NameNode lampBaseName = new NameNode("lamp base");
@@ -224,12 +225,12 @@ public class Anilamp_GLEventListener implements GLEventListener {
         ModelNode lampBaseNode_1 = new ModelNode("lamp base 1", lamp_base);
         ModelNode lampBaseNode_2 = new ModelNode("lamp base 2", lamp_base);
 
-        /*
-        lamp joints
+        /**
+         *lamp joints
          */
         float LAMP_JOINT_DIAMETER = 0.6f;
         Mesh lampJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Model lamp_joint = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampJointMesh);
+        Model lamp_joint = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial, new Mat4(1), lampJointMesh);
         Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
         TransformNode lampJointScale = new TransformNode("lamp joint scale", lampJointModelMatrix);
 
@@ -252,7 +253,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_TAIL_WIDTH = LAMP_TAIL_LENGTH;
         float LAMP_TAIL_HEIGHT = 3.5f;
         Mesh lampTailMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Model lamp_tail = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampTailMesh);
+        Model lamp_tail = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial, new Mat4(1), lampTailMesh);
         Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_LENGTH, LAMP_TAIL_HEIGHT, LAMP_TAIL_WIDTH);
         TransformNode lampTailScale = new TransformNode("lamp tail scale", lampTailModelMatrix);
 
@@ -291,9 +292,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_HEAD_JOINT_DIAMETER = 0.65f;
         float LAMP_HEAD_XZ_SCALE = 2.8f;
         float LAMP_HEAD_Y_SCALE = 0.8f;
-        Model head_joint = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial,new Mat4(1), lampJointMesh);
+        Model head_joint = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial,new Mat4(1), lampJointMesh);
         Mesh lampHeadMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Model lamp_head = new Model(gl3, camera, light1, light2, lampBaseShader, lampBaseMaterial, new Mat4(1), lampHeadMesh);
+        Model lamp_head = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial, new Mat4(1), lampHeadMesh);
 
         /*
         lamp head joint
@@ -367,17 +368,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
 //        print scene graph nodes
         lampRoot.print(0, false);
 
-        /*
-        light bulb
-         */
-        lightBulb = new MovingLight(gl3, lampHeadNode.worldTransform);
-        lightBulb.setCamera(camera);
-
         /**
          * test/reference cube
          */
-        Mat4 testCubeModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
-        testCube = new Model(gl3, camera, light1, light2, floorShader, floorMaterial, testCubeModelMatrix, tableBodyMesh, textureId0);
+        Mat4 testCube1ModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
+        Mat4 testCube2ModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
+        testCube1 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, tableBodyMesh, textureId0);
+        testCube2 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, tableBodyMesh, textureId0);
 
         /*
         animation
@@ -397,7 +394,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 //        translateTableLegLT.update();
 //        lampTranslate.setTransform(animator.generateRandomTargetAngle());
         animator.generateRandomTargetAngle();
-        testCube.setModelMatrix(animator.currentTranslateMatrix);
+        testCube1.setModelMatrix(animator.currentTranslateMatrix);
         animator.updateLowerJointYRotateDegree(startTime);
         lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.lowerJointYCurrentRotateDegree)));
         animator.updateJointJumpZRotateDegree();
@@ -410,7 +407,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
 //        lampHeadJointZRotate.setTransform(Mat4Transform.rotateAroundZ(-50 * (float) Math.sin(startTime)));
 //        lampHeadYRotate.setTransform(Mat4Transform.rotateAroundY(180 * (float) Math.sin(startTime)));
 //        lampHeadZRotate.setTransform(Mat4Transform.rotateAroundZ(-5 * (float) Math.sin(startTime)));
-        lightBulb.setWorldMatrix(lampHeadName.worldTransform);
+        lightBulb.setWorldMatrix(Mat4.multiply(lampHeadName.worldTransform, lightBulbSelfTranslate));
+        System.out.println("light bulb world position" + lightBulb.getWorldPosition());
+        System.out.println("light bulb world direction" + lightBulb.getWorldDirection());
         lampRoot.update();
     }
 
@@ -421,12 +420,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         floor.render(gl3);
         tableRoot.draw(gl3);
         updateMotion();
-        movingLight.setWorldMatrix(tableLegLT.worldTransform);
-//        movingLight.render(gl3);
 //        System.out.println(lampLowerJointZRotate.worldTransform);
 //        lampLowerJointZRotate.setTransform(lampLowerJointZRotate.worldTransform);
         lampRoot.draw(gl3);
         lightBulb.render(gl3);
-        testCube.render(gl3);
+        testCube1.render(gl3);
     }
 }

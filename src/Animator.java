@@ -161,9 +161,9 @@ public class Animator {
 //            }
 //            lowerRotateZPressDegreeCount = lowerRotateZPressDegreeCount + lowerJointRotateZVelocity;
             lowerJointZCurrentRotateDegree = lowerJointZCurrentRotateDegree + lowerJointRotateZVelocity;
-            System.out.println("rotate z press velocity                  = " + lowerJointRotateZVelocity);
-            System.out.println("rotate z press degree                    = " + lowerJointZCurrentRotateDegree);
-            System.out.println("count                                    = " + lowerRotateZPressDegreeCount);
+//            System.out.println("rotate z press velocity                  = " + lowerJointRotateZVelocity);
+//            System.out.println("rotate z press degree                    = " + lowerJointZCurrentRotateDegree);
+//            System.out.println("count                                    = " + lowerRotateZPressDegreeCount);
         } else {
             if (ANIMATION_PREP_PRESS) {
                 ANIMATION_PREP_PRESS = false;
@@ -274,7 +274,7 @@ public class Animator {
             if (previousPosition.y <= 0) {
                 previousPosition.y = 0;
             }
-            System.out.println("previous pos update" + previousPosition);
+//            System.out.println("previous pos update" + previousPosition);
             previousTranslateMatrix = Mat4Transform.translate(new Vec3(previousPosition));
 //            System.out.println("current time = " + startJumpTime);
 //            System.out.println("time         = " + (getCurrentSecond() - startJumpTime));

@@ -2,7 +2,7 @@ package gmaths;
 
 public class Mat4 {   // row column formulation
 
-    private float[][] values;
+    public float[][] values;
 
     public Mat4() {
         this(0);

@@ -95,13 +95,13 @@ void main() {
     diffuseBulb *= attenuation * intensity;
     specularBulb *= attenuation * intensity;
 
-    // vec3 ambient = ambientParallel + ambientBulb;
-    // vec3 diffuse = diffuseParallel + diffuseBulb;
-    // vec3 specular = specularParallel + specularBulb;
+    vec3 ambient = ambientParallel + ambientBulb;
+    vec3 diffuse = diffuseParallel + diffuseBulb;
+    vec3 specular = specularParallel + specularBulb;
 
-    vec3 ambient = ambientBulb;
-    vec3 diffuse = diffuseBulb;
-    vec3 specular = specularBulb;
+    // vec3 ambient = ambientBulb;
+    // vec3 diffuse = diffuseBulb;
+    // vec3 specular = specularBulb;
 
     vec3 result = ambient + diffuse + specular;
     // vec3 result = ambient;

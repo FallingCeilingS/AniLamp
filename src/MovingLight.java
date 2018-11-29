@@ -108,7 +108,7 @@ public class MovingLight {
 //        matrix = Mat4.multiply(matrix, this.worldMatrix);
         Vec4 result = Vec4.multiplyMatrix(this.worldMatrix, new Vec4(localDirection, 0));
         result.x = result.x * 0.285f;
-        result.z = result.z * -0.01f;
+        result.z = result.z * -0.005f;
         this.worldDirection = result.toVec3();
     }
 

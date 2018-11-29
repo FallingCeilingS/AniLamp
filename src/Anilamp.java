@@ -19,7 +19,7 @@ public class Anilamp extends JFrame implements ActionListener {
     private static Anilamp_GLEventListener glEventListener;
     private final FPSAnimator fpsAnimator;
     private Camera camera;
-    public JButton jumpButton;
+    public JButton randomPoseButton, resetButton, jumpButton;
 
     public Anilamp(String textForTitleBar) {
         super(textForTitleBar);
@@ -41,8 +41,14 @@ public class Anilamp extends JFrame implements ActionListener {
         jMenuBar.add(fileMenu);
 
         JPanel jPanel = new JPanel();
+        randomPoseButton = new JButton("Random Pose");
+        randomPoseButton.addActionListener(this);
+        resetButton = new JButton("Reset");
+        resetButton.addActionListener(this);
         jumpButton = new JButton("Jump");
         jumpButton.addActionListener(this);
+        jPanel.add(randomPoseButton);
+        jPanel.add(resetButton);
         jPanel.add(jumpButton);
         this.add(jPanel, BorderLayout.SOUTH);
 
@@ -69,16 +75,28 @@ public class Anilamp extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int delay = 3000;
+        int delay = 2500;
         Timer timer = new Timer(delay, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                randomPoseButton.setEnabled(true);
                 jumpButton.setEnabled(true);
             }
         });
         timer.setRepeats(false);
+        if (e.getActionCommand().equalsIgnoreCase("Random Pose")) {
+            glEventListener.setRandomPoseBegin();
+            randomPoseButton.setEnabled(false);
+            jumpButton.setEnabled(false);
+            timer.start();
+        }
+        if (e.getActionCommand().equalsIgnoreCase("Reset")) {
+            glEventListener.resetPose();
+        }
         if (e.getActionCommand().equalsIgnoreCase("Jump")) {
+            glEventListener.resetPose();
             glEventListener.setAnimationBegin();
             jumpButton.setEnabled(glEventListener.jumpButtonEnable);
+            randomPoseButton.setEnabled(false);
             timer.start();
         }
     }

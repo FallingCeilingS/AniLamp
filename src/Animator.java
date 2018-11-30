@@ -4,45 +4,59 @@ import gmaths.Vec3;
 
 public class Animator {
     private float MAX_LENGTH, MAX_WIDTH, MAX_DISTANCE;
-    private Vec3 previousPosition = new Vec3(0, 0, 0);
-    private Vec3 currentPosition = new Vec3(0, 0, 0);
-    private Vec3 previousDirection = new Vec3(1, 0, 0);
-    private Vec3 currentDirection = new Vec3(1, 0 ,0);
-    private Vec3 crossProduct;
-    private double lowerJointDeltaRotateDegree = 0;
-    public double lowerJointYCurrentRotateDegree = 0;
-    public double upperJointYCurrentRotateDegree;
-    private double lowerJointRotateYVelocity = 0;
     private double lowerJointZInitialDegree,
             upperJointZInitialDegree,
             lowerJointYInitialDegree,
             upperJointYInitialDegree,
             headJointZInitialDegree,
+            headJointYInitialDegree,
             LAMP_BASE_LENGTH;
+
+    private Vec3 previousPosition = new Vec3(0, 0, 0);
+    private Vec3 currentPosition = new Vec3(0, 0, 0);
+    private Vec3 previousDirection = new Vec3(1, 0, 0);
+    private Vec3 currentDirection = new Vec3(1, 0 ,0);
+    private Vec3 crossProduct;
+
+    public Mat4 previousTranslateMatrix = new Mat4(1);
+    public Mat4 currentTranslateMatrix = new Mat4(1);
+
+    private double lowerJointDeltaRotateDegree = 0;
     private double LOWER_PRESS_MAX_DELTA_DEGREE = 60;
     private double LOWER_STRETCH_MAX_DELTA_DEGREE = 45;
     private double UPPER_PRESS_MAX_DELTA_DEGREE = 60;
     private double UPPER_STRETCH_MAX_DELTA_DEGREE = 75;
-    private double HEAD_UP_MAX_DELTA_DEGREE = 80;
+    private double HEAD_UP_MAX_DELTA_DEGREE = 90;
+
     private double lowerPressTargetDegree;
     private double lowerStretchTargetDegree;
     private double upperPressTargetDegree;
     private double upperStretchTargetDegree;
+    private double upperJointYTargetDegree;
     private double headJointZTargetDegree;
+    private double headJointYTargetDegree;
+    private double rotateYDegreeCount = 0;
+
     public double lowerJointZCurrentRotateDegree;
     public double upperJointZCurrentRotateDegree;
+    public double lowerJointYCurrentRotateDegree = 0;
+    public double upperJointYCurrentRotateDegree;
     public double headJointZCurrentRotateDegree;
+    public double headJointYCurrentRotateDegree;
+
     private double lowerJointRotateZVelocity = 2.4;
     private double upperJointRotateZVelocity = 2.4;
+    private double lowerJointRotateYVelocity = 0;
+    private double upperJointRotateYVelocity = 1;
     private double headJointRotateZVelocity = 2;
+    private double headJointRotateYVelocity = 2;
     private double tmpMaxVelocity = 0;
-    private double rotateYDegreeCount = 0;
+    private double jumpHorizonVelocity = 0.24;
+
     private double ratio;
     private double postLowerPressRatio = 0.6;
     private double postLowerStretchRatio = 0.8;
-    private double jumpHorizonVelocity = 0.24;
-    public Mat4 previousTranslateMatrix = new Mat4(1);
-    public Mat4 currentTranslateMatrix = new Mat4(1);
+
     public boolean ANIMATION_GENERATION = false;
     public boolean ANIMATION_PREP_Y_ROTATE = false;
     public boolean ANIMATION_PREP_PRESS = false;
@@ -57,6 +71,7 @@ public class Animator {
     private boolean ANIMATION_RANDOM_LOWER_Z_STRETCH = false;
     private boolean ANIMATION_RANDOM_UPPER_Z_PRESS = false;
     private boolean ANIMATION_RANDOM_UPPER_Z_STRETCH = false;
+
     public double startJumpTime;
     public double startPressTime;
     public double startStretchTime;
@@ -85,6 +100,7 @@ public class Animator {
             double lowerJointYInitialDegree,
             double upperJointYInitialDegree,
             double headJointZInitialDegree,
+            double headJointYInitialDegree,
             double LAMP_BASE_LENGTH) {
         this.MAX_LENGTH = MAX_LENGTH;
         this.MAX_WIDTH = MAX_WIDTH;
@@ -96,9 +112,12 @@ public class Animator {
         this.lowerJointYInitialDegree = lowerJointYInitialDegree;
         this.upperJointYInitialDegree = upperJointYInitialDegree;
         this.headJointZInitialDegree = headJointZInitialDegree;
+        this.headJointYInitialDegree = headJointYInitialDegree;
+
         this.lowerJointZCurrentRotateDegree = lowerJointZInitialDegree;
         this.upperJointZCurrentRotateDegree = upperJointZInitialDegree;
         this.headJointZCurrentRotateDegree = headJointZInitialDegree;
+        this.headJointYCurrentRotateDegree = headJointYInitialDegree;
         this.LAMP_BASE_LENGTH = LAMP_BASE_LENGTH;
     }
 
@@ -106,8 +125,13 @@ public class Animator {
         if (ANIMATION_RANDOM_GENERATE) {
             double randomLowerZ = Math.random() * 60;
             double randomUpperZ = Math.random() * (-90) - 30;
+            double randomUpperY = Math.random() * 180 - 90;
+            double randomHeadJY = Math.random() * 120 - 60;
+            double randomHeadJZ = Math.random() * 90;
             System.out.println("random lower rotate z" + randomLowerZ);
             System.out.println("random upper rotate z" + randomUpperZ);
+            System.out.println("random upper rotate y" + randomUpperY);
+            System.out.println("random head joint rotate y" + randomHeadJY);
             if (lowerJointZCurrentRotateDegree <= randomLowerZ) {
                 lowerPressTargetDegree = randomLowerZ;
                 ANIMATION_RANDOM_MOTION = true;
@@ -119,13 +143,15 @@ public class Animator {
             }
             if (upperJointZCurrentRotateDegree <= randomUpperZ) {
                 upperStretchTargetDegree = randomUpperZ;
-                ANIMATION_RANDOM_GENERATE = false;
                 ANIMATION_RANDOM_UPPER_Z_STRETCH = true;
             } else {
                 upperPressTargetDegree = randomUpperZ;
-                ANIMATION_RANDOM_GENERATE = false;
                 ANIMATION_RANDOM_UPPER_Z_PRESS = true;
             }
+            upperJointYTargetDegree = randomUpperY;
+            headJointYTargetDegree = randomHeadJY;
+            headJointZTargetDegree = randomHeadJZ;
+            ANIMATION_RANDOM_GENERATE = false;
         }
     }
 
@@ -147,6 +173,36 @@ public class Animator {
                 System.out.println("upper press");
                 upperJointPress();
             }
+            System.out.println("upper rotate");
+            upperJointYRotate();
+            System.out.println("head y rotate");
+            headJointYRotate();
+            System.out.println("head z rotate");
+            headJointZRotate();
+        }
+    }
+
+    public void upperJointYRotate() {
+        if (upperJointYCurrentRotateDegree >= upperJointYTargetDegree) {
+            upperJointYCurrentRotateDegree = upperJointYCurrentRotateDegree - upperJointRotateYVelocity;
+        } else {
+            upperJointYCurrentRotateDegree = upperJointYCurrentRotateDegree + upperJointRotateYVelocity;
+        }
+    }
+
+    public void headJointYRotate() {
+        if (headJointYCurrentRotateDegree >= headJointYTargetDegree) {
+            headJointYCurrentRotateDegree = headJointYCurrentRotateDegree - headJointRotateYVelocity;
+        } else {
+            headJointYCurrentRotateDegree = headJointYCurrentRotateDegree + headJointRotateYVelocity;
+        }
+    }
+
+    public void headJointZRotate() {
+        if (headJointZCurrentRotateDegree >= headJointZTargetDegree) {
+            headJointZCurrentRotateDegree = headJointZCurrentRotateDegree - headJointRotateZVelocity;
+        } else {
+            headJointZCurrentRotateDegree = headJointZCurrentRotateDegree + headJointRotateZVelocity;
         }
     }
 
@@ -155,8 +211,10 @@ public class Animator {
         upperJointZCurrentRotateDegree = upperJointZInitialDegree;
         upperJointYCurrentRotateDegree = upperJointYInitialDegree;
         headJointZCurrentRotateDegree = headJointZInitialDegree;
+        headJointYCurrentRotateDegree = headJointYInitialDegree;
         lowerJointRotateZVelocity = 2.4;
         upperJointRotateZVelocity = 2.4;
+        headJointRotateZVelocity = 2;
     }
 
     public void generateRandomTargetAngle() {
@@ -245,7 +303,7 @@ public class Animator {
 
     public void lowerJointPress() {
         if (lowerJointZCurrentRotateDegree < lowerPressTargetDegree) {
-            /**
+            /*
              * ease in/out
              * not used but keep codes in comments
              *             if (ANIMATION_PREP_PRESS) {
@@ -273,7 +331,7 @@ public class Animator {
 
     public void lowerJointStretch() {
         if (lowerJointZCurrentRotateDegree > lowerStretchTargetDegree) {
-            /**
+            /*
              * ease in/out
              * not used but keep codes in comments
              *             if (ANIMATION_PREP_STRETCH) {
@@ -298,7 +356,7 @@ public class Animator {
 
     public void upperJointPress() {
         if (upperJointZCurrentRotateDegree > upperPressTargetDegree) {
-            /**
+            /*
              * ease in/out
              * not used but keep codes in comments
              *             if (ANIMATION_PREP_PRESS) {
@@ -318,7 +376,6 @@ public class Animator {
                 startStretchTime = getCurrentSecond();
             } else if (ANIMATION_RANDOM_UPPER_Z_PRESS) {
                 ANIMATION_RANDOM_UPPER_Z_PRESS = false;
-                ANIMATION_RANDOM_MOTION = false;
             }
         }
     }
@@ -326,7 +383,7 @@ public class Animator {
     public void upperJointStretch() {
         if (upperJointZCurrentRotateDegree < upperStretchTargetDegree) {
             if (ANIMATION_PREP_STRETCH) {
-                /**
+                /*
                  * ease in/out
                  * not used but keep codes in comments
                  *                 System.out.println("prep stretch");
@@ -334,7 +391,7 @@ public class Animator {
                  */
                 upperJointRotateZVelocity = 2.4;
             } else if (ANIMATION_POST_STRETCH) {
-                /**
+                /*
                  * ease in/out
                  * not used but keep codes in comments
                  *                 System.out.println("post stretch");
@@ -369,12 +426,14 @@ public class Animator {
 
     public void headUp() {
         if (headJointZCurrentRotateDegree <= headJointZTargetDegree) {
+            System.out.println("up");
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree + headJointRotateZVelocity;
         }
     }
 
     public void headDown() {
         if (headJointZCurrentRotateDegree >= headJointZInitialDegree) {
+            System.out.println("down");
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree - headJointRotateZVelocity;
         }
     }

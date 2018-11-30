@@ -13,6 +13,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private MovingLight lightBulb;
     private Mat4 lightBulbSelfTranslate;
     private Wall wall;
+    private Table table;
     private SGNode tableRoot, wallRoot, lampRoot;
     private NameNode lampHeadName;
     private TransformNode lampTranslate,
@@ -119,8 +120,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /**
          * table
          */
-        tableRoot = new NameNode("table root");
-        TransformNode tableTranslate = new TransformNode("table transform", Mat4Transform.translate(0, -0.328f, 0));
+//        tableRoot = new NameNode("table root");
+        float TABLE_X_POSITION = 0;
+        float TABLE_Y_POSITION = -0.328f;
+        float TABLE_Z_POSITION = 0;
+//        TransformNode tableTranslate = new TransformNode("table transform", Mat4Transform.translate(TABLE_X_POSITION, TABLE_Y_POSITION, TABLE_Z_POSITION));
 
         /*
         table body
@@ -128,18 +132,18 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float TABLE_BODY_LENGTH = 20;
         float TABLE_BODY_WIDTH = 10;
         float TABLE_BODY_HEIGHT = 0.4f;
-        Mesh tableBodyMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt");
-        Material tableBodyMaterial = new Material(
-                new Vec3(1.0f, 0.5f, 0.5f),
-                new Vec3(0.5f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
-        );
-        Model table_body = new Model(gl3, camera, light1, light2, lightBulb, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
-        Mat4 tableBodyModelMatrix = Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH);
-        TransformNode tableBodyScale = new TransformNode("table body scale", tableBodyModelMatrix);
-        NameNode tableBodyName = new NameNode("body");
-        ModelNode tableBodyNode = new ModelNode("table body", table_body);
+//        Mesh tableBodyMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+//        Shader tableBodyShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt");
+//        Material tableBodyMaterial = new Material(
+//                new Vec3(1.0f, 0.5f, 0.5f),
+//                new Vec3(0.5f, 0.5f, 0.4f),
+//                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+//        );
+//        Model table_body = new Model(gl3, camera, light1, light2, lightBulb, tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh);
+//        Mat4 tableBodyModelMatrix = Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH);
+//        TransformNode tableBodyScale = new TransformNode("table body scale", tableBodyModelMatrix);
+//        NameNode tableBodyName = new NameNode("body");
+//        ModelNode tableBodyNode = new ModelNode("table body", table_body);
 
         /*
         table legs
@@ -147,53 +151,57 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float TABLE_LEG_LENGTH = 0.6f;
         float TABLE_LEG_WIDTH = TABLE_LEG_LENGTH;
         float TABLE_LEG_HEIGHT = 8;
-        Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Model table_leg = new Model(gl3, camera, light1, light2, lightBulb, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh);
-        ModelNode tableLeg_LT_Node = new ModelNode("table leg", table_leg);
-        ModelNode tableLeg_LB_Node = new ModelNode("table leg", table_leg);
-        ModelNode tableLeg_RT_Node = new ModelNode("table leg", table_leg);
-        ModelNode tableLeg_RB_Node = new ModelNode("table leg", table_leg);
+//        Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+//        Model table_leg = new Model(gl3, camera, light1, light2, lightBulb, tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh);
+//        ModelNode tableLeg_LT_Node = new ModelNode("table leg", table_leg);
+//        ModelNode tableLeg_LB_Node = new ModelNode("table leg", table_leg);
+//        ModelNode tableLeg_RT_Node = new ModelNode("table leg", table_leg);
+//        ModelNode tableLeg_RB_Node = new ModelNode("table leg", table_leg);
+//
+//        Mat4 tableLegTransformMatrix = Mat4Transform.scale(TABLE_LEG_LENGTH, TABLE_LEG_HEIGHT, TABLE_LEG_WIDTH);
+//        tableLegTransformMatrix = Mat4.multiply(Mat4Transform.translate(0, -4, 0), tableLegTransformMatrix);
+//        TransformNode tableLegTransform = new TransformNode("table leg transform (scale then translate)", tableLegTransformMatrix);
+//        NameNode tableLegLeftTop = new NameNode("table leg left top");
+//        Mat4 ltTranslateMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 1.6f, 0, -TABLE_BODY_WIDTH / 2);
+//        TransformNode ltTranslate = new TransformNode("table leg left top translate", ltTranslateMatrix);
+//        NameNode tableLegLeftBtm = new NameNode("table let left bottom");
+//        Mat4 lbTranslateMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 1.6f, 0, TABLE_BODY_WIDTH / 2);
+//        TransformNode lbTranslate = new TransformNode("table leg left bottom translate", lbTranslateMatrix);
+//        NameNode tableLegRightTop = new NameNode("table leg right top");
+//        Mat4 rtTranslateMatrix = Mat4Transform.translate(TABLE_BODY_LENGTH / 1.6f, 0, -TABLE_BODY_WIDTH / 2);
+//        TransformNode rtTranslate = new TransformNode("table leg right top translate", rtTranslateMatrix);
+//        NameNode tableLegRightBtm = new NameNode("table let right bottom");
+//        Mat4 rbTranslateMatrix = Mat4Transform.translate(TABLE_BODY_LENGTH / 1.6f, 0, TABLE_BODY_WIDTH / 2);
+//        TransformNode rbTranslate = new TransformNode("table leg right bottom translate", rbTranslateMatrix);
+//
+//        /*
+//        table scene graph
+//         */
+//        tableRoot.addChild(tableTranslate);
+//            tableTranslate.addChild(tableBodyName);
+//                tableBodyName.addChild(tableBodyScale);
+//                    tableBodyScale.addChild(tableBodyNode);
+//                tableBodyName.addChild(tableLegTransform);
+//                    tableLegTransform.addChild(tableLegLeftTop);
+//                        tableLegLeftTop.addChild(ltTranslate);
+//                            ltTranslate.addChild(tableLeg_LT_Node);
+//                    tableLegTransform.addChild(tableLegLeftBtm);
+//                        tableLegLeftBtm.addChild(lbTranslate);
+//                            lbTranslate.addChild(tableLeg_LB_Node);
+//                    tableLegTransform.addChild(tableLegRightTop);
+//                        tableLegRightTop.addChild(rtTranslate);
+//                            rtTranslate.addChild(tableLeg_RT_Node);
+//                    tableLegTransform.addChild(tableLegRightBtm);
+//                        tableLegRightBtm.addChild(rbTranslate);
+//                            rbTranslate.addChild(tableLeg_RB_Node);
+//
+//        tableRoot.update();
 
-        Mat4 tableLegTransformMatrix = Mat4Transform.scale(TABLE_LEG_LENGTH, TABLE_LEG_HEIGHT, TABLE_LEG_WIDTH);
-        tableLegTransformMatrix = Mat4.multiply(Mat4Transform.translate(0, -4, 0), tableLegTransformMatrix);
-        TransformNode tableLegTransform = new TransformNode("table leg transform (scale then translate)", tableLegTransformMatrix);
-        NameNode tableLegLeftTop = new NameNode("table leg left top");
-        Mat4 ltTranslateMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 1.6f, 0, -TABLE_BODY_WIDTH / 2);
-        TransformNode ltTranslate = new TransformNode("table leg left top translate", ltTranslateMatrix);
-        NameNode tableLegLeftBtm = new NameNode("table let left bottom");
-        Mat4 lbTranslateMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 1.6f, 0, TABLE_BODY_WIDTH / 2);
-        TransformNode lbTranslate = new TransformNode("table leg left bottom translate", lbTranslateMatrix);
-        NameNode tableLegRightTop = new NameNode("table leg right top");
-        Mat4 rtTranslateMatrix = Mat4Transform.translate(TABLE_BODY_LENGTH / 1.6f, 0, -TABLE_BODY_WIDTH / 2);
-        TransformNode rtTranslate = new TransformNode("table leg right top translate", rtTranslateMatrix);
-        NameNode tableLegRightBtm = new NameNode("table let right bottom");
-        Mat4 rbTranslateMatrix = Mat4Transform.translate(TABLE_BODY_LENGTH / 1.6f, 0, TABLE_BODY_WIDTH / 2);
-        TransformNode rbTranslate = new TransformNode("table leg right bottom translate", rbTranslateMatrix);
-
-        /*
-        table scene graph
-         */
-        tableRoot.addChild(tableTranslate);
-            tableTranslate.addChild(tableBodyName);
-                tableBodyName.addChild(tableBodyScale);
-                    tableBodyScale.addChild(tableBodyNode);
-                tableBodyName.addChild(tableLegTransform);
-                    tableLegTransform.addChild(tableLegLeftTop);
-                        tableLegLeftTop.addChild(ltTranslate);
-                            ltTranslate.addChild(tableLeg_LT_Node);
-                    tableLegTransform.addChild(tableLegLeftBtm);
-                        tableLegLeftBtm.addChild(lbTranslate);
-                            lbTranslate.addChild(tableLeg_LB_Node);
-                    tableLegTransform.addChild(tableLegRightTop);
-                        tableLegRightTop.addChild(rtTranslate);
-                            rtTranslate.addChild(tableLeg_RT_Node);
-                    tableLegTransform.addChild(tableLegRightBtm);
-                        tableLegRightBtm.addChild(rbTranslate);
-                            rbTranslate.addChild(tableLeg_RB_Node);
-
-        tableRoot.update();
-//        tableBody.print(0, false);
-//        System.out.println(tableLegLT.worldTransform.toString());
+        table = new Table(gl3, camera, light1, light2, lightBulb,
+                TABLE_X_POSITION, TABLE_Y_POSITION, TABLE_Z_POSITION,
+                TABLE_BODY_LENGTH, TABLE_BODY_WIDTH, TABLE_BODY_HEIGHT,
+                TABLE_LEG_LENGTH, TABLE_LEG_WIDTH, TABLE_LEG_HEIGHT);
+        table.execute();
 
         /**
          * wall
@@ -490,8 +498,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /**
          * test/reference cube
          */
+        Mesh testCubeMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Mat4 testCube1ModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
-        testCube1 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, tableBodyMesh, textureId0);
+        testCube1 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, testCubeMesh, textureId0);
 
         /*
         animation
@@ -543,7 +552,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light1.render(gl3);
         light2.render(gl3);
         floor.render(gl3);
-        tableRoot.draw(gl3);
+//        tableRoot.draw(gl3);
+        table.draw(gl3);
 //        wallRoot.draw(gl3);
         wall.draw(gl3);
         env.render(gl3);

@@ -23,6 +23,7 @@ public class Wall extends SceneGraphObject {
                 float WALL_LENGTH, float WALL_HEIGHT, float WALL_WIDTH,
                 float WALL_X_POSITION, float WALL_Y_POSITION, float WALL_Z_POSITION) {
         super(gl3, camera, light1, light2, movingLight);
+
         this.WALL_LENGTH = WALL_LENGTH;
         this.WALL_HEIGHT = WALL_HEIGHT;
         this.WALL_WIDTH = WALL_WIDTH;

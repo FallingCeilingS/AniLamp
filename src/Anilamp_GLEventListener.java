@@ -12,6 +12,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private Light light1, light2;
     private MovingLight lightBulb;
     private Mat4 lightBulbSelfTranslate;
+    private Wall wall;
     private SGNode tableRoot, wallRoot, lampRoot;
     private NameNode lampHeadName;
     private TransformNode lampTranslate,
@@ -197,94 +198,100 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /**
          * wall
          */
-        wallRoot = new NameNode("wall root");
+//        wallRoot = new NameNode("wall root");
         float WALL_LENGTH = 16;
         float WALL_HEIGHT = 0.6f + TABLE_LEG_HEIGHT + TABLE_BODY_HEIGHT;
         float WALL_WIDTH = 0.8f;
-        TransformNode wallTransform = new TransformNode("wall transform", Mat4Transform.translate(0, floor_Y + WALL_HEIGHT / 2, -(TABLE_BODY_WIDTH / 2 + WALL_WIDTH / 2)));
-        Mesh wallMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Shader wallShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt");
-        Material wallMaterial = new Material(
-                new Vec3(0.6f, 0.4f, 0.61f),
-                new Vec3(0.8f, 0.4f, 0.81f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
-        );
+        float WALL_X_POSITION = 0;
+        float WALL_Y_POSITION = floor_Y + WALL_HEIGHT / 2;
+        float WALL_Z_POSITION = -(TABLE_BODY_WIDTH / 2 + WALL_WIDTH / 2);
+//        TransformNode wallTransform = new TransformNode("wall transform", Mat4Transform.translate(WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION));
+//        Mesh wallMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+//        Shader wallShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt");
+//        Material wallMaterial = new Material(
+//                new Vec3(0.6f, 0.4f, 0.61f),
+//                new Vec3(0.8f, 0.4f, 0.81f),
+//                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+//        );
+//
+//        Model wall_bottom = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        Mat4 wallModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
+//        TransformNode wallScale = new TransformNode("table bottom and top scale", wallModelMatrix);
+//        NameNode wallBottomName = new NameNode("wall bottom");
+//        ModelNode wallBottomNode = new ModelNode("wall bottom", wall_bottom);
+//        Model wall_bottom_left = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        NameNode wallBottomLeftName = new NameNode("wall bottom left name");
+//        Mat4 wallBottomLeftTranslateMatrix = Mat4Transform.translate(-1, 0, 0);
+//        TransformNode wallBottomLeftTranslate = new TransformNode("wall bottom left translate", wallBottomLeftTranslateMatrix);
+//        ModelNode wallBottomLeftNode = new ModelNode("wall bottom left node", wall_bottom_left);
+//        Model wall_bottom_right = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        NameNode wallBottomRightName = new NameNode("wall bottom right name");
+//        Mat4 wallBottomRightTranslateMatrix = Mat4Transform.translate(1, 0, 0);
+//        TransformNode wallBottomRightTranslate = new TransformNode("wall bottom right translate", wallBottomRightTranslateMatrix);
+//        ModelNode wallBottomRightNode = new ModelNode("wall bottom right node", wall_bottom_right);
+//
+//        Mat4 wallMiddleModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
+//        wallMiddleModelMatrix = Mat4.multiply(Mat4Transform.translate(0, WALL_HEIGHT, 0), wallMiddleModelMatrix);
+//        TransformNode wallMiddleTransform = new TransformNode("wall middle left and right translate", wallMiddleModelMatrix);
+//        Model wall_middle_left = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        NameNode wallMiddleLeftName = new NameNode("wall middle left");
+//        Mat4 wallMiddleLeftTranslateMatrix = Mat4Transform.translate(-1, 0,0 );
+//        TransformNode wallMiddleLeftTranslate = new TransformNode("wall middle left translate", wallMiddleLeftTranslateMatrix);
+//        ModelNode wallLeftNode = new ModelNode("wall middle left model", wall_middle_left);
+//        Model wall_middle_right = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        NameNode wallMiddleRightName = new NameNode("wall middle right");
+//        Mat4 wallMiddleRightTranslateMatrix = Mat4Transform.translate(1, 0, 0);
+//        TransformNode wallMiddleRightTranslate = new TransformNode("wall middle right translate", wallMiddleRightTranslateMatrix);
+//        ModelNode wallRightNode = new ModelNode("wall middle right model", wall_middle_right);
+//
+//        Model wall_top = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        Mat4 wallTopModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
+//        wallTopModelMatrix = Mat4.multiply(Mat4Transform.translate(0, WALL_HEIGHT * 2, 0) ,wallTopModelMatrix);
+//        TransformNode wallTopTransform = new TransformNode("table bottom and top scale", wallTopModelMatrix);
+//        NameNode wallTopName = new NameNode("wall top");
+//        ModelNode wallTopNode = new ModelNode("wall top", wall_top);
+//        Model wall_top_left = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        NameNode wallTopLeftName = new NameNode("wall top left name");
+//        Mat4 wallTopLeftTranslateMatrix = Mat4Transform.translate(-1, 0, 0);
+//        TransformNode wallTopLeftTranslate = new TransformNode("wall top left translate", wallTopLeftTranslateMatrix);
+//        ModelNode wallTopLeftNode = new ModelNode("wall top left node", wall_top_left);
+//        Model wall_top_right = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
+//        NameNode wallTopRightName = new NameNode("wall top right name");
+//        Mat4 wallTopRightTranslateMatrix = Mat4Transform.translate(1, 0, 0);
+//        TransformNode wallTopRightTranslate = new TransformNode("wall top right translate", wallTopRightTranslateMatrix);
+//        ModelNode wallTopRightNode = new ModelNode("wall bottom right node", wall_top_right);
+//
+//        wallRoot.addChild(wallTransform);
+//            wallTransform.addChild(wallScale);
+//                wallScale.addChild(wallBottomName);
+//                    wallBottomName.addChild(wallBottomNode);
+//                wallScale.addChild(wallBottomLeftName);
+//                    wallBottomLeftName.addChild(wallBottomLeftTranslate);
+//                        wallBottomLeftTranslate.addChild(wallBottomLeftNode);
+//                wallScale.addChild(wallBottomRightName);
+//                    wallBottomRightName.addChild(wallBottomRightTranslate);
+//                        wallBottomRightTranslate.addChild(wallBottomRightNode);
+//            wallTransform.addChild(wallMiddleTransform);
+//                wallMiddleTransform.addChild(wallMiddleLeftName);
+//                    wallMiddleLeftName.addChild(wallMiddleLeftTranslate);
+//                        wallMiddleLeftTranslate.addChild(wallLeftNode);
+//                wallMiddleTransform.addChild(wallMiddleRightName);
+//                    wallMiddleRightName.addChild(wallMiddleRightTranslate);
+//                        wallMiddleRightTranslate.addChild(wallRightNode);
+//            wallTransform.addChild(wallTopTransform);
+//                wallTopTransform.addChild(wallTopName);
+//                    wallTopName.addChild(wallTopNode);
+//                wallTopTransform.addChild(wallTopLeftName);
+//                    wallTopLeftName.addChild(wallTopLeftTranslate);
+//                        wallTopLeftTranslate.addChild(wallTopLeftNode);
+//                wallTopTransform.addChild(wallTopRightName);
+//                    wallTopRightName.addChild(wallTopRightTranslate);
+//                        wallTopRightTranslate.addChild(wallTopRightNode);
+//
+//        wallRoot.update();
 
-        Model wall_bottom = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        Mat4 wallModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
-        TransformNode wallScale = new TransformNode("table bottom and top scale", wallModelMatrix);
-        NameNode wallBottomName = new NameNode("wall bottom");
-        ModelNode wallBottomNode = new ModelNode("wall bottom", wall_bottom);
-        Model wall_bottom_left = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        NameNode wallBottomLeftName = new NameNode("wall bottom left name");
-        Mat4 wallBottomLeftTranslateMatrix = Mat4Transform.translate(-1, 0, 0);
-        TransformNode wallBottomLeftTranslate = new TransformNode("wall bottom left translate", wallBottomLeftTranslateMatrix);
-        ModelNode wallBottomLeftNode = new ModelNode("wall bottom left node", wall_bottom_left);
-        Model wall_bottom_right = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        NameNode wallBottomRightName = new NameNode("wall bottom right name");
-        Mat4 wallBottomRightTranslateMatrix = Mat4Transform.translate(1, 0, 0);
-        TransformNode wallBottomRightTranslate = new TransformNode("wall bottom right translate", wallBottomRightTranslateMatrix);
-        ModelNode wallBottomRightNode = new ModelNode("wall bottom right node", wall_bottom_right);
-
-        Mat4 wallMiddleModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
-        wallMiddleModelMatrix = Mat4.multiply(Mat4Transform.translate(0, WALL_HEIGHT, 0), wallMiddleModelMatrix);
-        TransformNode wallMiddleTransform = new TransformNode("wall middle left and right translate", wallMiddleModelMatrix);
-        Model wall_middle_left = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        NameNode wallMiddleLeftName = new NameNode("wall middle left");
-        Mat4 wallMiddleLeftTranslateMatrix = Mat4Transform.translate(-1, 0,0 );
-        TransformNode wallMiddleLeftTranslate = new TransformNode("wall middle left translate", wallMiddleLeftTranslateMatrix);
-        ModelNode wallLeftNode = new ModelNode("wall middle left model", wall_middle_left);
-        Model wall_middle_right = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        NameNode wallMiddleRightName = new NameNode("wall middle right");
-        Mat4 wallMiddleRightTranslateMatrix = Mat4Transform.translate(1, 0, 0);
-        TransformNode wallMiddleRightTranslate = new TransformNode("wall middle right translate", wallMiddleRightTranslateMatrix);
-        ModelNode wallRightNode = new ModelNode("wall middle right model", wall_middle_right);
-
-        Model wall_top = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        Mat4 wallTopModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
-        wallTopModelMatrix = Mat4.multiply(Mat4Transform.translate(0, WALL_HEIGHT * 2, 0) ,wallTopModelMatrix);
-        TransformNode wallTopTransform = new TransformNode("table bottom and top scale", wallTopModelMatrix);
-        NameNode wallTopName = new NameNode("wall top");
-        ModelNode wallTopNode = new ModelNode("wall top", wall_top);
-        Model wall_top_left = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        NameNode wallTopLeftName = new NameNode("wall top left name");
-        Mat4 wallTopLeftTranslateMatrix = Mat4Transform.translate(-1, 0, 0);
-        TransformNode wallTopLeftTranslate = new TransformNode("wall top left translate", wallTopLeftTranslateMatrix);
-        ModelNode wallTopLeftNode = new ModelNode("wall top left node", wall_top_left);
-        Model wall_top_right = new Model(gl3, camera, light1, light2, lightBulb, wallShader, wallMaterial, new Mat4(1), wallMesh);
-        NameNode wallTopRightName = new NameNode("wall top right name");
-        Mat4 wallTopRightTranslateMatrix = Mat4Transform.translate(1, 0, 0);
-        TransformNode wallTopRightTranslate = new TransformNode("wall top right translate", wallTopRightTranslateMatrix);
-        ModelNode wallTopRightNode = new ModelNode("wall bottom right node", wall_top_right);
-
-        wallRoot.addChild(wallTransform);
-            wallTransform.addChild(wallScale);
-                wallScale.addChild(wallBottomName);
-                    wallBottomName.addChild(wallBottomNode);
-                wallScale.addChild(wallBottomLeftName);
-                    wallBottomLeftName.addChild(wallBottomLeftTranslate);
-                        wallBottomLeftTranslate.addChild(wallBottomLeftNode);
-                wallScale.addChild(wallBottomRightName);
-                    wallBottomRightName.addChild(wallBottomRightTranslate);
-                        wallBottomRightTranslate.addChild(wallBottomRightNode);
-            wallTransform.addChild(wallMiddleTransform);
-                wallMiddleTransform.addChild(wallMiddleLeftName);
-                    wallMiddleLeftName.addChild(wallMiddleLeftTranslate);
-                        wallMiddleLeftTranslate.addChild(wallLeftNode);
-                wallMiddleTransform.addChild(wallMiddleRightName);
-                    wallMiddleRightName.addChild(wallMiddleRightTranslate);
-                        wallMiddleRightTranslate.addChild(wallRightNode);
-            wallTransform.addChild(wallTopTransform);
-                wallTopTransform.addChild(wallTopName);
-                    wallTopName.addChild(wallTopNode);
-                wallTopTransform.addChild(wallTopLeftName);
-                    wallTopLeftName.addChild(wallTopLeftTranslate);
-                        wallTopLeftTranslate.addChild(wallTopLeftNode);
-                wallTopTransform.addChild(wallTopRightName);
-                    wallTopRightName.addChild(wallTopRightTranslate);
-                        wallTopRightTranslate.addChild(wallTopRightNode);
-
-        wallRoot.update();
+        wall = new Wall(gl3, camera, light1, light2, lightBulb, WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION);
+        wall.execute();
 
         /**
          * outside environment
@@ -537,7 +544,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light2.render(gl3);
         floor.render(gl3);
         tableRoot.draw(gl3);
-        wallRoot.draw(gl3);
+//        wallRoot.draw(gl3);
+        wall.draw(gl3);
         env.render(gl3);
         updateMotion();
         lampRoot.draw(gl3);

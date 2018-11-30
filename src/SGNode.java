@@ -50,9 +50,9 @@ public class SGNode {
         }
     }
 
-    public void draw(GL3 gl) {
+    public void draw(GL3 gl3) {
         for (int i = 0; i < children.size(); i++) {
-            children.get(i).draw(gl);
+            children.get(i).draw(gl3);
         }
     }
 

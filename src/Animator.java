@@ -15,7 +15,7 @@ public class Animator {
     private Vec3 previousPosition = new Vec3(0, 0, 0);
     private Vec3 currentPosition = new Vec3(0, 0, 0);
     private Vec3 previousDirection = new Vec3(1, 0, 0);
-    private Vec3 currentDirection = new Vec3(1, 0 ,0);
+    private Vec3 currentDirection = new Vec3(1, 0, 0);
     private Vec3 crossProduct;
 
     public Mat4 previousTranslateMatrix = new Mat4(1);
@@ -58,13 +58,12 @@ public class Animator {
     private double postLowerStretchRatio = 0.8;
 
     public boolean ANIMATION_GENERATION = false;
-    public boolean ANIMATION_PREP_Y_ROTATE = false;
-    public boolean ANIMATION_PREP_PRESS = false;
-    public boolean ANIMATION_PREP_STRETCH = false;
-    public boolean ANIMATION_JUMP = false;
-    public boolean ANIMATION_POST_PRESS = false;
-    public boolean ANIMATION_POST_STRETCH = false;
-    public boolean ANIMATION_END = false;
+    private boolean ANIMATION_PREP_Y_ROTATE = false;
+    private boolean ANIMATION_PREP_PRESS = false;
+    private boolean ANIMATION_PREP_STRETCH = false;
+    private boolean ANIMATION_JUMP = false;
+    private boolean ANIMATION_POST_PRESS = false;
+    private boolean ANIMATION_POST_STRETCH = false;
     public boolean ANIMATION_RANDOM_GENERATE = false;
     private boolean ANIMATION_RANDOM_MOTION = false;
     private boolean ANIMATION_RANDOM_LOWER_Z_PRESS = false;
@@ -72,10 +71,7 @@ public class Animator {
     private boolean ANIMATION_RANDOM_UPPER_Z_PRESS = false;
     private boolean ANIMATION_RANDOM_UPPER_Z_STRETCH = false;
 
-    public double startJumpTime;
-    public double startPressTime;
-    public double startStretchTime;
-
+    private double startJumpTime;
     /**
      * some variables that never used
      */
@@ -87,6 +83,9 @@ public class Animator {
     private double postUpperPressDeltaDegree;
     private double postLowerStretchDeltaDegree;
     private double postUpperStretchDeltaDegree;
+    private boolean ANIMATION_END = false;
+    private double startPressTime;
+    private double startStretchTime;
 
     private double getCurrentSecond() {
         return System.currentTimeMillis() / 1000.0;
@@ -182,7 +181,7 @@ public class Animator {
         }
     }
 
-    public void upperJointYRotate() {
+    private void upperJointYRotate() {
         if (upperJointYCurrentRotateDegree >= upperJointYTargetDegree) {
             upperJointYCurrentRotateDegree = upperJointYCurrentRotateDegree - upperJointRotateYVelocity;
         } else {
@@ -190,7 +189,7 @@ public class Animator {
         }
     }
 
-    public void headJointYRotate() {
+    private void headJointYRotate() {
         if (headJointYCurrentRotateDegree >= headJointYTargetDegree) {
             headJointYCurrentRotateDegree = headJointYCurrentRotateDegree - headJointRotateYVelocity;
         } else {
@@ -198,7 +197,7 @@ public class Animator {
         }
     }
 
-    public void headJointZRotate() {
+    private void headJointZRotate() {
         if (headJointZCurrentRotateDegree >= headJointZTargetDegree) {
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree - headJointRotateZVelocity;
         } else {
@@ -227,14 +226,14 @@ public class Animator {
         }
     }
 
-    public void generateRandomPosition() {
+    private void generateRandomPosition() {
         double randomX = Math.random() * (MAX_LENGTH - LAMP_BASE_LENGTH) - (MAX_LENGTH - LAMP_BASE_LENGTH) / 2;
         double randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
         currentPosition = new Vec3((float) randomX, 0, (float) randomZ);
         generateAngles();
     }
 
-    public void generateLowerJointYRotateDegree() {
+    private void generateLowerJointYRotateDegree() {
         if (ANIMATION_GENERATION) {
             ANIMATION_END = false;
 //            System.out.println("previous pos  = " + previousPosition);
@@ -251,7 +250,7 @@ public class Animator {
         }
     }
 
-    public void generateAngles() {
+    private void generateAngles() {
         ratio = Vec3.magnitude(Vec3.subtract(previousPosition, currentPosition)) / MAX_DISTANCE;
         lowerPressTargetDegree = LOWER_PRESS_MAX_DELTA_DEGREE * ratio + lowerJointZInitialDegree;
         lowerStretchTargetDegree = lowerJointZInitialDegree - LOWER_STRETCH_MAX_DELTA_DEGREE * ratio;
@@ -260,7 +259,7 @@ public class Animator {
         headJointZTargetDegree = HEAD_UP_MAX_DELTA_DEGREE * ratio + headJointZInitialDegree;
     }
 
-    public double easeAnimation(double startTime, double count, double delta, double ratio) {
+    private double easeAnimation(double startTime, double count, double delta, double ratio) {
         double v;
         if (count <= delta / 1.98888888888) {
             v = (getCurrentSecond() - startTime) * ratio;
@@ -276,8 +275,8 @@ public class Animator {
 
     /**
      * this function will be executed 60 times per second so we do not need loop
+     *
      * @param startTime
-     * @return void
      */
     public void updateLowerJointYRotateDegree(double startTime) {
         if (ANIMATION_PREP_Y_ROTATE) {
@@ -301,7 +300,7 @@ public class Animator {
         }
     }
 
-    public void lowerJointPress() {
+    private void lowerJointPress() {
         if (lowerJointZCurrentRotateDegree < lowerPressTargetDegree) {
             /*
              * ease in/out
@@ -329,7 +328,7 @@ public class Animator {
         }
     }
 
-    public void lowerJointStretch() {
+    private void lowerJointStretch() {
         if (lowerJointZCurrentRotateDegree > lowerStretchTargetDegree) {
             /*
              * ease in/out
@@ -354,7 +353,7 @@ public class Animator {
         }
     }
 
-    public void upperJointPress() {
+    private void upperJointPress() {
         if (upperJointZCurrentRotateDegree > upperPressTargetDegree) {
             /*
              * ease in/out
@@ -380,7 +379,7 @@ public class Animator {
         }
     }
 
-    public void upperJointStretch() {
+    private void upperJointStretch() {
         if (upperJointZCurrentRotateDegree < upperStretchTargetDegree) {
             if (ANIMATION_PREP_STRETCH) {
                 /*
@@ -424,14 +423,14 @@ public class Animator {
         }
     }
 
-    public void headUp() {
+    private void headUp() {
         if (headJointZCurrentRotateDegree <= headJointZTargetDegree) {
             System.out.println("up");
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree + headJointRotateZVelocity;
         }
     }
 
-    public void headDown() {
+    private void headDown() {
         if (headJointZCurrentRotateDegree >= headJointZInitialDegree) {
             System.out.println("down");
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree - headJointRotateZVelocity;
@@ -462,7 +461,7 @@ public class Animator {
             previousPosition.x = previousPosition.x + (float) jumpHorizonVelocity * currentDirection.x;
             previousPosition.z = previousPosition.z + (float) jumpHorizonVelocity * currentDirection.z;
             double distance = jumpHorizonVelocity * (getCurrentSecond() - startJumpTime) * 60;
-            previousPosition.y = - 0.15f * (float) distance * (float) (distance - MAX_DISTANCE * ratio);
+            previousPosition.y = -0.15f * (float) distance * (float) (distance - MAX_DISTANCE * ratio);
             if (previousPosition.y <= 0) {
                 previousPosition.y = 0;
             }

@@ -95,7 +95,7 @@ public class Anilamp extends JFrame implements ActionListener {
         if (e.getActionCommand().equalsIgnoreCase("Jump")) {
             glEventListener.resetPose();
             glEventListener.setAnimationBegin();
-            jumpButton.setEnabled(glEventListener.jumpButtonEnable);
+            jumpButton.setEnabled(false);
             randomPoseButton.setEnabled(false);
             timer.start();
         }

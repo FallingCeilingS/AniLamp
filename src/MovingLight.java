@@ -104,8 +104,6 @@ public class MovingLight {
     }
 
     public void setWorldDirection() {
-//        Mat4 matrix = Mat4Transform.rotateAroundZ(180);
-//        matrix = Mat4.multiply(matrix, this.worldMatrix);
         Vec4 result = Vec4.multiplyMatrix(this.worldMatrix, new Vec4(localDirection, 0));
         result.x = result.x * 0.285f;
         result.z = result.z * -0.005f;
@@ -138,8 +136,6 @@ public class MovingLight {
         setWorldPosition();
         setWorldDirection();
         Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldMatrix));
-//        System.out.println(worldMatrix.toString());
-//        System.out.println(mvpMatrix.toString());
 
         shader.use(gl3);
         shader.setFloatArray(gl3, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());

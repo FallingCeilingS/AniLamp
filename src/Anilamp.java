@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.logging.Handler;
 
 public class Anilamp extends JFrame implements ActionListener {
     private static final int WIDTH = 1920;
@@ -19,7 +18,7 @@ public class Anilamp extends JFrame implements ActionListener {
     private static Anilamp_GLEventListener glEventListener;
     private final FPSAnimator fpsAnimator;
     private Camera camera;
-    public JButton randomPoseButton, resetButton, jumpButton;
+    public JButton light1Control, light2Control, lightBulbControl, randomPoseButton, resetButton, jumpButton;
 
     public Anilamp(String textForTitleBar) {
         super(textForTitleBar);
@@ -41,12 +40,21 @@ public class Anilamp extends JFrame implements ActionListener {
         jMenuBar.add(fileMenu);
 
         JPanel jPanel = new JPanel();
+        light1Control = new JButton("Light 1 On/Off");
+        light1Control.addActionListener(this);
+        light2Control = new JButton("Light 2 On/Off");
+        light2Control.addActionListener(this);
+        lightBulbControl = new JButton("Lamp On/Off");
+        lightBulbControl.addActionListener(this);
         randomPoseButton = new JButton("Random Pose");
         randomPoseButton.addActionListener(this);
         resetButton = new JButton("Reset");
         resetButton.addActionListener(this);
         jumpButton = new JButton("Jump");
         jumpButton.addActionListener(this);
+        jPanel.add(light1Control);
+        jPanel.add(light2Control);
+        jPanel.add(lightBulbControl);
         jPanel.add(randomPoseButton);
         jPanel.add(resetButton);
         jPanel.add(jumpButton);
@@ -75,6 +83,16 @@ public class Anilamp extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equalsIgnoreCase("Lamp On/Off")) {
+            glEventListener.LAMP_ON = !glEventListener.LAMP_ON;
+        }
+        if (e.getActionCommand().equalsIgnoreCase("Light 1 On/Off")) {
+            glEventListener.LIGHT1_ON = !glEventListener.LIGHT1_ON;
+        }
+        if (e.getActionCommand().equalsIgnoreCase("Light 2 On/Off")) {
+            glEventListener.LIGHT2_ON = !glEventListener.LIGHT2_ON;
+        }
+
         int delay = 2500;
         Timer timer = new Timer(delay, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -83,15 +101,18 @@ public class Anilamp extends JFrame implements ActionListener {
             }
         });
         timer.setRepeats(false);
+
         if (e.getActionCommand().equalsIgnoreCase("Random Pose")) {
             glEventListener.setRandomPoseBegin();
             randomPoseButton.setEnabled(false);
             jumpButton.setEnabled(false);
             timer.start();
         }
+
         if (e.getActionCommand().equalsIgnoreCase("Reset")) {
             glEventListener.resetPose();
         }
+
         if (e.getActionCommand().equalsIgnoreCase("Jump")) {
             glEventListener.resetPose();
             glEventListener.setAnimationBegin();

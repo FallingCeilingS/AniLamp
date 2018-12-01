@@ -9,6 +9,7 @@ import gmaths.Vec3;
 public class Anilamp_GLEventListener implements GLEventListener {
     private Camera camera;
     private Model floor, env, testCube1;
+    private Material light1Material, light2Material, lightBulbMaterial, nullMaterial;
     private Light light1, light2;
     private MovingLight lightBulb;
     private Mat4 lightBulbSelfTranslate;
@@ -17,6 +18,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private Lamp lamp;
     private Animator animator;
     private double startTime = 0;
+
+    public boolean LIGHT1_ON = true;
+    public boolean LIGHT2_ON = true;
+    public boolean LAMP_ON = true;
 
     private double getStartSecond() {
         return System.currentTimeMillis() / 1000.0;
@@ -63,12 +68,21 @@ public class Anilamp_GLEventListener implements GLEventListener {
     public void initialise(GL3 gl3) {
         int[] textureId0 = TextureLibrary.loadTexture(gl3, "textures/chequerboard.jpg");
 
+        nullMaterial = new Material();
+        nullMaterial.setAmbient(0, 0, 0);
+        nullMaterial.setDiffuse(0, 0, 0);
+        nullMaterial.setSpecular(0, 0, 0);
+
         /**
          * static lights
          */
         /*
         light1
          */
+        light1Material = new Material();
+        light1Material.setAmbient(0.5f, 0.6f, 0.5f);
+        light1Material.setDiffuse(0.8f, 0.8f, 0.8f);
+        light1Material.setSpecular(0.8f, 0.8f, 0.8f);
         light1 = new Light(gl3);
         light1.setPosition(new Vec3(3f,2f,1f));
         light1.setCamera(camera);
@@ -76,6 +90,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /*
         light2
          */
+        light2Material = new Material();
+        light2Material.setAmbient(0.5f, 0.5f, 0.5f);
+        light2Material.setDiffuse(0.8f, 0.8f, 0.8f);
+        light2Material.setSpecular(0.8f, 0.7f, 0.8f);
         light2 = new Light(gl3);
         light2.setCamera(camera);
         light2.setPosition(new Vec3(-3f,2f,1f));
@@ -89,6 +107,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Vec3 lightBulbLocalPosition = new Vec3(0, -0.8f, 0);
         lightBulbSelfTranslate = Mat4Transform.translate(new Vec3(0, -0.5f, 0));
         Vec3 lightBulbLocalDirection = new Vec3(0f, -1f, 0f);
+        lightBulbMaterial = new Material();
+        lightBulbMaterial.setAmbient(0.5f, 0.5f, 0.5f);
+        lightBulbMaterial.setDiffuse(0.8f, 0.8f, 0.8f);
+        lightBulbMaterial.setSpecular(0.8f, 0.8f, 0.8f);
         lightBulb = new MovingLight(gl3, lightBulbLocalPosition, lightBulbSelfTranslate, lightBulbLocalDirection);
         lightBulb.setWorldPosition();
         lightBulb.setWorldDirection();
@@ -292,6 +314,26 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
     }
 
+    public void setLightOnOff() {
+        if (LIGHT1_ON) {
+            light1.setMaterial(light1Material);
+        } else {
+            light1.setMaterial(nullMaterial);
+        }
+
+        if (LIGHT2_ON) {
+            light2.setMaterial(light2Material);
+        } else {
+            light2.setMaterial(nullMaterial);
+        }
+
+        if (LAMP_ON) {
+            lightBulb.setMaterial(lightBulbMaterial);
+        } else {
+            lightBulb.setMaterial(nullMaterial);
+        }
+    }
+
     public void setRandomPoseBegin() {
         animator.ANIMATION_RANDOM_GENERATE = true;
     }
@@ -332,15 +374,22 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     public void render(GL3 gl3) {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        light1.render(gl3);
-        light2.render(gl3);
+        setLightOnOff();
+        if (LIGHT1_ON) {
+            light1.render(gl3);
+        }
+        if (LIGHT2_ON) {
+            light2.render(gl3);
+        }
         floor.render(gl3);
         table.draw(gl3);
         wall.draw(gl3);
         env.render(gl3);
         updateMotion();
         lamp.draw(gl3);
-        lightBulb.render(gl3);
+        if (LAMP_ON) {
+            lightBulb.render(gl3);
+        }
         testCube1.render(gl3);
     }
 }

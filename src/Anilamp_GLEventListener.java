@@ -328,9 +328,44 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lampHeadZRotate = new TransformNode("lamp head joint z rotate", lampHeadZRotateMatrix);
         ModelNode lampHeadNode = new ModelNode("lamp head joint", lamp_head);
 
-        /*
+        /**
         lamp head decoration
          */
+        /*
+        lamp head back
+         */
+        float LAMP_HEAD_BACK_DIAMETER = 1.15f;
+        float LAMP_HEAD_BACK_Y_SCALE = 0.6f;
+        Mesh lampHeadBackMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
+        Model lamp_head_back = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial, new Mat4(1), lampHeadBackMesh, textureId0);
+        Mat4 lampHeadBackModelMatrix = Mat4Transform.scale(LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_DIAMETER * LAMP_HEAD_BACK_Y_SCALE, LAMP_HEAD_BACK_DIAMETER);
+        lampHeadBackModelMatrix = Mat4.multiply(Mat4Transform.translate(0, LAMP_HEAD_BACK_DIAMETER * LAMP_HEAD_BACK_Y_SCALE / 1.5f, 0), lampHeadBackModelMatrix);
+        TransformNode lampHeadBackTransform = new TransformNode("lamp head transform", lampHeadBackModelMatrix);
+        NameNode lampHeadBackName = new NameNode("lamp head back");
+        ModelNode lampHeadBackNode = new ModelNode("lamp head back", lamp_head_back);
+
+        /*
+        lamp head ear
+         */
+        float LAMP_HEAD_EAR_X_SCALE = 2.5f;
+        float LAMP_HEAD_EAR_Y_SCALE = 0.5f;
+        float LAMP_HEAD_EAR_Z_SCALE = 1;
+        float LAMP_HEAD_EAR_X_POSITION = 1.5f;
+        float LAMP_HEAD_EAR_Y_POSITION = 0.35f;
+        float LAMP_HEAD_EAR_Z_POSITION = 0.8f;
+        Mesh lampHeadEarMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
+        Model lamp_head_left_ear = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial, new Mat4(1), lampHeadEarMesh);
+        Mat4 lampHeadEarLeftModelMatrix = Mat4Transform.scale(LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE);
+        lampHeadEarLeftModelMatrix = Mat4.multiply(Mat4Transform.translate(LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, -LAMP_HEAD_EAR_Z_POSITION), lampHeadEarLeftModelMatrix);
+        TransformNode lampHeadEarLeftTransform = new TransformNode("lamp head ear left transform", lampHeadEarLeftModelMatrix);
+        NameNode lampHeadEarLeftName = new NameNode("lamp head ear left");
+        ModelNode lampHeadEarLeftNode = new ModelNode("lamp head ear left", lamp_head_left_ear);
+        Model lamp_head_right_ear = new Model(gl3, camera, light1, light2, lightBulb, lampBaseShader, lampBaseMaterial, new Mat4(1), lampHeadEarMesh);
+        Mat4 lampHeadEarRightModelMatrix = Mat4Transform.scale(LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE);
+        lampHeadEarRightModelMatrix = Mat4.multiply(Mat4Transform.translate(LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, LAMP_HEAD_EAR_Z_POSITION), lampHeadEarRightModelMatrix);
+        TransformNode lampHeadEarRightTransform = new TransformNode("lamp head ear right transform", lampHeadEarRightModelMatrix);
+        NameNode lampHeadEarRightName = new NameNode("lamp head ear right");
+        ModelNode lampHeadEarRightNode = new ModelNode("lamp head ear right", lamp_head_right_ear);
 
         /*
         lamp scene graph
@@ -377,6 +412,16 @@ public class Anilamp_GLEventListener implements GLEventListener {
                                                     lampTailZRotate.addChild(lampTailName);
                                                         lampTailName.addChild(lampTailTransform);
                                                             lampTailTransform.addChild(lampTailNode);
+                                                                        lampHeadJointName.addChild(lampHeadTranslate);
+                                                                            lampHeadTranslate.addChild(lampHeadBackTransform);
+                                                                                lampHeadBackTransform.addChild(lampHeadBackName);
+                                                                                    lampHeadBackName.addChild(lampHeadBackNode);
+                                                                        lampHeadJointName.addChild(lampHeadEarLeftTransform);
+                                                                            lampHeadEarLeftTransform.addChild(lampHeadEarLeftName);
+                                                                                lampHeadEarLeftName.addChild(lampHeadEarLeftNode);
+                                                                        lampHeadJointName.addChild(lampHeadEarRightTransform);
+                                                                            lampHeadEarRightTransform.addChild(lampHeadEarRightName);
+                                                                                lampHeadEarRightName.addChild(lampHeadEarRightNode);
 
         lampRoot.update();
 //        print scene graph nodes

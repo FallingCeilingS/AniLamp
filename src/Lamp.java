@@ -52,7 +52,9 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_base = new Model(gl3, camera, light1, light2, movingLight, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh);
+        Model lamp_base = new Model(
+                gl3, camera, light1, light2, movingLight, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh
+        );
         Mat4 lampBaseModelMatrix = Mat4Transform.scale(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
         lampBaseScale = new TransformNode("lamp base scale", lampBaseModelMatrix);
         lampBaseName = new NameNode("lamp base");
@@ -74,7 +76,9 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_joint = new Model(gl3, camera, light1, light2, movingLight, lampJointShader, lampJointMaterial, new Mat4(1), lampJointMesh);
+        Model lamp_joint = new Model(
+                gl3, camera, light1, light2, movingLight, lampJointShader, lampJointMaterial, new Mat4(1), lampJointMesh
+        );
         Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
         lampJointScale = new TransformNode("lamp joint scale", lampJointModelMatrix);
 
@@ -105,7 +109,9 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_arm = new Model(gl3, camera, light1, light2, movingLight, lampArmShader, lampArmMaterial, new Mat4(1), lampArmMesh);
+        Model lamp_arm = new Model(
+                gl3, camera, light1, light2, movingLight, lampArmShader, lampArmMaterial, new Mat4(1), lampArmMesh
+        );
         Mat4 lampArmModelMatrix = Mat4Transform.scale(LAMP_ARM_LENGTH, LAMP_ARM_HEIGHT, LAMP_ARM_WIDTH);
         lampArmScale = new TransformNode("lamp arm scale", lampArmModelMatrix);
 
@@ -132,12 +138,18 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model head_joint = new Model(gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial,new Mat4(1), lampHeadJointMesh);
+        Model head_joint = new Model(
+                gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial, new Mat4(1), lampHeadJointMesh
+        );
         Mesh lampHeadMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Model lamp_head = new Model(gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial, new Mat4(1), lampHeadMesh);
+        Model lamp_head = new Model(
+                gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial, new Mat4(1), lampHeadMesh
+        );
 
         Mat4 lampHeadJointMatrix = Mat4Transform.translate(0, LAMP_ARM_HEIGHT, 0);
-        Mat4 lampHeadJointSelfMatrix = Mat4Transform.scale(LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_JOINT_DIAMETER);
+        Mat4 lampHeadJointSelfMatrix = Mat4Transform.scale(
+                LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_JOINT_DIAMETER
+        );
         lampHeadJointTranslate = new TransformNode("lamp head joint translate", lampHeadJointMatrix);
         lampHeadJointSelfScale = new TransformNode("lamp head joint self scale", lampHeadJointSelfMatrix);
         lampHeadJointName = new NameNode("lamp head joint");
@@ -167,7 +179,9 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_tail = new Model(gl3, camera, light1, light2, movingLight, lampTailShader, lampTailMaterial, new Mat4(1), lampTailMesh);
+        Model lamp_tail = new Model(
+                gl3, camera, light1, light2, movingLight, lampTailShader, lampTailMaterial, new Mat4(1), lampTailMesh
+        );
         Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z);
         lampTailModelMatrix = Mat4.multiply(Mat4Transform.translate(-LAMP_TAIL_SCALE_X, 0, 0), lampTailModelMatrix);
         lampTailTransform = new TransformNode("lamp tail", lampTailModelMatrix);
@@ -193,9 +207,17 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_head_back = new Model(gl3, camera, light1, light2, movingLight, lampHeadBackShader, lampHeadBackMaterial, new Mat4(1), lampHeadBackMesh);
-        Mat4 lampHeadBackModelMatrix = Mat4Transform.scale(LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_DIAMETER * LAMP_HEAD_BACK_Y_SCALE, LAMP_HEAD_BACK_DIAMETER);
-        lampHeadBackModelMatrix = Mat4.multiply(Mat4Transform.translate(0, LAMP_HEAD_BACK_DIAMETER * LAMP_HEAD_BACK_Y_SCALE / 1.5f, 0), lampHeadBackModelMatrix);
+        Model lamp_head_back = new Model(
+                gl3, camera, light1, light2, movingLight, lampHeadBackShader, lampHeadBackMaterial, new Mat4(1), lampHeadBackMesh
+        );
+        Mat4 lampHeadBackModelMatrix = Mat4Transform.scale(
+                LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_DIAMETER * LAMP_HEAD_BACK_Y_SCALE, LAMP_HEAD_BACK_DIAMETER
+        );
+        lampHeadBackModelMatrix = Mat4.multiply(
+                Mat4Transform.translate(
+                        0, LAMP_HEAD_BACK_DIAMETER * LAMP_HEAD_BACK_Y_SCALE / 1.5f, 0)
+                , lampHeadBackModelMatrix
+        );
         lampHeadBackTransform = new TransformNode("lamp head transform", lampHeadBackModelMatrix);
         lampHeadBackName = new NameNode("lamp head back");
         lampHeadBackNode = new ModelNode("lamp head back", lamp_head_back);
@@ -207,15 +229,29 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_head_left_ear = new Model(gl3, camera, light1, light2, movingLight, lampHeadEarShader, lampHeadEarMaterial, new Mat4(1), lampHeadEarMesh);
-        Mat4 lampHeadEarLeftModelMatrix = Mat4Transform.scale(LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE);
-        lampHeadEarLeftModelMatrix = Mat4.multiply(Mat4Transform.translate(LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, -LAMP_HEAD_EAR_Z_POSITION), lampHeadEarLeftModelMatrix);
+        Model lamp_head_left_ear = new Model(
+                gl3, camera, light1, light2, movingLight, lampHeadEarShader, lampHeadEarMaterial, new Mat4(1), lampHeadEarMesh
+        );
+        Mat4 lampHeadEarLeftModelMatrix = Mat4Transform.scale(
+                LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE
+        );
+        lampHeadEarLeftModelMatrix = Mat4.multiply(
+                Mat4Transform.translate(LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, -LAMP_HEAD_EAR_Z_POSITION), lampHeadEarLeftModelMatrix
+        );
         lampHeadEarLeftTransform = new TransformNode("lamp head ear left transform", lampHeadEarLeftModelMatrix);
         lampHeadEarLeftName = new NameNode("lamp head ear left");
         lampHeadEarLeftNode = new ModelNode("lamp head ear left", lamp_head_left_ear);
-        Model lamp_head_right_ear = new Model(gl3, camera, light1, light2, movingLight, lampHeadEarShader, lampHeadEarMaterial, new Mat4(1), lampHeadEarMesh);
-        Mat4 lampHeadEarRightModelMatrix = Mat4Transform.scale(LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE);
-        lampHeadEarRightModelMatrix = Mat4.multiply(Mat4Transform.translate(LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, LAMP_HEAD_EAR_Z_POSITION), lampHeadEarRightModelMatrix);
+        Model lamp_head_right_ear = new Model(
+                gl3, camera, light1, light2, movingLight, lampHeadEarShader, lampHeadEarMaterial, new Mat4(1), lampHeadEarMesh
+        );
+        Mat4 lampHeadEarRightModelMatrix = Mat4Transform.scale(
+                LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE
+        );
+        lampHeadEarRightModelMatrix = Mat4.multiply(
+                Mat4Transform.translate(
+                        LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, LAMP_HEAD_EAR_Z_POSITION
+                ), lampHeadEarRightModelMatrix
+        );
         lampHeadEarRightTransform = new TransformNode("lamp head ear right transform", lampHeadEarRightModelMatrix);
         lampHeadEarRightName = new NameNode("lamp head ear right");
         lampHeadEarRightNode = new ModelNode("lamp head ear right", lamp_head_right_ear);
@@ -224,64 +260,69 @@ public class Lamp extends SceneGraphObject {
     @Override
     void initialise() {
         lampRoot = new NameNode("lamp root");
-        lampTranslate = new TransformNode("lamp transform", Mat4Transform.translate(LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z));
+        lampTranslate = new TransformNode(
+                "lamp transform", Mat4Transform.translate(LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z)
+        );
     }
 
     @Override
     void buildTree() {
         lampRoot.addChild(lampTranslate);
-        lampTranslate.addChild(lampBaseScale);
-        lampBaseScale.addChild(lampBaseName);
-        lampBaseName.addChild(lampBaseNode_1);
-        lampBaseName.addChild(lampBaseScale2);
-        lampBaseScale2.addChild(lampBaseNode_2);
-        lampTranslate.addChild(lampJointScale);
-        lampJointScale.addChild(lampLowerJointName);
-        lampLowerJointName.addChild(lampLowerJointTranslate);
-        lampLowerJointTranslate.addChild(lampLowerJointYRotate);
-        lampLowerJointYRotate.addChild(lampLowerJointZRotate);
-        lampLowerJointZRotate.addChild(lampLowerJointNode);
-        lampLowerJointZRotate.addChild(lampLowerArmName);
-        lampLowerArmName.addChild(lampArmScale);
-        lampArmScale.addChild(lampLowerArmTranslate);
-        lampLowerArmTranslate.addChild(lampLowerArmNode);
-        lampLowerArmName.addChild(lampUpperJointTranslate);
-        lampUpperJointTranslate.addChild(lampUpperJointYRotate);
-        lampUpperJointYRotate.addChild(lampUpperJointZRotate);
-        lampUpperJointZRotate.addChild(lampUpperJointName);
-        lampUpperJointName.addChild(lampUpperJointNode);
-        lampUpperJointName.addChild(lampUpperArmName);
-        lampUpperArmName.addChild(lampUpperArmTranslate);
-        lampUpperArmTranslate.addChild(lampUpperArmNode);
-        lampUpperArmName.addChild(lampHeadJointTranslate);
-        lampHeadJointTranslate.addChild(lampHeadJointYRotate);
-        lampHeadJointYRotate.addChild(lampHeadJointZRotate);
-        lampHeadJointZRotate.addChild(lampHeadJointName);
-        lampHeadJointName.addChild(lampHeadJointSelfScale);
-        lampHeadJointSelfScale.addChild(lampHeadJointNode);
-        lampHeadJointName.addChild(lampHeadTranslate);
-        lampHeadTranslate.addChild(lampHeadYRotate);
-        lampHeadYRotate.addChild(lampHeadZRotate);
-        lampHeadZRotate.addChild(lampHeadName);
-        lampHeadName.addChild(lampHeadSelfScale);
-        lampHeadSelfScale.addChild(lampHeadNode);
-        lampUpperJointTranslate.addChild(lampTailXRotate);
-        lampTailXRotate.addChild(lampTailYRotate);
-        lampTailYRotate.addChild(lampTailZRotate);
-        lampTailZRotate.addChild(lampTailName);
-        lampTailName.addChild(lampTailTransform);
-        lampTailTransform.addChild(lampTailNode);
+            lampTranslate.addChild(lampBaseScale);
+                lampBaseScale.addChild(lampBaseName);
+                    lampBaseName.addChild(lampBaseNode_1);
+                    lampBaseName.addChild(lampBaseScale2);
+                        lampBaseScale2.addChild(lampBaseNode_2);
+            lampTranslate.addChild(lampJointScale);
+                lampJointScale.addChild(lampLowerJointName);
+                    lampLowerJointName.addChild(lampLowerJointTranslate);
+                        lampLowerJointTranslate.addChild(lampLowerJointYRotate);
+                            lampLowerJointYRotate.addChild(lampLowerJointZRotate);
+                                lampLowerJointZRotate.addChild(lampLowerJointNode);
+                                lampLowerJointZRotate.addChild(lampLowerArmName);
+                                    lampLowerArmName.addChild(lampArmScale);
+                                        lampArmScale.addChild(lampLowerArmTranslate);
+                                            lampLowerArmTranslate.addChild(lampLowerArmNode);
+                                    lampLowerArmName.addChild(lampUpperJointTranslate);
+                                        lampUpperJointTranslate.addChild(lampUpperJointYRotate);
+                                            lampUpperJointYRotate.addChild(lampUpperJointZRotate);
+                                                lampUpperJointZRotate.addChild(lampUpperJointName);
+                                                    lampUpperJointName.addChild(lampUpperJointNode);
+                                                    lampUpperJointName.addChild(lampUpperArmName);
+                                                        lampUpperArmName.addChild(lampUpperArmTranslate);
+                                                            lampUpperArmTranslate.addChild(lampUpperArmNode);
+                                                        lampUpperArmName.addChild(lampHeadJointTranslate);
+                                                            lampHeadJointTranslate.addChild(lampHeadJointYRotate);
+                                                                lampHeadJointYRotate.addChild(lampHeadJointZRotate);
+                                                                    lampHeadJointZRotate.addChild(lampHeadJointName);
+                                                                        lampHeadJointName.addChild(lampHeadJointSelfScale);
+                                                                            lampHeadJointSelfScale.addChild(lampHeadJointNode);
+                                                                        lampHeadJointName.addChild(lampHeadTranslate);
+                                                                            lampHeadTranslate.addChild(lampHeadYRotate);
+                                                                                lampHeadYRotate.addChild(lampHeadZRotate);
+                                                                                    lampHeadZRotate.addChild(lampHeadName);
+                                                                                        lampHeadName.addChild(lampHeadSelfScale);
+                                                                                            lampHeadSelfScale.addChild(lampHeadNode);
 
-        lampHeadJointName.addChild(lampHeadTranslate);
-        lampHeadTranslate.addChild(lampHeadBackTransform);
-        lampHeadBackTransform.addChild(lampHeadBackName);
-        lampHeadBackName.addChild(lampHeadBackNode);
-        lampHeadJointName.addChild(lampHeadEarLeftTransform);
-        lampHeadEarLeftTransform.addChild(lampHeadEarLeftName);
-        lampHeadEarLeftName.addChild(lampHeadEarLeftNode);
-        lampHeadJointName.addChild(lampHeadEarRightTransform);
-        lampHeadEarRightTransform.addChild(lampHeadEarRightName);
-        lampHeadEarRightName.addChild(lampHeadEarRightNode);
+                                        lampUpperJointTranslate.addChild(lampTailXRotate);
+                                            lampTailXRotate.addChild(lampTailYRotate);
+                                                lampTailYRotate.addChild(lampTailZRotate);
+                                                    lampTailZRotate.addChild(lampTailName);
+                                                        lampTailName.addChild(lampTailTransform);
+                                                            lampTailTransform.addChild(lampTailNode);
+
+                                                                        lampHeadJointName.addChild(lampHeadTranslate);
+                                                                            lampHeadTranslate.addChild(lampHeadBackTransform);
+                                                                                lampHeadBackTransform.addChild(lampHeadBackName);
+                                                                                    lampHeadBackName.addChild(lampHeadBackNode);
+                                                                        lampHeadJointName.addChild(lampHeadEarLeftTransform);
+                                                                            lampHeadEarLeftTransform.addChild(lampHeadEarLeftName);
+                                                                                lampHeadEarLeftName.addChild(lampHeadEarLeftNode);
+                                                                        lampHeadJointName.addChild(lampHeadEarRightTransform);
+                                                                            lampHeadEarRightTransform.addChild(lampHeadEarRightName);
+                                                                                lampHeadEarRightName.addChild(lampHeadEarRightNode);
+
+        lampRoot.print(0, false);
     }
 
     @Override

@@ -44,16 +44,18 @@ public class Lamp extends SceneGraphObject {
         this.LAMP_ARM_HEIGHT = LAMP_ARM_HEIGHT;
     }
 
-    public void generateLampBase(float LAMP_BASE_LENGTH, float LAMP_BASE_HEIGHT, float LAMP_BASE_WIDTH) {
+    public void generateLampBase(
+            float LAMP_BASE_LENGTH, float LAMP_BASE_HEIGHT, float LAMP_BASE_WIDTH, int[] textureId_LampBase01
+            ) {
         Mesh lampBaseMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Shader lampBaseShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material lampBaseMaterial = new Material(
-                new Vec3(0.1f, 0.5f, 0.1f),
-                new Vec3(0.2f, 0.5f, 0.4f),
+                new Vec3(0.5f, 0.5f, 0.5f),
+                new Vec3(0.4f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
         Model lamp_base = new Model(
-                gl3, camera, light1, light2, movingLight, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh
+                gl3, camera, light1, light2, movingLight, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh, textureId_LampBase01
         );
         Mat4 lampBaseModelMatrix = Mat4Transform.scale(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
         lampBaseScale = new TransformNode("lamp base scale", lampBaseModelMatrix);

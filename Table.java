@@ -21,10 +21,15 @@ public class Table extends SceneGraphObject {
     private float TABLE_LEG_WIDTH;
     private float TABLE_LEG_HEIGHT;
 
+    private int[] textureId_Body01;
+    private int[] textureId_Leg01;
+
     public Table(GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight,
                  float TABLE_X_POSITION, float TABLE_Y_POSITION, float TABLE_Z_POSITION,
                  float TABLE_BODY_LENGTH, float TABLE_BODY_WIDTH, float TABLE_BODY_HEIGHT,
-                 float TABLE_LEG_LENGTH, float TABLE_LEG_WIDTH, float TABLE_LEG_HEIGHT) {
+                 float TABLE_LEG_LENGTH, float TABLE_LEG_WIDTH, float TABLE_LEG_HEIGHT,
+                 int[] textureId_Body01, int[] textureId_Leg01
+                 ) {
         super(gl3, camera, light1, light2, movingLight);
 
         this.TABLE_X_POSITION = TABLE_X_POSITION;
@@ -38,6 +43,9 @@ public class Table extends SceneGraphObject {
         this.TABLE_LEG_LENGTH = TABLE_LEG_LENGTH;
         this.TABLE_LEG_WIDTH = TABLE_LEG_WIDTH;
         this.TABLE_LEG_HEIGHT = TABLE_LEG_HEIGHT;
+
+        this.textureId_Body01 = textureId_Body01;
+        this.textureId_Leg01 = textureId_Leg01;
     }
 
     @Override
@@ -49,16 +57,16 @@ public class Table extends SceneGraphObject {
 
         Mesh tableBodyMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Shader tableBodyShader = new Shader(
-                gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt"
+                gl3, "shader/vs_table_body.txt", "shader/fs_table_body.txt"
         );
         Material tableBodyMaterial = new Material(
-                new Vec3(1.0f, 0.5f, 0.5f),
-                new Vec3(0.5f, 0.5f, 0.4f),
+                new Vec3(1.0f, 1.0f, 1.0f),
+                new Vec3(0.5f, 0.5f, 0.5f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
         Model table_body = new Model(
                 gl3, camera, light1, light2, movingLight,
-                tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh
+                tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh, textureId_Body01
         );
         Mat4 tableBodyModelMatrix = Mat4Transform.scale(TABLE_BODY_LENGTH, TABLE_BODY_HEIGHT, TABLE_BODY_WIDTH);
         tableBodyScale = new TransformNode("table body scale", tableBodyModelMatrix);
@@ -68,7 +76,7 @@ public class Table extends SceneGraphObject {
         Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Model table_leg = new Model(
                 gl3, camera, light1, light2, movingLight,
-                tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh
+                tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh, textureId_Leg01
         );
         tableLeg_LT_Node = new ModelNode("table leg", table_leg);
         tableLeg_LB_Node = new ModelNode("table leg", table_leg);

@@ -19,9 +19,13 @@ public class Wall extends SceneGraphObject {
     private float WALL_Y_POSITION;
     private float WALL_Z_POSITION;
 
+    private int[] textureId_Wall01;
+
     public Wall(GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight,
                 float WALL_LENGTH, float WALL_HEIGHT, float WALL_WIDTH,
-                float WALL_X_POSITION, float WALL_Y_POSITION, float WALL_Z_POSITION) {
+                float WALL_X_POSITION, float WALL_Y_POSITION, float WALL_Z_POSITION,
+                int[] textureId_Wall01
+                ) {
         super(gl3, camera, light1, light2, movingLight);
 
         this.WALL_LENGTH = WALL_LENGTH;
@@ -30,6 +34,8 @@ public class Wall extends SceneGraphObject {
         this.WALL_X_POSITION = WALL_X_POSITION;
         this.WALL_Y_POSITION = WALL_Y_POSITION;
         this.WALL_Z_POSITION = WALL_Z_POSITION;
+
+        this.textureId_Wall01 = textureId_Wall01;
     }
 
     @Override
@@ -41,13 +47,12 @@ public class Wall extends SceneGraphObject {
         Mesh wallMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Shader wallShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt");
         Material wallMaterial = new Material(
-                new Vec3(0.6f, 0.4f, 0.61f),
-                new Vec3(0.8f, 0.4f, 0.81f),
+                new Vec3(0.6f, 0.6f, 0.6f),
+                new Vec3(0.4f, 0.4f, 0.6f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-
         Model wall_bottom = new Model(
-                gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
+                gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh, textureId_Wall01
         );
         Mat4 wallModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
         wallScale = new TransformNode("table bottom and top scale", wallModelMatrix);

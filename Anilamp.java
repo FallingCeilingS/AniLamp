@@ -11,8 +11,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Anilamp extends JFrame implements ActionListener {
-    private static final int WIDTH = 1920;
-    private static final int HEIGHT = 1080;
+    private static final int WIDTH = 1024;
+    private static final int HEIGHT = 768;
     private static final Dimension dimension = new Dimension(WIDTH, HEIGHT);
     private static GLCanvas glCanvas;
     private static Anilamp_GLEventListener glEventListener;

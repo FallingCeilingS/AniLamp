@@ -120,17 +120,19 @@ public class Anilamp_GLEventListener implements GLEventListener {
          * floor
          */
         float floor_Y = -8.328f;
+        float floor_Z = 8f;
 
         Mesh floorMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader floorShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material floorMaterial = new Material(
-                new Vec3(0.0f, 0.5f, 0.81f),
-                new Vec3(0.0f, 0.5f, 0.81f),
+                new Vec3(0.6f, 0.5f, 0.5f),
+                new Vec3(0.65f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Mat4 floorModelMatrix = Mat4Transform.scale(60f,1f,40f);
-        floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, floor_Y, 0), floorModelMatrix);
-        floor = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId0);
+        int[] textureId_Floor = TextureLibrary.loadTexture(gl3, "textures/floor_resize.jpg");
+        Mat4 floorModelMatrix = Mat4Transform.scale(60f, 1f, 30f);
+        floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, floor_Y, floor_Z), floorModelMatrix);
+        floor = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId_Floor);
 
         /**
          * table
@@ -146,17 +148,22 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float TABLE_BODY_WIDTH = 10;
         float TABLE_BODY_HEIGHT = 0.4f;
 
+        int[] textureId_TableBody01 = TextureLibrary.loadTexture(gl3, "textures/table_body.jpg");
+
         /*
         table legs
          */
         float TABLE_LEG_LENGTH = 0.6f;
         float TABLE_LEG_WIDTH = TABLE_LEG_LENGTH;
         float TABLE_LEG_HEIGHT = 8;
+        int[] textureId_TableLeg01 = TextureLibrary.loadTexture(gl3, "textures/table_leg.jpg");
 
         table = new Table(gl3, camera, light1, light2, lightBulb,
                 TABLE_X_POSITION, TABLE_Y_POSITION, TABLE_Z_POSITION,
                 TABLE_BODY_LENGTH, TABLE_BODY_WIDTH, TABLE_BODY_HEIGHT,
-                TABLE_LEG_LENGTH, TABLE_LEG_WIDTH, TABLE_LEG_HEIGHT);
+                TABLE_LEG_LENGTH, TABLE_LEG_WIDTH, TABLE_LEG_HEIGHT,
+                textureId_TableBody01, textureId_TableLeg01
+                );
         table.execute();
 
         /**
@@ -168,8 +175,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float WALL_X_POSITION = 0;
         float WALL_Y_POSITION = floor_Y + WALL_HEIGHT / 2;
         float WALL_Z_POSITION = -(TABLE_BODY_WIDTH / 2 + WALL_WIDTH / 2);
+        int[] textureId_Wall01 = TextureLibrary.loadTexture(gl3, "textures/wall.jpg");
 
-        wall = new Wall(gl3, camera, light1, light2, lightBulb, WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION);
+        wall = new Wall(
+            gl3, camera, light1, light2, lightBulb, WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION, textureId_Wall01
+            );
         wall.execute();
 
         /**
@@ -184,9 +194,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 new Vec3(1.0f, 0.2f, 0.2f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Mat4 envModelMatrix = Mat4Transform.scale(400f,1f,160f);
+        Mat4 envModelMatrix = Mat4Transform.scale(400f,1f,200f);
         envModelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), envModelMatrix);
-        envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -4, env_Z), envModelMatrix);
+        envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -50, env_Z), envModelMatrix);
         env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId0);
 
 
@@ -209,6 +219,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_BASE_LENGTH = 1.25f;
         float LAMP_BASE_WIDTH = LAMP_BASE_LENGTH;
         float LAMP_BASE_HEIGHT = 0.25f;
+        int[] textureId_LampBase01 = TextureLibrary.loadTexture(gl3, "textures/lamp_base.jpg");
 
         /**
          *lamp joints
@@ -278,14 +289,15 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_HEAD_EAR_X_POSITION = 1.5f;
         float LAMP_HEAD_EAR_Y_POSITION = 0.35f;
         float LAMP_HEAD_EAR_Z_POSITION = 0.8f;
-
+        
         lamp = new Lamp(
-                gl3, camera, light1, light2, lightBulb,
-                LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z,
-                LAMP_ARM_HEIGHT
+            gl3, camera, light1, light2, lightBulb,
+            LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z,
+            LAMP_ARM_HEIGHT
         );
         lamp.initialise();
-        lamp.generateLampBase(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
+        
+        lamp.generateLampBase(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH, textureId_LampBase01);
         lamp.generateLampJoints(LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree);
         lamp.generateArms(LAMP_ARM_LENGTH, LAMP_ARM_WIDTH);
         lamp.generateHead(LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree);

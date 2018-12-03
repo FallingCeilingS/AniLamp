@@ -177,7 +177,7 @@ public class Lamp extends SceneGraphObject {
         lampHeadNode = new ModelNode("lamp head joint", lamp_head);
     }
 
-    public void generateTail(float LAMP_TAIL_SCALE_X, float LAMP_TAIL_SCALE_Y, float LAMP_TAIL_SCALE_Z) {
+    public void generateTail(float LAMP_TAIL_SCALE_X, float LAMP_TAIL_SCALE_Y, float LAMP_TAIL_SCALE_Z, int[] textureId_LampTail01) {
         Mesh lampTailMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         Shader lampTailShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material lampTailMaterial = new Material(
@@ -186,7 +186,7 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
         lamp_tail = new Model(
-                gl3, camera, light1, light2, movingLight, lampTailShader, lampTailMaterial, new Mat4(1), lampTailMesh
+                gl3, camera, light1, light2, movingLight, lampTailShader, lampTailMaterial, new Mat4(1), lampTailMesh, textureId_LampTail01
         );
         Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z);
         lampTailModelMatrix = Mat4.multiply(Mat4Transform.translate(-LAMP_TAIL_SCALE_X, 0, 0), lampTailModelMatrix);

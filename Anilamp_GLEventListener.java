@@ -261,6 +261,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_TAIL_SCALE_X = 0.65f;
         float LAMP_TAIL_SCALE_Y = 0.25f;
         float LAMP_TAIL_SCALE_Z = 0.25f;
+        int[] textureId_LampTail01 = TextureLibrary.loadTexture(gl3, "textures/lamp_tail.jpg");
 
         /*
         lamp upper arm
@@ -319,7 +320,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lamp.generateHead(
             LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree, textureId_LampHeadJoint01, textureId_LampHead01
             );
-        lamp.generateTail(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z);
+        lamp.generateTail(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z, textureId_LampTail01);
         lamp.generateDecoration(
             LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_Y_SCALE,
             LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE,

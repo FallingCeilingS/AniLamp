@@ -201,9 +201,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 new Vec3(0.2f, 0.2f, 0.2f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Mat4 envModelMatrix = Mat4Transform.scale(400f,1f,200f);
+        Mat4 envModelMatrix = Mat4Transform.scale(300f,1f,200f);
         envModelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), envModelMatrix);
-        envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -50, env_Z), envModelMatrix);
+        envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -5f, env_Z), envModelMatrix);
         int[] textureId_Env = TextureLibrary.loadTexture(gl3, "textures/fog-3622519.jpg");
         env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId_Env);
 
@@ -272,6 +272,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_HEAD_JOINT_DIAMETER = 0.65f;
         float LAMP_HEAD_XZ_SCALE = 2.8f;
         float LAMP_HEAD_Y_SCALE = 1f;
+        int[] textureId_LampHeadJoint01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_joint.jpg");
+        int[] textureId_LampHead01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head.jpg");
 
         /*
         lamp head joint
@@ -299,6 +301,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_HEAD_EAR_X_POSITION = 1.5f;
         float LAMP_HEAD_EAR_Y_POSITION = 0.35f;
         float LAMP_HEAD_EAR_Z_POSITION = 0.8f;
+        int[] textureId_LampHeadBack01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_joint.jpg");
+        int[] textureId_LampHeadEar01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_ear.jpg");
         
         lamp = new Lamp(
             gl3, camera, light1, light2, lightBulb,
@@ -309,14 +313,19 @@ public class Anilamp_GLEventListener implements GLEventListener {
         
         lamp.generateLampBase(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH, textureId_LampBase01);
         lamp.generateLampJoints(
-            LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree, textureId0
+            LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree, textureId_LampJoint01
             );
         lamp.generateArms(LAMP_ARM_LENGTH, LAMP_ARM_WIDTH, textureId_LampArm01);
-        lamp.generateHead(LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree);
+        lamp.generateHead(
+            LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree, textureId_LampHeadJoint01, textureId_LampHead01
+            );
         lamp.generateTail(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z);
-        lamp.generateDecoration(LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_Y_SCALE,
-        LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE,
-        LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, LAMP_HEAD_EAR_Z_POSITION);
+        lamp.generateDecoration(
+            LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_Y_SCALE,
+            LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE,
+            LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, LAMP_HEAD_EAR_Z_POSITION,
+            textureId_LampHeadBack01, textureId_LampHeadEar01
+            );
         lamp.buildTree();
         lamp.update();
 

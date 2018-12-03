@@ -69,17 +69,18 @@ public class Lamp extends SceneGraphObject {
     public void generateLampJoints(
             float LAMP_JOINT_DIAMETER,
             double lowerPressYInitialDegree, double lowerPressZInitialDegree,
-            double upperPressYInitialDegree, double upperPressZInitialDegree
+            double upperPressYInitialDegree, double upperPressZInitialDegree,
+            int[] textureId_LampJoint01
     ) {
         Mesh lampJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         Shader lampJointShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material lampJointMaterial = new Material(
-                new Vec3(0.1f, 0.5f, 0.1f),
-                new Vec3(0.2f, 0.5f, 0.4f),
+                new Vec3(0.5f, 0.5f, 0.4f),
+                new Vec3(0.4f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
         Model lamp_joint = new Model(
-                gl3, camera, light1, light2, movingLight, lampJointShader, lampJointMaterial, new Mat4(1), lampJointMesh
+                gl3, camera, light1, light2, movingLight, lampJointShader, lampJointMaterial, new Mat4(1), lampJointMesh, textureId_LampJoint01
         );
         Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
         lampJointScale = new TransformNode("lamp joint scale", lampJointModelMatrix);
@@ -103,16 +104,16 @@ public class Lamp extends SceneGraphObject {
         lampUpperJointNode = new ModelNode("lamp upper joint", lamp_joint);
     }
 
-    public void generateArms(float LAMP_ARM_LENGTH, float LAMP_ARM_WIDTH) {
+    public void generateArms(float LAMP_ARM_LENGTH, float LAMP_ARM_WIDTH, int[] textureId_LampArm01) {
         Mesh lampArmMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Shader lampArmShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material lampArmMaterial = new Material(
-                new Vec3(0.1f, 0.5f, 0.1f),
-                new Vec3(0.2f, 0.5f, 0.4f),
+                new Vec3(0.5f, 0.5f, 0.5f),
+                new Vec3(0.4f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
         Model lamp_arm = new Model(
-                gl3, camera, light1, light2, movingLight, lampArmShader, lampArmMaterial, new Mat4(1), lampArmMesh
+                gl3, camera, light1, light2, movingLight, lampArmShader, lampArmMaterial, new Mat4(1), lampArmMesh, textureId_LampArm01
         );
         Mat4 lampArmModelMatrix = Mat4Transform.scale(LAMP_ARM_LENGTH, LAMP_ARM_HEIGHT, LAMP_ARM_WIDTH);
         lampArmScale = new TransformNode("lamp arm scale", lampArmModelMatrix);
@@ -136,8 +137,8 @@ public class Lamp extends SceneGraphObject {
         Mesh lampHeadJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         Shader lampHeadShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material lampHeadMaterial = new Material(
-                new Vec3(0.1f, 0.5f, 0.1f),
-                new Vec3(0.2f, 0.5f, 0.4f),
+                new Vec3(0.5f, 0.5f, 0.5f),
+                new Vec3(0.3f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
         Model head_joint = new Model(

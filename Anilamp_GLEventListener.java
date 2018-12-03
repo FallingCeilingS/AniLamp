@@ -49,6 +49,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
     @Override
     public void dispose(GLAutoDrawable glAutoDrawable) {
         GL3 gl3 = glAutoDrawable.getGL().getGL3();
+        light1.dispose(gl3);
+        light2.dispose(gl3);
+        floor.dispose(gl3);
     }
 
     @Override
@@ -190,14 +193,15 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Mesh envMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader envShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material envMaterial = new Material(
-                new Vec3(1.0f, 0.2f, 0.2f),
-                new Vec3(1.0f, 0.2f, 0.2f),
+                new Vec3(0.2f, 0.2f, 0.2f),
+                new Vec3(0.2f, 0.2f, 0.2f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
         Mat4 envModelMatrix = Mat4Transform.scale(400f,1f,200f);
         envModelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), envModelMatrix);
         envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -50, env_Z), envModelMatrix);
-        env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId0);
+        int[] textureId_Env = TextureLibrary.loadTexture(gl3, "textures/fog-3622519.jpg");
+        env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId_Env);
 
 
         /**
@@ -225,6 +229,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
          *lamp joints
          */
         float LAMP_JOINT_DIAMETER = 0.6f;
+        int[] textureId_LampJoint01 = TextureLibrary.loadTexture(gl3, "textures/lamp_joint.jpg");
 
         /*
         lamp lower joint
@@ -236,6 +241,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_ARM_LENGTH = LAMP_JOINT_DIAMETER * 0.5f;
         float LAMP_ARM_WIDTH = LAMP_ARM_LENGTH;
         float LAMP_ARM_HEIGHT = 3.5f;
+        int[] textureId_LampArm01 = TextureLibrary.loadTexture(gl3, "textures/arm_metal.jpg");
 
         /*
         lamp lower arm
@@ -298,8 +304,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lamp.initialise();
         
         lamp.generateLampBase(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH, textureId_LampBase01);
-        lamp.generateLampJoints(LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree);
-        lamp.generateArms(LAMP_ARM_LENGTH, LAMP_ARM_WIDTH);
+        lamp.generateLampJoints(
+            LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree, textureId0
+            );
+        lamp.generateArms(LAMP_ARM_LENGTH, LAMP_ARM_WIDTH, textureId_LampArm01);
         lamp.generateHead(LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree);
         lamp.generateTail(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z);
         lamp.generateDecoration(LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_Y_SCALE,
@@ -402,6 +410,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
         if (LAMP_ON) {
             lightBulb.render(gl3);
         }
-        testCube1.render(gl3);
+        // testCube1.render(gl3);
     }
 }

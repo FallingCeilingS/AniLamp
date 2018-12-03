@@ -4,6 +4,8 @@ import gmaths.Mat4Transform;
 import gmaths.Vec3;
 
 public class Wall extends SceneGraphObject {
+    private Model wall_bottom, wall_bottom_left, wall_bottom_right,
+            wall_middle_left, wall_middle_right, wall_top, wall_top_left, wall_top_right;
     private NameNode wallRoot, wallBottomName, wallBottomLeftName, wallBottomRightName,
             wallMiddleLeftName, wallMiddleRightName, wallTopName, wallTopLeftName, wallTopRightName;
     private TransformNode wallTransform, wallScale, wallBottomLeftTranslate, wallBottomRightTranslate,
@@ -51,21 +53,21 @@ public class Wall extends SceneGraphObject {
                 new Vec3(0.4f, 0.4f, 0.6f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model wall_bottom = new Model(
+        wall_bottom = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh, textureId_Wall01
         );
         Mat4 wallModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
         wallScale = new TransformNode("table bottom and top scale", wallModelMatrix);
         wallBottomName = new NameNode("wall bottom");
         wallBottomNode = new ModelNode("wall bottom", wall_bottom);
-        Model wall_bottom_left = new Model(
+        wall_bottom_left = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
         );
         wallBottomLeftName = new NameNode("wall bottom left name");
         Mat4 wallBottomLeftTranslateMatrix = Mat4Transform.translate(-1, 0, 0);
         wallBottomLeftTranslate = new TransformNode("wall bottom left translate", wallBottomLeftTranslateMatrix);
         wallBottomLeftNode = new ModelNode("wall bottom left node", wall_bottom_left);
-        Model wall_bottom_right = new Model(
+        wall_bottom_right = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
         );
         wallBottomRightName = new NameNode("wall bottom right name");
@@ -78,14 +80,14 @@ public class Wall extends SceneGraphObject {
         Mat4 wallMiddleModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
         wallMiddleModelMatrix = Mat4.multiply(Mat4Transform.translate(0, WALL_HEIGHT, 0), wallMiddleModelMatrix);
         wallMiddleTransform = new TransformNode("wall middle left and right translate", wallMiddleModelMatrix);
-        Model wall_middle_left = new Model(
+        wall_middle_left = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
         );
         wallMiddleLeftName = new NameNode("wall middle left");
         Mat4 wallMiddleLeftTranslateMatrix = Mat4Transform.translate(-1, 0, 0);
         wallMiddleLeftTranslate = new TransformNode("wall middle left translate", wallMiddleLeftTranslateMatrix);
         wallLeftNode = new ModelNode("wall middle left model", wall_middle_left);
-        Model wall_middle_right = new Model(
+        wall_middle_right = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
         );
         wallMiddleRightName = new NameNode("wall middle right");
@@ -95,7 +97,7 @@ public class Wall extends SceneGraphObject {
         );
         wallRightNode = new ModelNode("wall middle right model", wall_middle_right);
 
-        Model wall_top = new Model(
+        wall_top = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
         );
         Mat4 wallTopModelMatrix = Mat4Transform.scale(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH);
@@ -105,14 +107,14 @@ public class Wall extends SceneGraphObject {
         wallTopTransform = new TransformNode("table bottom and top scale", wallTopModelMatrix);
         wallTopName = new NameNode("wall top");
         wallTopNode = new ModelNode("wall top", wall_top);
-        Model wall_top_left = new Model(
+        wall_top_left = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
         );
         wallTopLeftName = new NameNode("wall top left name");
         Mat4 wallTopLeftTranslateMatrix = Mat4Transform.translate(-1, 0, 0);
         wallTopLeftTranslate = new TransformNode("wall top left translate", wallTopLeftTranslateMatrix);
         wallTopLeftNode = new ModelNode("wall top left node", wall_top_left);
-        Model wall_top_right = new Model(
+        wall_top_right = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh
         );
         wallTopRightName = new NameNode("wall top right name");
@@ -154,6 +156,18 @@ public class Wall extends SceneGraphObject {
     @Override
     void update() {
         wallRoot.update();
+    }
+
+    @Override
+    void dispose(GL3 gl3) {
+        wall_bottom.dispose(gl3);
+        wall_bottom_left.dispose(gl3);
+        wall_bottom_right.dispose(gl3);
+        wall_middle_left.dispose(gl3);
+        wall_middle_right.dispose(gl3);
+        wall_top.dispose(gl3);
+        wall_top_left.dispose(gl3);
+        wall_top_right.dispose(gl3);
     }
 
     @Override

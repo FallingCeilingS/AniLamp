@@ -4,6 +4,7 @@ import gmaths.Mat4Transform;
 import gmaths.Vec3;
 
 public class Table extends SceneGraphObject {
+    private Model table_body, table_leg;
     private NameNode tableRoot, tableBodyName, tableLegLeftTop, tableLegLeftBtm, tableLegRightTop, tableLegRightBtm;
     private TransformNode tableTranslate, tableBodyScale, tableLegTransform,
             ltTranslate, lbTranslate, rtTranslate, rbTranslate;
@@ -64,7 +65,7 @@ public class Table extends SceneGraphObject {
                 new Vec3(0.5f, 0.5f, 0.5f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model table_body = new Model(
+        table_body = new Model(
                 gl3, camera, light1, light2, movingLight,
                 tableBodyShader, tableBodyMaterial, new Mat4(1), tableBodyMesh, textureId_Body01
         );
@@ -74,7 +75,7 @@ public class Table extends SceneGraphObject {
         tableBodyNode = new ModelNode("table body", table_body);
 
         Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Model table_leg = new Model(
+        table_leg = new Model(
                 gl3, camera, light1, light2, movingLight,
                 tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh, textureId_Leg01
         );
@@ -128,6 +129,12 @@ public class Table extends SceneGraphObject {
     @Override
     void update() {
         tableRoot.update();
+    }
+
+    @Override
+    void dispose(GL3 gl3) {
+        table_body.dispose(gl3);
+        table_leg.dispose(gl3);
     }
 
     @Override

@@ -51,7 +51,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         GL3 gl3 = glAutoDrawable.getGL().getGL3();
         light1.dispose(gl3);
         light2.dispose(gl3);
+        lightBulb.dispose(gl3);
         floor.dispose(gl3);
+        table.dispose(gl3);
+        wall.dispose(gl3);
+        lamp.dispose(gl3);
     }
 
     @Override

@@ -5,6 +5,8 @@ import gmaths.Vec3;
 
 public class Lamp extends SceneGraphObject {
     private float LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z, LAMP_ARM_HEIGHT;
+    private Model lamp_base, lamp_joint, lamp_arm, head_joint, lamp_head,
+            lamp_tail, lamp_head_back, lamp_head_left_ear, lamp_head_right_ear;
     private NameNode lampBaseName,
             lampLowerJointName, lampLowerArmName, lampUpperJointName, lampUpperArmName,
             lampHeadJointName,
@@ -54,7 +56,7 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.4f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_base = new Model(
+        lamp_base = new Model(
                 gl3, camera, light1, light2, movingLight, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh, textureId_LampBase01
         );
         Mat4 lampBaseModelMatrix = Mat4Transform.scale(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH);
@@ -79,7 +81,7 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.4f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_joint = new Model(
+        lamp_joint = new Model(
                 gl3, camera, light1, light2, movingLight, lampJointShader, lampJointMaterial, new Mat4(1), lampJointMesh, textureId_LampJoint01
         );
         Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
@@ -112,7 +114,7 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.4f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_arm = new Model(
+        lamp_arm = new Model(
                 gl3, camera, light1, light2, movingLight, lampArmShader, lampArmMaterial, new Mat4(1), lampArmMesh, textureId_LampArm01
         );
         Mat4 lampArmModelMatrix = Mat4Transform.scale(LAMP_ARM_LENGTH, LAMP_ARM_HEIGHT, LAMP_ARM_WIDTH);
@@ -141,11 +143,11 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.3f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model head_joint = new Model(
+        head_joint = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial, new Mat4(1), lampHeadJointMesh
         );
         Mesh lampHeadMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Model lamp_head = new Model(
+        lamp_head = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial, new Mat4(1), lampHeadMesh
         );
 
@@ -182,7 +184,7 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_tail = new Model(
+        lamp_tail = new Model(
                 gl3, camera, light1, light2, movingLight, lampTailShader, lampTailMaterial, new Mat4(1), lampTailMesh
         );
         Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z);
@@ -210,7 +212,7 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_head_back = new Model(
+        lamp_head_back = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadBackShader, lampHeadBackMaterial, new Mat4(1), lampHeadBackMesh
         );
         Mat4 lampHeadBackModelMatrix = Mat4Transform.scale(
@@ -232,7 +234,7 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.2f, 0.5f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 32.0f
         );
-        Model lamp_head_left_ear = new Model(
+        lamp_head_left_ear = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadEarShader, lampHeadEarMaterial, new Mat4(1), lampHeadEarMesh
         );
         Mat4 lampHeadEarLeftModelMatrix = Mat4Transform.scale(
@@ -244,7 +246,7 @@ public class Lamp extends SceneGraphObject {
         lampHeadEarLeftTransform = new TransformNode("lamp head ear left transform", lampHeadEarLeftModelMatrix);
         lampHeadEarLeftName = new NameNode("lamp head ear left");
         lampHeadEarLeftNode = new ModelNode("lamp head ear left", lamp_head_left_ear);
-        Model lamp_head_right_ear = new Model(
+        lamp_head_right_ear = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadEarShader, lampHeadEarMaterial, new Mat4(1), lampHeadEarMesh
         );
         Mat4 lampHeadEarRightModelMatrix = Mat4Transform.scale(
@@ -331,6 +333,19 @@ public class Lamp extends SceneGraphObject {
     @Override
     void update() {
         lampRoot.update();
+    }
+
+    @Override
+    void dispose(GL3 gl3) {
+        lamp_base.dispose(gl3);
+        lamp_joint.dispose(gl3);
+        lamp_arm.dispose(gl3);
+        head_joint.dispose(gl3);
+        lamp_head.dispose(gl3);
+        lamp_tail.dispose(gl3);
+        lamp_head_back.dispose(gl3);
+        lamp_head_left_ear.dispose(gl3);
+        lamp_head_right_ear.dispose(gl3);
     }
 
     @Override

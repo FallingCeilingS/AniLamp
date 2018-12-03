@@ -22,5 +22,6 @@ abstract class SceneGraphObject {
         buildTree();
         update();
     }
+    abstract void dispose(GL3 gl3);
     public abstract void draw(GL3 gl3);
 }

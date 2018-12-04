@@ -6,10 +6,13 @@ public class Model {
     private Camera camera;
     private Light light1, light2;
     private MovingLight movingLight;
-    public Shader shader;
+    private Shader shader;
     private Material material;
     private Mat4 modelMatrix;
     private Mesh mesh;
+
+    private double programStart = 0;
+    private float offsetX;
 
     private int[] textureId1;
     private int[] textureId2;
@@ -28,6 +31,7 @@ public class Model {
         this.mesh = mesh;
         this.textureId1 = textureId1;
         this.textureId2 = textureId2;
+        this.programStart = System.currentTimeMillis() / 1000.0;
     }
 
     public Model(
@@ -69,6 +73,12 @@ public class Model {
         }
     }
 
+    private void setOffsetTexture() {
+        double elapsedTime = (System.currentTimeMillis() - programStart) * 0.00008;
+        offsetX = (float) (elapsedTime - Math.floor(elapsedTime));
+        System.out.println("offsetX" + offsetX);
+    }
+
     public void render(GL3 gl3, Mat4 modelMatrix) {
         Mat4 mvpMatrix = Mat4.multiply(
                 camera.getPerspectiveMatrix(),
@@ -76,11 +86,13 @@ public class Model {
                         camera.getViewMatrix(),
                         modelMatrix
                 )
-                );
+        );
+        setOffsetTexture();
         shader.use(gl3);
         shader.setFloatArray(gl3, "model", modelMatrix.toFloatArrayForGLSL());
         shader.setFloatArray(gl3, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());
         shader.setVec3(gl3, "viewPos", camera.getPosition());
+        shader.setFloat(gl3, "offset", offsetX, 0);
         shader.setVec3(gl3, "light1.position", light1.getPosition());
         shader.setVec3(gl3, "light1.ambient", light1.getMaterial().getAmbient());
         shader.setVec3(gl3, "light1.diffuse", light1.getMaterial().getDiffuse());

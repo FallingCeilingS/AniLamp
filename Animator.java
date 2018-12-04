@@ -77,6 +77,8 @@ public class Animator {
     private double[] range1;
     private double[] obj_2_range;
     private double[] range2;
+    private double[] obj_3_range;
+    private double[] range3;
 
     /**
      * some variables that never used
@@ -108,7 +110,8 @@ public class Animator {
             double headJointYInitialDegree,
             double LAMP_BASE_LENGTH,
             double[] obj_1_range,
-            double[] obj_2_range
+            double[] obj_2_range,
+            double[] obj_3_range
     ) {
         this.MAX_LENGTH = MAX_LENGTH;
         this.MAX_WIDTH = MAX_WIDTH;
@@ -132,6 +135,8 @@ public class Animator {
         this.range1 = generateRange(this.obj_1_range);
         this.obj_2_range = obj_2_range;
         this.range2 = generateRange(this.obj_2_range);
+        this.obj_3_range = obj_3_range;
+        this.range3 = generateRange(this.obj_3_range);
     }
 
     private double[] generateRange(double[] obj_range) {
@@ -252,7 +257,11 @@ public class Animator {
     private void generateRandomPosition() {
         double randomX = Math.random() * (MAX_LENGTH - LAMP_BASE_LENGTH) - (MAX_LENGTH - LAMP_BASE_LENGTH) / 2;
         double randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
-        while (judgeRange(range1, randomX, randomZ) | judgeRange(range2, randomX, randomZ)) {
+        while (
+                judgeRange(range1, randomX, randomZ) |
+                judgeRange(range2, randomX, randomZ) |
+                judgeRange(range3, randomX, randomZ)
+        ) {
             randomX = Math.random() * (MAX_LENGTH - LAMP_BASE_LENGTH) - (MAX_LENGTH - LAMP_BASE_LENGTH) / 2;
             randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
         }

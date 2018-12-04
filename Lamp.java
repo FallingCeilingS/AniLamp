@@ -371,15 +371,13 @@ public class Lamp extends SceneGraphObject {
 
     @Override
     void dispose(GL3 gl3) {
-        lamp_base.dispose(gl3);
-        lamp_joint.dispose(gl3);
-        lamp_arm.dispose(gl3);
-        head_joint.dispose(gl3);
-        lamp_head.dispose(gl3);
-        lamp_tail.dispose(gl3);
-        lamp_head_back.dispose(gl3);
-        lamp_head_left_ear.dispose(gl3);
-        lamp_head_right_ear.dispose(gl3);
+        Model[] models = new Model[] {
+                lamp_base, lamp_joint, lamp_arm, head_joint, lamp_head,
+                lamp_tail, lamp_head_back, lamp_head_left_ear, lamp_head_right_ear
+        };
+        for (Model model: models) {
+            model.dispose(gl3);
+        }
     }
 
     @Override

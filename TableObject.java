@@ -47,6 +47,10 @@ public class TableObject {
         range = new double[] {OBJ_X_POS, OBJ_Z_POS, OBJ_SCALE_X, OBJ_SCALE_Z};
     }
 
+    public void dispose(GL3 gl3) {
+        object.dispose(gl3);
+    }
+
     public void render(GL3 gl3) {
         object.render(gl3);
     }

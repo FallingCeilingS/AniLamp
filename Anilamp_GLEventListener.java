@@ -19,7 +19,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private Lamp lamp;
     private Animator animator;
     private double startTime = 0;
-    private double programStart = 0;
     private float offsetX = 0;
     private float offsetY = 0;
 
@@ -33,7 +32,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     public Anilamp_GLEventListener(Camera camera) {
         this.camera = camera;
-        this.camera.setPosition(new Vec3(0f,4f,30f));
+        this.camera.setPosition(new Vec3(0f, 4f, 30f));
         this.camera.setTarget(new Vec3(0f, 2.5f, 0f));
     }
 
@@ -54,13 +53,21 @@ public class Anilamp_GLEventListener implements GLEventListener {
     @Override
     public void dispose(GLAutoDrawable glAutoDrawable) {
         GL3 gl3 = glAutoDrawable.getGL().getGL3();
-        light1.dispose(gl3);
-        light2.dispose(gl3);
+        Light[] lights = new Light[]{
+                light1, light2
+        };
+        for (Light light : lights) {
+            light.dispose(gl3);
+        }
         lightBulb.dispose(gl3);
         floor.dispose(gl3);
-        table.dispose(gl3);
-        wall.dispose(gl3);
-        lamp.dispose(gl3);
+        env.dispose(gl3);
+        SceneGraphObject[] sceneGraphObjects = new SceneGraphObject[]{
+                table, wall, lamp
+        };
+        for (SceneGraphObject sceneGraphObject : sceneGraphObjects) {
+            sceneGraphObject.dispose(gl3);
+        }
     }
 
     @Override
@@ -77,9 +84,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         camera.setPerspectiveMatrix(Mat4Transform.perspective(45, aspect));
     }
 
-    public void initialise(GL3 gl3) {
+    private void initialise(GL3 gl3) {
         // ***************************************************
-        programStart = getStartSecond();
         int[] textureId0 = TextureLibrary.loadTexture(gl3, "textures/chequerboard.jpg");
 
         nullMaterial = new Material();
@@ -99,7 +105,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light1Material.setDiffuse(0.6f, 0.6f, 0.6f);
         light1Material.setSpecular(0.6f, 0.6f, 0.6f);
         light1 = new Light(gl3);
-        light1.setPosition(new Vec3(-10f,10f,4f));
+        light1.setPosition(new Vec3(-10f, 10f, 4f));
         light1.setCamera(camera);
 
         /*
@@ -111,7 +117,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light2Material.setSpecular(0.9f, 0.9f, 0.9f);
         light2 = new Light(gl3);
         light2.setCamera(camera);
-        light2.setPosition(new Vec3(6f,4f,8f));
+        light2.setPosition(new Vec3(6f, 4f, 8f));
 
         // ***************************************************
         /*
@@ -183,43 +189,46 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 TABLE_BODY_LENGTH, TABLE_BODY_WIDTH, TABLE_BODY_HEIGHT,
                 TABLE_LEG_LENGTH, TABLE_LEG_WIDTH, TABLE_LEG_HEIGHT,
                 textureId_TableBody01, textureId_TableLeg01
-                );
+        );
         table.execute();
 
         // ***************************************************
         /*
         3 objects on the table
          */
-        float TABLE_OBJ_Y_POS = TABLE_Y_POSITION + TABLE_BODY_HEIGHT * 2 - 0.25f;
+        float TABLE_OBJ_Y_POS = TABLE_BODY_HEIGHT / 2 + TABLE_Y_POSITION;
 
         float OBJ_1_X_POS = 2;
-        float OBJ_1_Z_POS = 2;
+        float OBJ_1_Z_POS = 4;
         float OBJ_1_SCALE_X = 2;
         float OBJ_1_SCALE_Y = 0.5f;
         float OBJ_1_SCALE_Z = 1.5f;
         object01 = new TableObject(
-                OBJ_1_SCALE_X, OBJ_1_SCALE_Y, OBJ_1_SCALE_Z, OBJ_1_X_POS, OBJ_1_Z_POS, TABLE_OBJ_Y_POS,
+                OBJ_1_SCALE_X, OBJ_1_SCALE_Y, OBJ_1_SCALE_Z, OBJ_1_X_POS, OBJ_1_Z_POS, TABLE_OBJ_Y_POS + OBJ_1_SCALE_Y / 2,
                 camera, light1, light2, lightBulb);
         object01.generateModel(gl3, "cube");
 
-        float OBJ_2_X_POS = -2;
-        float OBJ_2_Z_POS = 2;
-        float OBJ_2_SCALE_X = 2;
+        float OBJ_2_X_POS = 8;
+        float OBJ_2_Z_POS = -2;
+        float OBJ_2_SCALE_X = 2f;
         float OBJ_2_SCALE_Y = 2f;
         float OBJ_2_SCALE_Z = 2f;
         object02 = new TableObject(
-                OBJ_2_SCALE_X, OBJ_2_SCALE_Y, OBJ_2_SCALE_Z, OBJ_2_X_POS, OBJ_2_Z_POS, TABLE_OBJ_Y_POS,
+                OBJ_2_SCALE_X, OBJ_2_SCALE_Y, OBJ_2_SCALE_Z, OBJ_2_X_POS, OBJ_2_Z_POS, TABLE_OBJ_Y_POS + OBJ_2_SCALE_Y / 2,
                 camera, light1, light2, lightBulb
         );
         object02.generateModel(gl3, "sphere");
 
-        Mesh obj3 = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Shader shader3 = new Shader(gl3, "shader/vs_table_body.txt", "shader/fs_table_body.txt");
-        Material obj_3_Material = new Material(
-                new Vec3(0.2f, 0.2f, 0.2f),
-                new Vec3(0.75f, 0.6f, 0.75f),
-                new Vec3(0.2f, 0.2f, 0.2f), 16.0f
+        float OBJ_3_X_POS = -2;
+        float OBJ_3_Z_POS = 2;
+        float OBJ_3_SCALE_X = 1f;
+        float OBJ_3_SCALE_Y = 0.2f;
+        float OBJ_3_SCALE_Z = 1.2f;
+        object03 = new TableObject(
+                OBJ_3_SCALE_X, OBJ_3_SCALE_Y, OBJ_3_SCALE_Z, OBJ_3_X_POS, OBJ_3_Z_POS, TABLE_OBJ_Y_POS + OBJ_3_SCALE_Y / 2,
+                camera, light1, light2, lightBulb
         );
+        object03.generateModel(gl3, "cube");
 
         // ***************************************************
         /*
@@ -234,8 +243,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_Wall01 = TextureLibrary.loadTexture(gl3, "textures/wall.jpg");
 
         wall = new Wall(
-            gl3, camera, light1, light2, lightBulb, WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION, textureId_Wall01
-            );
+                gl3, camera, light1, light2, lightBulb, WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION, textureId_Wall01
+        );
         wall.execute();
 
         // ***************************************************
@@ -252,13 +261,12 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 new Vec3(1.0f, 1.0f, 1.0f),
                 new Vec3(0.0f, 0.0f, 0.0f), 32.0f
         );
-        Mat4 envModelMatrix = Mat4Transform.scale(300f,1f,200f);
+        Mat4 envModelMatrix = Mat4Transform.scale(300f, 1f, 200f);
         envModelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), envModelMatrix);
         envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -5f, env_Z), envModelMatrix);
         int[] textureId_Env = TextureLibrary.loadTexture(gl3, "textures/fog_bg.jpg");
         int[] textureId_Fog = TextureLibrary.loadTexture(gl3, "textures/fog.jpg");
         env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId_Env, textureId_Fog);
-
 
         // ***************************************************
         /*
@@ -327,29 +335,29 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_HEAD_EAR_Z_POSITION = 0.8f;
         int[] textureId_LampHeadBack01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_joint.jpg");
         int[] textureId_LampHeadEar01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_ear.jpg");
-        
+
         lamp = new Lamp(
-            gl3, camera, light1, light2, lightBulb,
-            LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z,
-            LAMP_ARM_HEIGHT
+                gl3, camera, light1, light2, lightBulb,
+                LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z,
+                LAMP_ARM_HEIGHT
         );
         lamp.initialise();
-        
+
         lamp.generateLampBase(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH, textureId_LampBase01);
         lamp.generateLampJoints(
-            LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree, textureId_LampJoint01
-            );
+                LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree, textureId_LampJoint01
+        );
         lamp.generateArms(LAMP_ARM_LENGTH, LAMP_ARM_WIDTH, textureId_LampArm01);
         lamp.generateHead(
-            LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree, textureId_LampHeadJoint01, textureId_LampHead01
-            );
+                LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree, textureId_LampHeadJoint01, textureId_LampHead01
+        );
         lamp.generateTail(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z, textureId_LampTail01);
         lamp.generateDecoration(
-            LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_Y_SCALE,
-            LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE,
-            LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, LAMP_HEAD_EAR_Z_POSITION,
-            textureId_LampHeadBack01, textureId_LampHeadEar01
-            );
+                LAMP_HEAD_BACK_DIAMETER, LAMP_HEAD_BACK_Y_SCALE,
+                LAMP_HEAD_EAR_X_SCALE, LAMP_HEAD_EAR_Y_SCALE, LAMP_HEAD_EAR_Z_SCALE,
+                LAMP_HEAD_EAR_X_POSITION, LAMP_HEAD_EAR_Y_POSITION, LAMP_HEAD_EAR_Z_POSITION,
+                textureId_LampHeadBack01, textureId_LampHeadEar01
+        );
         lamp.buildTree();
         lamp.update();
 
@@ -370,11 +378,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 lowerPressZInitialDegree, upperPressZInitialDegree, lowerPressYInitialDegree,
                 upperPressYInitialDegree, headJointZInitialDegree, headJointYInitialDegree,
                 LAMP_BASE_LENGTH,
-                object01.range, object02.range
+                object01.range, object02.range, object03.range
         );
     }
 
-    public void setLightOnOff() {
+    private void setLightOnOff() {
         if (LIGHT1_ON) {
             light1.setMaterial(light1Material);
         } else {
@@ -408,7 +416,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         startTime = getStartSecond();
     }
 
-    public void updateMotion() {
+    private void updateMotion() {
         animator.generateRandomTargetAngle();
         testCube1.setModelMatrix(animator.currentTranslateMatrix);
         animator.updateLowerJointYRotateDegree(startTime);
@@ -429,17 +437,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lightBulb.setWorldMatrix(Mat4.multiply(lamp.lampHeadName.worldTransform, lightBulbSelfTranslate));
 //        System.out.println("light bulb world position" + lightBulb.getWorldPosition());
 //        System.out.println("light bulb world direction" + lightBulb.getWorldDirection());
+        
         lamp.update();
     }
 
-    public void setOffsetTexture(GL3 gl3) {
-        double elapsedTime = getStartSecond() - programStart;
-        offsetX = (float) (elapsedTime);
-//        System.out.println("offsetX" + offsetX);
-        env.shader.setFloat(gl3, "offset", offsetX, offsetY);
-    }
-
-    public void render(GL3 gl3) {
+    private void render(GL3 gl3) {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         setLightOnOff();
         if (LIGHT1_ON) {
@@ -452,8 +454,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         table.draw(gl3);
         object01.render(gl3);
         object02.render(gl3);
+        object03.render(gl3);
         wall.draw(gl3);
-        setOffsetTexture(gl3);
         env.render(gl3);
         updateMotion();
         lamp.draw(gl3);

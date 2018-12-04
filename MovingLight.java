@@ -92,8 +92,9 @@ public class MovingLight {
 
     public void setWorldDirection() {
         Vec4 result = Vec4.multiplyMatrix(this.worldMatrix, new Vec4(localDirection, 0));
-        result.x = result.x * 0.285f;
-        result.z = result.z * -0.001f;
+//        result.x = result.x * 0.285f;
+//        result.z = result.z * -0.001f;
+        result.z = result.z * (-0.05f);
         this.worldDirection = result.toVec3();
     }
 

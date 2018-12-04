@@ -82,7 +82,7 @@ public class Model {
     private void setOffsetTexture() {
         double elapsedTime = (System.currentTimeMillis() - programStart) * 0.00008;
         offsetX = (float) (elapsedTime - Math.floor(elapsedTime));
-        System.out.println("offsetX" + offsetX);
+        // System.out.println("offsetX" + offsetX);
     }
 
     public void render(GL3 gl3, Mat4 modelMatrix) {

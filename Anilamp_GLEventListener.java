@@ -199,26 +199,30 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         float TABLE_OBJ_Y_POS = TABLE_BODY_HEIGHT / 2 + TABLE_Y_POSITION;
 
-        float OBJ_1_X_POS = 2;
-        float OBJ_1_Z_POS = 4;
+        float OBJ_1_X_POS = 4;
+        float OBJ_1_Z_POS = -2.5f;
         float OBJ_1_SCALE_X = 2;
-        float OBJ_1_SCALE_Y = 0.5f;
-        float OBJ_1_SCALE_Z = 1.5f;
+        float OBJ_1_SCALE_Y = 0.15f;
+        float OBJ_1_SCALE_Z = 2.87f;
+        int[] textureId_Obj1_01 = TextureLibrary.loadTexture(
+                gl3, "textures/Disney Animation Studios will present 'Cycles' , its first virtual reality (VR) short, at ACM SIGGRAPH 2018.jpg"
+                );
         object01 = new TableObject(
                 OBJ_1_SCALE_X, OBJ_1_SCALE_Y, OBJ_1_SCALE_Z, OBJ_1_X_POS, OBJ_1_Z_POS,
                 TABLE_OBJ_Y_POS + OBJ_1_SCALE_Y / 2,
-                camera, light1, light2, lightBulb);
+                camera, light1, light2, lightBulb, textureId_Obj1_01);
         object01.generateModel(gl3, "cube");
 
         float OBJ_2_X_POS = 8;
-        float OBJ_2_Z_POS = -2;
-        float OBJ_2_SCALE_X = 2f;
+        float OBJ_2_Z_POS = -4;
+        float OBJ_2_SCALE_X = 1.292f;
         float OBJ_2_SCALE_Y = 2f;
-        float OBJ_2_SCALE_Z = 2f;
+        float OBJ_2_SCALE_Z = 2.66f;
+        int[] textureId_Obj2_01 = TextureLibrary.loadTexture(gl3, "textures/flat-world-map-paint-acrylic.jpg");
         object02 = new TableObject(
                 OBJ_2_SCALE_X, OBJ_2_SCALE_Y, OBJ_2_SCALE_Z, OBJ_2_X_POS, OBJ_2_Z_POS,
                 TABLE_OBJ_Y_POS + OBJ_2_SCALE_Y / 2,
-                camera, light1, light2, lightBulb
+                camera, light1, light2, lightBulb, textureId_Obj2_01
         );
         object02.generateModel(gl3, "sphere");
 
@@ -227,10 +231,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float OBJ_3_SCALE_X = 1f;
         float OBJ_3_SCALE_Y = 0.2f;
         float OBJ_3_SCALE_Z = 1.2f;
+        int[] textureId_Obj3_01 = TextureLibrary.loadTexture(gl3, "textures/mobile.jpg");
         object03 = new TableObject(
                 OBJ_3_SCALE_X, OBJ_3_SCALE_Y, OBJ_3_SCALE_Z, OBJ_3_X_POS, OBJ_3_Z_POS,
                 TABLE_OBJ_Y_POS + OBJ_3_SCALE_Y / 2,
-                camera, light1, light2, lightBulb
+                camera, light1, light2, lightBulb, textureId_Obj3_01
         );
         object03.generateModel(gl3, "cube");
 

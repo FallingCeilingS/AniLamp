@@ -61,9 +61,9 @@ public class Table extends SceneGraphObject {
                 gl3, "shader/vs_table_body.txt", "shader/fs_table_body.txt"
         );
         Material tableBodyMaterial = new Material(
+                new Vec3(0.36f, 0.36f, 0.36f),
                 new Vec3(1.0f, 1.0f, 1.0f),
-                new Vec3(0.5f, 0.5f, 0.5f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.2f, 0.15f, 0.15f), 32.0f
         );
         table_body = new Model(
                 gl3, camera, light1, light2, movingLight,
@@ -75,9 +75,17 @@ public class Table extends SceneGraphObject {
         tableBodyNode = new ModelNode("table body", table_body);
 
         Mesh tableLegMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+        Shader tableLegShader = new Shader(
+                gl3, "shader/vs_table_leg.txt", "shader/fs_table_leg.txt"
+        );
+        Material tableLegMaterial = new Material(
+                new Vec3(0.56f, 0.56f, 0.56f),
+                new Vec3(1.0f, 1.0f, 1.0f),
+                new Vec3(0.15f, 0.15f, 0.15f), 32.0f
+        );
         table_leg = new Model(
                 gl3, camera, light1, light2, movingLight,
-                tableBodyShader, tableBodyMaterial, tableBodyModelMatrix, tableLegMesh, textureId_Leg01
+                tableLegShader, tableLegMaterial, tableBodyModelMatrix, tableLegMesh, textureId_Leg01
         );
         tableLeg_LT_Node = new ModelNode("table leg", table_leg);
         tableLeg_LB_Node = new ModelNode("table leg", table_leg);

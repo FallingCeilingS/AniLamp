@@ -18,38 +18,25 @@ public class MovingLight {
     private int[] vertexBufferId = new int[1];
     private int[] vertexArrayId = new int[1];
     private int[] elementBufferId = new int[1];
-    // ***************************************************
-    /* THE DATA
-     */
-    // anticlockwise/counterclockwise ordering
 
-    private float[] vertices = new float[] {  // x,y,z
-            -0.5f, -0.5f, -0.5f,  // 0
-            -0.5f, -0.5f,  0.5f,  // 1
-            -0.5f,  0.5f, -0.5f,  // 2
-            -0.5f,  0.5f,  0.5f,  // 3
-            0.5f, -0.5f, -0.5f,  // 4
-            0.5f, -0.5f,  0.5f,  // 5
-            0.5f,  0.5f, -0.5f,  // 6
-            0.5f,  0.5f,  0.5f   // 7
-    };
-
-    private int[] indices =  new int[] {
-            0,1,3, // x -ve
-            3,2,0, // x -ve
-            4,6,7, // x +ve
-            7,5,4, // x +ve
-            1,5,7, // z +ve
-            7,3,1, // z +ve
-            6,4,0, // z -ve
-            0,2,6, // z -ve
-            0,4,5, // y -ve
-            5,1,0, // y -ve
-            2,3,7, // y +ve
-            7,6,2  // y +ve
-    };
+    private float[] vertices = setLightSize();
+    private int[] indices = Sphere.indices;
     private int vertexStride = 3;
     private int vertexXYZFloats = 3;
+
+    private float[] setLightSize() {
+        float[] vertices = Sphere.vertices.clone();
+        for (int i = 0; i < vertices.length; i++) {
+            vertices[i] = vertices[i] * 0.65f;
+        }
+        return vertices;
+    }
+
+    private float constant;
+    private float linear;
+    private float quadratic;
+    private float cutOff;
+    private float outerCutOff;
 
     public MovingLight(GL3 gl3, Vec3 localPosition, Mat4 worldMatrix, Vec3 localDirection) {
         material = new Material();
@@ -106,7 +93,7 @@ public class MovingLight {
     public void setWorldDirection() {
         Vec4 result = Vec4.multiplyMatrix(this.worldMatrix, new Vec4(localDirection, 0));
         result.x = result.x * 0.285f;
-        result.z = result.z * -0.005f;
+        result.z = result.z * -0.001f;
         this.worldDirection = result.toVec3();
     }
 
@@ -124,6 +111,46 @@ public class MovingLight {
 
     public void setCamera(Camera camera) {
         this.camera = camera;
+    }
+
+    public void setConstant(float constant) {
+        this.constant = constant;
+    }
+
+    public float getConstant() {
+        return this.constant;
+    }
+
+    public void setLinear(float linear) {
+        this.linear = linear;
+    }
+
+    public float getLinear() {
+        return this.linear;
+    }
+
+    public void setQuadratic(float quadratic) {
+        this.quadratic = quadratic;
+    }
+
+    public float getQuadratic() {
+        return this.quadratic;
+    }
+
+    public void setCutOff(float cutOff) {
+        this.cutOff = (float) Math.cos(Math.toRadians(cutOff));
+    }
+
+    public float getCutOff() {
+        return this.cutOff;
+    }
+
+    public void setOuterCutOff(float outerCutOff) {
+        this.outerCutOff = (float) Math.cos(Math.toRadians(outerCutOff));
+    }
+
+    public float getOuterCutOff() {
+        return this.outerCutOff;
     }
 
     public void dispose(GL3 gl3) {

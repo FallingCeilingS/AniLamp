@@ -94,11 +94,11 @@ public class Model {
         shader.setVec3(gl3, "lightBulb.ambient", movingLight.getMaterial().getAmbient());
         shader.setVec3(gl3, "lightBulb.diffuse", movingLight.getMaterial().getDiffuse());
         shader.setVec3(gl3, "lightBulb.specular", movingLight.getMaterial().getSpecular());
-        shader.setFloat(gl3, "lightBulb.constant", 1.0f);
-        shader.setFloat(gl3, "lightBulb.linear", 0.09f);
-        shader.setFloat(gl3, "lightBulb.quadratic", 0.032f);
-        shader.setFloat(gl3, "lightBulb.cutOff", (float) Math.cos(Math.toRadians(12.5)));
-        shader.setFloat(gl3, "lightBulb.outerCutOff", (float) Math.cos(Math.toRadians(12.5)));
+        shader.setFloat(gl3, "lightBulb.constant", movingLight.getConstant());
+        shader.setFloat(gl3, "lightBulb.linear", movingLight.getLinear());
+        shader.setFloat(gl3, "lightBulb.quadratic", movingLight.getQuadratic());
+        shader.setFloat(gl3, "lightBulb.cutOff", movingLight.getCutOff());
+        shader.setFloat(gl3, "lightBulb.outerCutOff", movingLight.getOuterCutOff());
         shader.setVec3(gl3, "material.ambient", material.getAmbient());
         shader.setVec3(gl3, "material.diffuse", material.getDiffuse());
         shader.setVec3(gl3, "material.specular", material.getSpecular());

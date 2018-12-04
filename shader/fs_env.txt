@@ -1,0 +1,43 @@
+#version 330 core
+
+in vec3 aPos;
+in vec3 aNormal;
+in vec2 aTexCoord;
+
+out vec4 fragColor;
+
+uniform sampler2D first_texture;
+uniform vec3 viewPos;
+
+struct Light {
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform Light light1;
+uniform Light light2;
+
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+}; 
+  
+uniform Material material;
+
+void main() {
+    // ambient
+    vec3 ambient = material.ambient;
+
+    // diffuse
+    vec3 diffuse = material.diffuse * texture(first_texture, aTexCoord).rgb;
+
+    // specular
+    vec3 specular = material.specular * texture(first_texture, aTexCoord).rgb;
+
+    vec3 result = ambient + diffuse + specular;
+    fragColor = vec4(result, 1.0);
+}

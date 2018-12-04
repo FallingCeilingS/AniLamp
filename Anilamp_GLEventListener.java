@@ -29,7 +29,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     public Anilamp_GLEventListener(Camera camera) {
         this.camera = camera;
-        this.camera.setPosition(new Vec3(4f,12f,18f));
+        this.camera.setPosition(new Vec3(0f,4f,30f));
+        this.camera.setTarget(new Vec3(0f, 2.5f, 0f));
     }
 
     @Override
@@ -87,23 +88,23 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light1
          */
         light1Material = new Material();
-        light1Material.setAmbient(0.5f, 0.6f, 0.5f);
-        light1Material.setDiffuse(0.8f, 0.8f, 0.8f);
-        light1Material.setSpecular(0.8f, 0.8f, 0.8f);
+        light1Material.setAmbient(0.5f, 0.6f, 0.65f);
+        light1Material.setDiffuse(0.6f, 0.6f, 0.6f);
+        light1Material.setSpecular(0.6f, 0.6f, 0.6f);
         light1 = new Light(gl3);
-        light1.setPosition(new Vec3(3f,2f,1f));
+        light1.setPosition(new Vec3(-10f,10f,4f));
         light1.setCamera(camera);
 
         /*
         light2
          */
         light2Material = new Material();
-        light2Material.setAmbient(0.5f, 0.5f, 0.5f);
+        light2Material.setAmbient(0.6f, 0.55f, 0.5f);
         light2Material.setDiffuse(0.8f, 0.8f, 0.8f);
-        light2Material.setSpecular(0.8f, 0.7f, 0.8f);
+        light2Material.setSpecular(0.9f, 0.9f, 0.9f);
         light2 = new Light(gl3);
         light2.setCamera(camera);
-        light2.setPosition(new Vec3(-3f,2f,1f));
+        light2.setPosition(new Vec3(6f,4f,8f));
 
         /**
          * moving light
@@ -111,17 +112,22 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /*
         light bulb
          */
-        Vec3 lightBulbLocalPosition = new Vec3(0, -0.8f, 0);
-        lightBulbSelfTranslate = Mat4Transform.translate(new Vec3(0, -0.5f, 0));
-        Vec3 lightBulbLocalDirection = new Vec3(0f, -1f, 0f);
+        Vec3 lightBulbLocalPosition = new Vec3(0.5f, -0.5f, 0);
+        lightBulbSelfTranslate = Mat4Transform.translate(new Vec3(0.25f, -0.5f, 0));
+        Vec3 lightBulbLocalDirection = new Vec3(-0.1f, -4f, 0f);
         lightBulbMaterial = new Material();
         lightBulbMaterial.setAmbient(0.5f, 0.5f, 0.5f);
-        lightBulbMaterial.setDiffuse(0.8f, 0.8f, 0.8f);
-        lightBulbMaterial.setSpecular(0.8f, 0.8f, 0.8f);
+        lightBulbMaterial.setDiffuse(0.8f, 0.75f, 0.6f);
+        lightBulbMaterial.setSpecular(0.8f, 0.75f, 0.6f);
         lightBulb = new MovingLight(gl3, lightBulbLocalPosition, lightBulbSelfTranslate, lightBulbLocalDirection);
         lightBulb.setWorldPosition();
         lightBulb.setWorldDirection();
         lightBulb.setCamera(camera);
+        lightBulb.setConstant(1.0f);
+        lightBulb.setLinear(0.09f);
+        lightBulb.setQuadratic(0.032f);
+        lightBulb.setCutOff(12.5f);
+        lightBulb.setOuterCutOff(20f);
 
         /**
          * floor
@@ -132,9 +138,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Mesh floorMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader floorShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
         Material floorMaterial = new Material(
-                new Vec3(0.6f, 0.5f, 0.5f),
-                new Vec3(0.65f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.2f, 0.2f, 0.2f),
+                new Vec3(0.85f, 0.8f, 0.75f),
+                new Vec3(0.2f, 0.2f, 0.2f), 16.0f
         );
         int[] textureId_Floor = TextureLibrary.loadTexture(gl3, "textures/floor_resize.jpg");
         Mat4 floorModelMatrix = Mat4Transform.scale(60f, 1f, 30f);
@@ -195,11 +201,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float env_Z = -200f;
 
         Mesh envMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
-        Shader envShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader envShader = new Shader(gl3, "shader/vs_env.txt", "shader/fs_env.txt");
         Material envMaterial = new Material(
-                new Vec3(0.2f, 0.2f, 0.2f),
-                new Vec3(0.2f, 0.2f, 0.2f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.0f, 0.0f, 0.0f),
+                new Vec3(1.0f, 1.0f, 1.0f),
+                new Vec3(0.0f, 0.0f, 0.0f), 32.0f
         );
         Mat4 envModelMatrix = Mat4Transform.scale(300f,1f,200f);
         envModelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), envModelMatrix);
@@ -261,7 +267,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_TAIL_SCALE_X = 0.65f;
         float LAMP_TAIL_SCALE_Y = 0.25f;
         float LAMP_TAIL_SCALE_Z = 0.25f;
-        int[] textureId_LampTail01 = TextureLibrary.loadTexture(gl3, "textures/lamp_tail.jpg");
+        int[] textureId_LampTail01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head.jpg");
 
         /*
         lamp upper arm

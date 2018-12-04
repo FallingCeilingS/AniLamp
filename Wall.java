@@ -47,11 +47,11 @@ public class Wall extends SceneGraphObject {
                 "wall transform", Mat4Transform.translate(WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION)
         );
         Mesh wallMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Shader wallShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_table_body.txt");
+        Shader wallShader = new Shader(gl3, "shader/vs_wall.txt", "shader/fs_wall.txt");
         Material wallMaterial = new Material(
-                new Vec3(0.6f, 0.6f, 0.6f),
-                new Vec3(0.4f, 0.4f, 0.6f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.1f, 0.1f, 0.1f),
+                new Vec3(0.8f, 0.82f, 0.85f),
+                new Vec3(0.10f, 0.12f, 0.16f), 1.0f
         );
         wall_bottom = new Model(
                 gl3, camera, light1, light2, movingLight, wallShader, wallMaterial, new Mat4(1), wallMesh, textureId_Wall01

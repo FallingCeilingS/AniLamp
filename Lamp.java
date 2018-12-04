@@ -50,11 +50,11 @@ public class Lamp extends SceneGraphObject {
             float LAMP_BASE_LENGTH, float LAMP_BASE_HEIGHT, float LAMP_BASE_WIDTH, int[] textureId_LampBase01
             ) {
         Mesh lampBaseMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Shader lampBaseShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader lampBaseShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampBaseMaterial = new Material(
-                new Vec3(0.5f, 0.5f, 0.5f),
-                new Vec3(0.4f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.55f, 0.5f, 0.45f),
+                new Vec3(0.6f, 0.5f, 0.4f),
+                new Vec3(0.1f, 0.1f, 0.1f), 1.0f
         );
         lamp_base = new Model(
                 gl3, camera, light1, light2, movingLight, lampBaseShader, lampBaseMaterial, new Mat4(1), lampBaseMesh, textureId_LampBase01
@@ -75,11 +75,11 @@ public class Lamp extends SceneGraphObject {
             int[] textureId_LampJoint01
     ) {
         Mesh lampJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Shader lampJointShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader lampJointShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampJointMaterial = new Material(
-                new Vec3(0.5f, 0.5f, 0.4f),
-                new Vec3(0.4f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.6f, 0.5f, 0.4f),
+                new Vec3(0.6f, 0.5f, 0.4f),
+                new Vec3(0.4f, 0.4f, 0.4f), 32.0f
         );
         lamp_joint = new Model(
                 gl3, camera, light1, light2, movingLight, lampJointShader, lampJointMaterial, new Mat4(1), lampJointMesh, textureId_LampJoint01
@@ -108,11 +108,11 @@ public class Lamp extends SceneGraphObject {
 
     public void generateArms(float LAMP_ARM_LENGTH, float LAMP_ARM_WIDTH, int[] textureId_LampArm01) {
         Mesh lampArmMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
-        Shader lampArmShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader lampArmShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampArmMaterial = new Material(
-                new Vec3(0.5f, 0.5f, 0.5f),
-                new Vec3(0.4f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.35f, 0.35f, 0.40f),
+                new Vec3(0.5f, 0.55f, 0.6f),
+                new Vec3(1.0f, 1.0f, 1.0f), 256.0f
         );
         lamp_arm = new Model(
                 gl3, camera, light1, light2, movingLight, lampArmShader, lampArmMaterial, new Mat4(1), lampArmMesh, textureId_LampArm01
@@ -138,14 +138,20 @@ public class Lamp extends SceneGraphObject {
             int[] textureId_LampHeadJoint01, int[] textureId_LampHead01
     ) {
         Mesh lampHeadJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Shader lampHeadShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
-        Material lampHeadMaterial = new Material(
-                new Vec3(0.5f, 0.5f, 0.5f),
-                new Vec3(0.3f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+        Shader lampHeadJointShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
+        Material lampHeadJointMaterial = new Material(
+                new Vec3(0.65f, 0.45f, 0.5f),
+                new Vec3(0.6f, 0.5f, 0.4f),
+                new Vec3(0.2f, 0.2f, 0.2f), 32.0f
         );
         head_joint = new Model(
-                gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial, new Mat4(1), lampHeadJointMesh, textureId_LampHeadJoint01
+                gl3, camera, light1, light2, movingLight, lampHeadJointShader, lampHeadJointMaterial, new Mat4(1), lampHeadJointMesh, textureId_LampHeadJoint01
+        );
+        Shader lampHeadShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
+        Material lampHeadMaterial = new Material(
+                new Vec3(0.6f, 0.55f, 0.5f),
+                new Vec3(0.6f, 0.45f, 0.4f),
+                new Vec3(0.3f, 0.3f, 0.3f), 64.0f
         );
         Mesh lampHeadMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         lamp_head = new Model(
@@ -179,11 +185,11 @@ public class Lamp extends SceneGraphObject {
 
     public void generateTail(float LAMP_TAIL_SCALE_X, float LAMP_TAIL_SCALE_Y, float LAMP_TAIL_SCALE_Z, int[] textureId_LampTail01) {
         Mesh lampTailMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Shader lampTailShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader lampTailShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampTailMaterial = new Material(
-                new Vec3(0.1f, 0.5f, 0.1f),
-                new Vec3(0.2f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.45f, 0.35f, 0.25f),
+                new Vec3(0.6f, 0.55f, 0.5f),
+                new Vec3(0.2f, 0.2f, 0.2f), 8.0f
         );
         lamp_tail = new Model(
                 gl3, camera, light1, light2, movingLight, lampTailShader, lampTailMaterial, new Mat4(1), lampTailMesh, textureId_LampTail01
@@ -208,11 +214,11 @@ public class Lamp extends SceneGraphObject {
             int[] textureId_LampHeadBack01, int[] textureId_LampHeadEar01
     ) {
         Mesh lampHeadBackMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Shader lampHeadBackShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader lampHeadBackShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampHeadBackMaterial = new Material(
-                new Vec3(0.5f, 0.5f, 0.5f),
-                new Vec3(0.5f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.6f, 0.4f, 0.35f),
+                new Vec3(0.65f, 0.6f, 0.5f),
+                new Vec3(0.15f, 0.15f, 0.15f), 8.0f
         );
         lamp_head_back = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadBackShader, lampHeadBackMaterial, new Mat4(1), lampHeadBackMesh, textureId_LampHeadBack01
@@ -231,11 +237,11 @@ public class Lamp extends SceneGraphObject {
         lampHeadBackNode = new ModelNode("lamp head back", lamp_head_back);
 
         Mesh lampHeadEarMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
-        Shader lampHeadEarShader = new Shader(gl3, "shader/vs_floor.txt", "shader/fs_floor.txt");
+        Shader lampHeadEarShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampHeadEarMaterial = new Material(
-                new Vec3(0.5f, 0.5f, 0.1f),
-                new Vec3(0.5f, 0.5f, 0.4f),
-                new Vec3(0.3f, 0.3f, 0.3f), 32.0f
+                new Vec3(0.6f, 0.5f, 0.1f),
+                new Vec3(0.6f, 0.4f, 0.4f),
+                new Vec3(0.1f, 0.1f, 0.1f), 8.0f
         );
         lamp_head_left_ear = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadEarShader, lampHeadEarMaterial, new Mat4(1), lampHeadEarMesh, textureId_LampHeadEar01

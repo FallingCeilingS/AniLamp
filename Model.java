@@ -6,7 +6,7 @@ public class Model {
     private Camera camera;
     private Light light1, light2;
     private MovingLight movingLight;
-    private Shader shader;
+    public Shader shader;
     private Material material;
     private Mat4 modelMatrix;
     private Mesh mesh;

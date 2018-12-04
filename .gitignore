@@ -1,5 +1,6 @@
 /.idea
 /out
+/PSD
 .DS_Store
 *.iml
 *.log

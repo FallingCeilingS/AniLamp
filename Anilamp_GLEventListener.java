@@ -18,6 +18,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private Lamp lamp;
     private Animator animator;
     private double startTime = 0;
+    private double programStart = 0;
+    private float offsetX = 0;
+    private float offsetY = 0;
 
     public boolean LIGHT1_ON = true;
     public boolean LIGHT2_ON = true;
@@ -74,6 +77,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
     }
 
     public void initialise(GL3 gl3) {
+        programStart = getStartSecond();
         int[] textureId0 = TextureLibrary.loadTexture(gl3, "textures/chequerboard.jpg");
 
         nullMaterial = new Material();
@@ -202,6 +206,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
         Mesh envMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader envShader = new Shader(gl3, "shader/vs_env.txt", "shader/fs_env.txt");
+        envShader.setFloat(gl3, "offset", offsetX, offsetY);
         Material envMaterial = new Material(
                 new Vec3(0.0f, 0.0f, 0.0f),
                 new Vec3(1.0f, 1.0f, 1.0f),
@@ -210,8 +215,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Mat4 envModelMatrix = Mat4Transform.scale(300f,1f,200f);
         envModelMatrix = Mat4.multiply(Mat4Transform.rotateAroundX(90), envModelMatrix);
         envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -5f, env_Z), envModelMatrix);
-        int[] textureId_Env = TextureLibrary.loadTexture(gl3, "textures/fog-3622519.jpg");
-        env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId_Env);
+        int[] textureId_Env = TextureLibrary.loadTexture(gl3, "textures/fog_bg.jpg");
+        int[] textureId_Fog = TextureLibrary.loadTexture(gl3, "textures/fog.jpg");
+        env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId_Env, textureId_Fog);
 
 
         /**
@@ -267,7 +273,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_TAIL_SCALE_X = 0.65f;
         float LAMP_TAIL_SCALE_Y = 0.25f;
         float LAMP_TAIL_SCALE_Z = 0.25f;
-        int[] textureId_LampTail01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head.jpg");
+        int[] textureId_LampTail01 = TextureLibrary.loadTexture(gl3, "textures/lamp_tail.jpg");
 
         /*
         lamp upper arm
@@ -412,6 +418,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lamp.update();
     }
 
+    public void setOffsetTexture(GL3 gl3) {
+        double elapsedTime = getStartSecond() - programStart;
+        offsetX = (float) (elapsedTime);
+        System.out.println("offsetX" + offsetX);
+        env.shader.setFloat(gl3, "offset", offsetX, offsetY);
+    }
+
     public void render(GL3 gl3) {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         setLightOnOff();
@@ -424,6 +437,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         floor.render(gl3);
         table.draw(gl3);
         wall.draw(gl3);
+        setOffsetTexture(gl3);
+        env.shader.setFloat(gl3, "offset", offsetX, offsetY);
         env.render(gl3);
         updateMotion();
         lamp.draw(gl3);

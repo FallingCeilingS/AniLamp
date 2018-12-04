@@ -19,8 +19,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private Lamp lamp;
     private Animator animator;
     private double startTime = 0;
-    private float offsetX = 0;
-    private float offsetY = 0;
 
     public boolean LIGHT1_ON = true;
     public boolean LIGHT2_ON = true;
@@ -157,7 +155,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_Floor = TextureLibrary.loadTexture(gl3, "textures/floor_resize.jpg");
         Mat4 floorModelMatrix = Mat4Transform.scale(60f, 1f, 30f);
         floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, floor_Y, floor_Z), floorModelMatrix);
-        floor = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId_Floor);
+        floor = new Model(
+                gl3, camera, light1, light2, lightBulb,
+                floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId_Floor
+        );
 
         // ***************************************************
         /*
@@ -204,7 +205,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float OBJ_1_SCALE_Y = 0.5f;
         float OBJ_1_SCALE_Z = 1.5f;
         object01 = new TableObject(
-                OBJ_1_SCALE_X, OBJ_1_SCALE_Y, OBJ_1_SCALE_Z, OBJ_1_X_POS, OBJ_1_Z_POS, TABLE_OBJ_Y_POS + OBJ_1_SCALE_Y / 2,
+                OBJ_1_SCALE_X, OBJ_1_SCALE_Y, OBJ_1_SCALE_Z, OBJ_1_X_POS, OBJ_1_Z_POS,
+                TABLE_OBJ_Y_POS + OBJ_1_SCALE_Y / 2,
                 camera, light1, light2, lightBulb);
         object01.generateModel(gl3, "cube");
 
@@ -214,7 +216,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float OBJ_2_SCALE_Y = 2f;
         float OBJ_2_SCALE_Z = 2f;
         object02 = new TableObject(
-                OBJ_2_SCALE_X, OBJ_2_SCALE_Y, OBJ_2_SCALE_Z, OBJ_2_X_POS, OBJ_2_Z_POS, TABLE_OBJ_Y_POS + OBJ_2_SCALE_Y / 2,
+                OBJ_2_SCALE_X, OBJ_2_SCALE_Y, OBJ_2_SCALE_Z, OBJ_2_X_POS, OBJ_2_Z_POS,
+                TABLE_OBJ_Y_POS + OBJ_2_SCALE_Y / 2,
                 camera, light1, light2, lightBulb
         );
         object02.generateModel(gl3, "sphere");
@@ -225,7 +228,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float OBJ_3_SCALE_Y = 0.2f;
         float OBJ_3_SCALE_Z = 1.2f;
         object03 = new TableObject(
-                OBJ_3_SCALE_X, OBJ_3_SCALE_Y, OBJ_3_SCALE_Z, OBJ_3_X_POS, OBJ_3_Z_POS, TABLE_OBJ_Y_POS + OBJ_3_SCALE_Y / 2,
+                OBJ_3_SCALE_X, OBJ_3_SCALE_Y, OBJ_3_SCALE_Z, OBJ_3_X_POS, OBJ_3_Z_POS,
+                TABLE_OBJ_Y_POS + OBJ_3_SCALE_Y / 2,
                 camera, light1, light2, lightBulb
         );
         object03.generateModel(gl3, "cube");
@@ -243,7 +247,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_Wall01 = TextureLibrary.loadTexture(gl3, "textures/wall.jpg");
 
         wall = new Wall(
-                gl3, camera, light1, light2, lightBulb, WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION, textureId_Wall01
+                gl3, camera, light1, light2, lightBulb,
+                WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION,
+                textureId_Wall01
         );
         wall.execute();
 
@@ -255,7 +261,6 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
         Mesh envMesh = new Mesh(gl3, TwoTriangles.vertices.clone(), TwoTriangles.indices.clone());
         Shader envShader = new Shader(gl3, "shader/vs_env.txt", "shader/fs_env.txt");
-        envShader.setFloat(gl3, "offset", offsetX, offsetY);
         Material envMaterial = new Material(
                 new Vec3(0.0f, 0.0f, 0.0f),
                 new Vec3(1.0f, 1.0f, 1.0f),
@@ -266,7 +271,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         envModelMatrix = Mat4.multiply(Mat4Transform.translate(0, -5f, env_Z), envModelMatrix);
         int[] textureId_Env = TextureLibrary.loadTexture(gl3, "textures/fog_bg.jpg");
         int[] textureId_Fog = TextureLibrary.loadTexture(gl3, "textures/fog.jpg");
-        env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId_Env, textureId_Fog);
+        env = new Model(
+                gl3, camera, light1, light2, lightBulb,
+                envShader, envMaterial, envModelMatrix, envMesh, textureId_Env, textureId_Fog
+        );
 
         // ***************************************************
         /*
@@ -345,11 +353,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
         lamp.generateLampBase(LAMP_BASE_LENGTH, LAMP_BASE_HEIGHT, LAMP_BASE_WIDTH, textureId_LampBase01);
         lamp.generateLampJoints(
-                LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree, upperPressYInitialDegree, upperPressZInitialDegree, textureId_LampJoint01
+                LAMP_JOINT_DIAMETER, lowerPressYInitialDegree, lowerPressZInitialDegree,
+                upperPressYInitialDegree, upperPressZInitialDegree, textureId_LampJoint01
         );
         lamp.generateArms(LAMP_ARM_LENGTH, LAMP_ARM_WIDTH, textureId_LampArm01);
         lamp.generateHead(
-                LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE, headJointYInitialDegree, headJointZInitialDegree, textureId_LampHeadJoint01, textureId_LampHead01
+                LAMP_HEAD_JOINT_DIAMETER, LAMP_HEAD_XZ_SCALE, LAMP_HEAD_Y_SCALE,
+                headJointYInitialDegree, headJointZInitialDegree, textureId_LampHeadJoint01, textureId_LampHead01
         );
         lamp.generateTail(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z, textureId_LampTail01);
         lamp.generateDecoration(
@@ -367,7 +377,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
          */
         Mesh testCubeMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Mat4 testCube1ModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
-        testCube1 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, testCubeMesh, textureId0);
+        testCube1 = new Model(
+                gl3, camera, light1, light2, lightBulb,
+                floorShader, floorMaterial, testCube1ModelMatrix, testCubeMesh, textureId0
+        );
 
         // ***************************************************
         /*
@@ -420,24 +433,40 @@ public class Anilamp_GLEventListener implements GLEventListener {
         animator.generateRandomTargetAngle();
         testCube1.setModelMatrix(animator.currentTranslateMatrix);
         animator.updateLowerJointYRotateDegree(startTime);
-        lamp.lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.lowerJointYCurrentRotateDegree)));
+        lamp.lampLowerJointYRotate.setTransform(Mat4Transform.rotateAroundY(
+                (float) (animator.lowerJointYCurrentRotateDegree))
+        );
         animator.updateJointJumpZRotateDegree();
-        lamp.lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ((float) (animator.lowerJointZCurrentRotateDegree)));
-        lamp.lampUpperJointZRotate.setTransform(Mat4Transform.rotateAroundZ((float) (animator.upperJointZCurrentRotateDegree)));
+        lamp.lampLowerJointZRotate.setTransform(Mat4Transform.rotateAroundZ(
+                (float) (animator.lowerJointZCurrentRotateDegree))
+        );
+        lamp.lampUpperJointZRotate.setTransform(Mat4Transform.rotateAroundZ(
+                (float) (animator.upperJointZCurrentRotateDegree))
+        );
         animator.updateJump();
         lamp.lampTranslate.setTransform(animator.previousTranslateMatrix);
         animator.generateRandomPose();
         animator.generateLowerJointRandomMotion();
-        lamp.lampUpperJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.upperJointYCurrentRotateDegree)));
-        lamp.lampHeadJointZRotate.setTransform(Mat4Transform.rotateAroundZ((float) (animator.headJointZCurrentRotateDegree)));
-        lamp.lampHeadJointYRotate.setTransform(Mat4Transform.rotateAroundY((float) (animator.headJointYCurrentRotateDegree)));
-        lamp.lampTailYRotate.setTransform(Mat4Transform.rotateAroundY(10 * (float) Math.sin(20 * getStartSecond())));
-        lamp.lampTailZRotate.setTransform(Mat4Transform.rotateAroundZ(5 * (float) Math.sin(20 * getStartSecond())));
+        lamp.lampUpperJointYRotate.setTransform(Mat4Transform.rotateAroundY(
+                (float) (animator.upperJointYCurrentRotateDegree))
+        );
+        lamp.lampHeadJointZRotate.setTransform(Mat4Transform.rotateAroundZ(
+                (float) (animator.headJointZCurrentRotateDegree))
+        );
+        lamp.lampHeadJointYRotate.setTransform(Mat4Transform.rotateAroundY(
+                (float) (animator.headJointYCurrentRotateDegree))
+        );
+        lamp.lampTailYRotate.setTransform(Mat4Transform.rotateAroundY(
+                10 * (float) Math.sin(20 * getStartSecond()))
+        );
+        lamp.lampTailZRotate.setTransform(Mat4Transform.rotateAroundZ(
+                5 * (float) Math.sin(20 * getStartSecond()))
+        );
 
         lightBulb.setWorldMatrix(Mat4.multiply(lamp.lampHeadName.worldTransform, lightBulbSelfTranslate));
 //        System.out.println("light bulb world position" + lightBulb.getWorldPosition());
 //        System.out.println("light bulb world direction" + lightBulb.getWorldDirection());
-        
+
         lamp.update();
     }
 

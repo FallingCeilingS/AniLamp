@@ -18,7 +18,8 @@ public class Model {
     private int[] textureId2;
 
     public Model(
-            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
+            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight,
+            Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
             int[] textureId1, int[] textureId2
     ) {
         this.camera = camera;
@@ -35,16 +36,21 @@ public class Model {
     }
 
     public Model(
-            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
+            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight,
+            Shader shader, Material material, Mat4 modelMatrix, Mesh mesh,
             int[] textureId1
     ) {
         this(gl3, camera, light1, light2, movingLight, shader, material, modelMatrix, mesh, textureId1, null);
     }
 
     public Model(
-            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight, Shader shader, Material material, Mat4 modelMatrix, Mesh mesh
+            GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight,
+            Shader shader, Material material, Mat4 modelMatrix, Mesh mesh
     ) {
-        this(gl3, camera, light1, light2, movingLight, shader, material, modelMatrix, mesh, null, null);
+        this(
+                gl3, camera, light1, light2, movingLight,
+                shader, material, modelMatrix, mesh, null, null
+        );
     }
 
     public void setCamera(Camera camera) {

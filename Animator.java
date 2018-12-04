@@ -140,7 +140,7 @@ public class Animator {
     }
 
     private double[] generateRange(double[] obj_range) {
-        return new double[] {
+        return new double[]{
                 obj_range[0] - 0.5 * obj_range[2] - LAMP_BASE_LENGTH,
                 obj_range[0] + 0.5 * obj_range[2] + LAMP_BASE_LENGTH,
                 obj_range[1] - 0.5 * obj_range[3] - LAMP_BASE_LENGTH,
@@ -259,8 +259,8 @@ public class Animator {
         double randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
         while (
                 judgeRange(range1, randomX, randomZ) |
-                judgeRange(range2, randomX, randomZ) |
-                judgeRange(range3, randomX, randomZ)
+                        judgeRange(range2, randomX, randomZ) |
+                        judgeRange(range3, randomX, randomZ)
         ) {
             randomX = Math.random() * (MAX_LENGTH - LAMP_BASE_LENGTH) - (MAX_LENGTH - LAMP_BASE_LENGTH) / 2;
             randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
@@ -270,7 +270,7 @@ public class Animator {
     }
 
     private boolean judgeRange(double[] range, double randomX, double randomZ) {
-        return (randomX >= range[0] & randomX <= range[1] & randomZ >= range[2] & randomZ<= range[3]);
+        return (randomX >= range[0] & randomX <= range[1] & randomZ >= range[2] & randomZ <= range[3]);
     }
 
     private void generateLowerJointYRotateDegree() {

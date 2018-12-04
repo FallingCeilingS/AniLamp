@@ -44,7 +44,7 @@ public class TableObject {
         Mat4 obj1ModelMatrix = Mat4Transform.scale(OBJ_SCALE_X, OBJ_SCALE_Y, OBJ_SCALE_Z);
         obj1ModelMatrix = Mat4.multiply(Mat4Transform.translate(OBJ_X_POS, TABLE_OBJ_Y_POS, OBJ_Z_POS), obj1ModelMatrix);
         object = new Model(gl3, camera, light1, light2, movingLight, shader, obj_Material, obj1ModelMatrix, obj);
-        range = new double[] {OBJ_X_POS, OBJ_Z_POS, OBJ_SCALE_X, OBJ_SCALE_Z};
+        range = new double[]{OBJ_X_POS, OBJ_Z_POS, OBJ_SCALE_X, OBJ_SCALE_Z};
     }
 
     public void dispose(GL3 gl3) {

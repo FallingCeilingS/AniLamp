@@ -62,7 +62,7 @@ public class MovingLight {
         int stride = vertexStride;
         int numXYZFloats = vertexXYZFloats;
         int offset = 0;
-        gl3.glVertexAttribPointer(0, numXYZFloats, GL.GL_FLOAT, false, stride*Float.BYTES, offset);
+        gl3.glVertexAttribPointer(0, numXYZFloats, GL.GL_FLOAT, false, stride * Float.BYTES, offset);
         gl3.glEnableVertexAttribArray(0);
 
         gl3.glGenBuffers(1, elementBufferId, 0);
@@ -163,7 +163,9 @@ public class MovingLight {
     public void render(GL3 gl3) {
         setWorldPosition();
         setWorldDirection();
-        Mat4 mvpMatrix = Mat4.multiply(camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldMatrix));
+        Mat4 mvpMatrix = Mat4.multiply(
+                camera.getPerspectiveMatrix(), Mat4.multiply(camera.getViewMatrix(), worldMatrix)
+        );
 
         shader.use(gl3);
         shader.setFloatArray(gl3, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());

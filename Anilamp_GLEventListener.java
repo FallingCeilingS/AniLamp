@@ -77,6 +77,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
     }
 
     public void initialise(GL3 gl3) {
+        // ***************************************************
         programStart = getStartSecond();
         int[] textureId0 = TextureLibrary.loadTexture(gl3, "textures/chequerboard.jpg");
 
@@ -85,7 +86,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         nullMaterial.setDiffuse(0, 0, 0);
         nullMaterial.setSpecular(0, 0, 0);
 
-        /**
+        // ***************************************************
+        /*
          * static lights
          */
         /*
@@ -110,11 +112,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         light2.setCamera(camera);
         light2.setPosition(new Vec3(6f,4f,8f));
 
-        /**
-         * moving light
-         */
+        // ***************************************************
         /*
-        light bulb
+         * moving light
          */
         Vec3 lightBulbLocalPosition = new Vec3(0.5f, -0.5f, 0);
         lightBulbSelfTranslate = Mat4Transform.translate(new Vec3(0.25f, -0.5f, 0));
@@ -133,7 +133,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lightBulb.setCutOff(12.5f);
         lightBulb.setOuterCutOff(20f);
 
-        /**
+        // ***************************************************
+        /*
          * floor
          */
         float floor_Y = -8.328f;
@@ -151,7 +152,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         floorModelMatrix = Mat4.multiply(Mat4Transform.translate(0, floor_Y, floor_Z), floorModelMatrix);
         floor = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, floorModelMatrix, floorMesh, textureId_Floor);
 
-        /**
+        // ***************************************************
+        /*
          * table
          */
         float TABLE_X_POSITION = 0;
@@ -183,7 +185,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 );
         table.execute();
 
-        /**
+        // ***************************************************
+        /*
          * wall
          */
         float WALL_LENGTH = 16;
@@ -199,7 +202,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
             );
         wall.execute();
 
-        /**
+        // ***************************************************
+        /*
          * outside environment
          */
         float env_Z = -200f;
@@ -220,7 +224,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
         env = new Model(gl3, camera, light1, light2, lightBulb, envShader, envMaterial, envModelMatrix, envMesh, textureId_Env, textureId_Fog);
 
 
-        /**
+        // ***************************************************
+        /*
          * lamp
          */
         float LAMP_POSITION_X = 0;
@@ -241,17 +246,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float LAMP_BASE_HEIGHT = 0.25f;
         int[] textureId_LampBase01 = TextureLibrary.loadTexture(gl3, "textures/lamp_base.jpg");
 
-        /**
+        /*
          *lamp joints
          */
         float LAMP_JOINT_DIAMETER = 0.6f;
         int[] textureId_LampJoint01 = TextureLibrary.loadTexture(gl3, "textures/lamp_joint.jpg");
 
         /*
-        lamp lower joint
-         */
-
-        /**
          * lamp arms
          */
         float LAMP_ARM_LENGTH = LAMP_JOINT_DIAMETER * 0.5f;
@@ -260,12 +261,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_LampArm01 = TextureLibrary.loadTexture(gl3, "textures/arm_metal.jpg");
 
         /*
-        lamp lower arm
+         * lamp head
          */
-
-        /*
-        lamp upper joint
-         */
+        float LAMP_HEAD_JOINT_DIAMETER = 0.65f;
+        float LAMP_HEAD_XZ_SCALE = 2.8f;
+        float LAMP_HEAD_Y_SCALE = 1f;
+        int[] textureId_LampHeadJoint01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_joint.jpg");
+        int[] textureId_LampHead01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head.jpg");
 
         /*
         lamp tail
@@ -276,38 +278,11 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_LampTail01 = TextureLibrary.loadTexture(gl3, "textures/lamp_tail.jpg");
 
         /*
-        lamp upper arm
-         */
-
-        /**
-         * lamp head
-         */
-        float LAMP_HEAD_JOINT_DIAMETER = 0.65f;
-        float LAMP_HEAD_XZ_SCALE = 2.8f;
-        float LAMP_HEAD_Y_SCALE = 1f;
-        int[] textureId_LampHeadJoint01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_joint.jpg");
-        int[] textureId_LampHead01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head.jpg");
-
-        /*
-        lamp head joint
-         */
-
-        /*
-        lamp head main
-         */
-
-        /**
         lamp head decoration
-         */
-        /*
-        lamp head back
          */
         float LAMP_HEAD_BACK_DIAMETER = 1.15f;
         float LAMP_HEAD_BACK_Y_SCALE = 0.6f;
 
-        /*
-        lamp head ear
-         */
         float LAMP_HEAD_EAR_X_SCALE = 2.5f;
         float LAMP_HEAD_EAR_Y_SCALE = 0.5f;
         float LAMP_HEAD_EAR_Z_SCALE = 1;
@@ -342,13 +317,15 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lamp.buildTree();
         lamp.update();
 
-        /**
+        // ***************************************************
+        /*
          * test/reference cube
          */
         Mesh testCubeMesh = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
         Mat4 testCube1ModelMatrix = Mat4Transform.translate(-TABLE_BODY_LENGTH / 2, 0, -TABLE_BODY_WIDTH / 2);
         testCube1 = new Model(gl3, camera, light1, light2, lightBulb, floorShader, floorMaterial, testCube1ModelMatrix, testCubeMesh, textureId0);
 
+        // ***************************************************
         /*
         animation
          */

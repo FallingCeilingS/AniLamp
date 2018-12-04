@@ -87,6 +87,9 @@ public class Lamp extends SceneGraphObject {
         Mat4 lampJointModelMatrix = Mat4Transform.scale(LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER, LAMP_JOINT_DIAMETER);
         lampJointScale = new TransformNode("lamp joint scale", lampJointModelMatrix);
 
+        /*
+        lamp lower joint
+         */
         Mat4 lampLowerJointMatrix = Mat4Transform.translate(0, 0.4f, 0);
         lampLowerJointTranslate = new TransformNode("lamp lower joint translate", lampLowerJointMatrix);
         lampLowerJointName = new NameNode("lamp lower joint");
@@ -96,6 +99,9 @@ public class Lamp extends SceneGraphObject {
         lampLowerJointZRotate = new TransformNode("lamp lower joint z rotate", lampLowerJointZRotateMatrix);
         lampLowerJointNode = new ModelNode("lamp lower joint", lamp_joint);
 
+        /*
+        lamp upper joint
+         */
         Mat4 lampUpperJointMatrix = Mat4Transform.translate(0, LAMP_ARM_HEIGHT, 0);
         lampUpperJointTranslate = new TransformNode("lamp upper joint translate", lampUpperJointMatrix);
         lampUpperJointName = new NameNode("lamp upper joint");
@@ -120,11 +126,17 @@ public class Lamp extends SceneGraphObject {
         Mat4 lampArmModelMatrix = Mat4Transform.scale(LAMP_ARM_LENGTH, LAMP_ARM_HEIGHT, LAMP_ARM_WIDTH);
         lampArmScale = new TransformNode("lamp arm scale", lampArmModelMatrix);
 
+        /*
+        lamp lower arm
+         */
         Mat4 lampLowerArmMatrix = Mat4Transform.translate(0, 0.4f, 0);
         lampLowerArmTranslate = new TransformNode("lamp lower arm translate", lampLowerArmMatrix);
         lampLowerArmName = new NameNode("lamp lower arm");
         lampLowerArmNode = new ModelNode("lamp lower arm", lamp_arm);
 
+        /*
+        lamp upper arm
+         */
         Mat4 lampUpperArmMatrix = Mat4Transform.translate(0, LAMP_ARM_HEIGHT / 2, 0);
         lampUpperArmMatrix = Mat4.multiply(lampUpperArmMatrix, lampArmModelMatrix);
         lampUpperArmTranslate = new TransformNode("lamp upper arm translate", lampUpperArmMatrix);
@@ -137,6 +149,9 @@ public class Lamp extends SceneGraphObject {
             double headJointYInitialDegree, double headJointZInitialDegree,
             int[] textureId_LampHeadJoint01, int[] textureId_LampHead01
     ) {
+        /*
+        lamp head joint
+         */
         Mesh lampHeadJointMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         Shader lampHeadJointShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampHeadJointMaterial = new Material(
@@ -153,6 +168,10 @@ public class Lamp extends SceneGraphObject {
                 new Vec3(0.6f, 0.45f, 0.4f),
                 new Vec3(0.3f, 0.3f, 0.3f), 64.0f
         );
+
+        /*
+        lamp head main
+         */
         Mesh lampHeadMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         lamp_head = new Model(
                 gl3, camera, light1, light2, movingLight, lampHeadShader, lampHeadMaterial, new Mat4(1), lampHeadMesh, textureId_LampHead01
@@ -213,6 +232,9 @@ public class Lamp extends SceneGraphObject {
             float LAMP_HEAD_EAR_X_POSITION, float LAMP_HEAD_EAR_Y_POSITION, float LAMP_HEAD_EAR_Z_POSITION,
             int[] textureId_LampHeadBack01, int[] textureId_LampHeadEar01
     ) {
+        /*
+        lamp head back
+         */
         Mesh lampHeadBackMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         Shader lampHeadBackShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampHeadBackMaterial = new Material(
@@ -236,6 +258,9 @@ public class Lamp extends SceneGraphObject {
         lampHeadBackName = new NameNode("lamp head back");
         lampHeadBackNode = new ModelNode("lamp head back", lamp_head_back);
 
+        /*
+        lamp head ear
+         */
         Mesh lampHeadEarMesh = new Mesh(gl3, Sphere.vertices.clone(), Sphere.indices.clone());
         Shader lampHeadEarShader = new Shader(gl3, "shader/vs_lamp.txt", "shader/fs_lamp.txt");
         Material lampHeadEarMaterial = new Material(

@@ -14,6 +14,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
     private MovingLight lightBulb;
     private Mat4 lightBulbSelfTranslate;
     private Table table;
+    private TableObject object01, object02, object03;
     private Wall wall;
     private Lamp lamp;
     private Animator animator;
@@ -187,6 +188,41 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
         // ***************************************************
         /*
+        3 objects on the table
+         */
+        float TABLE_OBJ_Y_POS = TABLE_Y_POSITION + TABLE_BODY_HEIGHT * 2 - 0.25f;
+
+        float OBJ_1_X_POS = 2;
+        float OBJ_1_Z_POS = 2;
+        float OBJ_1_SCALE_X = 2;
+        float OBJ_1_SCALE_Y = 0.5f;
+        float OBJ_1_SCALE_Z = 1.5f;
+        object01 = new TableObject(
+                OBJ_1_SCALE_X, OBJ_1_SCALE_Y, OBJ_1_SCALE_Z, OBJ_1_X_POS, OBJ_1_Z_POS, TABLE_OBJ_Y_POS,
+                camera, light1, light2, lightBulb);
+        object01.generateModel(gl3, "cube");
+
+        float OBJ_2_X_POS = -2;
+        float OBJ_2_Z_POS = 2;
+        float OBJ_2_SCALE_X = 2;
+        float OBJ_2_SCALE_Y = 2f;
+        float OBJ_2_SCALE_Z = 2f;
+        object02 = new TableObject(
+                OBJ_2_SCALE_X, OBJ_2_SCALE_Y, OBJ_2_SCALE_Z, OBJ_2_X_POS, OBJ_2_Z_POS, TABLE_OBJ_Y_POS,
+                camera, light1, light2, lightBulb
+        );
+        object02.generateModel(gl3, "sphere");
+
+        Mesh obj3 = new Mesh(gl3, Cube.vertices.clone(), Cube.indices.clone());
+        Shader shader3 = new Shader(gl3, "shader/vs_table_body.txt", "shader/fs_table_body.txt");
+        Material obj_3_Material = new Material(
+                new Vec3(0.2f, 0.2f, 0.2f),
+                new Vec3(0.75f, 0.6f, 0.75f),
+                new Vec3(0.2f, 0.2f, 0.2f), 16.0f
+        );
+
+        // ***************************************************
+        /*
          * wall
          */
         float WALL_LENGTH = 16;
@@ -333,7 +369,8 @@ public class Anilamp_GLEventListener implements GLEventListener {
                 TABLE_BODY_LENGTH, TABLE_BODY_WIDTH,
                 lowerPressZInitialDegree, upperPressZInitialDegree, lowerPressYInitialDegree,
                 upperPressYInitialDegree, headJointZInitialDegree, headJointYInitialDegree,
-                LAMP_BASE_LENGTH
+                LAMP_BASE_LENGTH,
+                object01.range, object02.range
         );
     }
 
@@ -398,7 +435,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
     public void setOffsetTexture(GL3 gl3) {
         double elapsedTime = getStartSecond() - programStart;
         offsetX = (float) (elapsedTime);
-        System.out.println("offsetX" + offsetX);
+//        System.out.println("offsetX" + offsetX);
         env.shader.setFloat(gl3, "offset", offsetX, offsetY);
     }
 
@@ -413,9 +450,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         }
         floor.render(gl3);
         table.draw(gl3);
+        object01.render(gl3);
+        object02.render(gl3);
         wall.draw(gl3);
         setOffsetTexture(gl3);
-        env.shader.setFloat(gl3, "offset", offsetX, offsetY);
         env.render(gl3);
         updateMotion();
         lamp.draw(gl3);

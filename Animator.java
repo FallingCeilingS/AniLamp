@@ -72,6 +72,12 @@ public class Animator {
     private boolean ANIMATION_RANDOM_UPPER_Z_STRETCH = false;
 
     private double startJumpTime;
+
+    private double[] obj_1_range;
+    private double[] range1;
+    private double[] obj_2_range;
+    private double[] range2;
+
     /**
      * some variables that never used
      */
@@ -100,7 +106,10 @@ public class Animator {
             double upperJointYInitialDegree,
             double headJointZInitialDegree,
             double headJointYInitialDegree,
-            double LAMP_BASE_LENGTH) {
+            double LAMP_BASE_LENGTH,
+            double[] obj_1_range,
+            double[] obj_2_range
+    ) {
         this.MAX_LENGTH = MAX_LENGTH;
         this.MAX_WIDTH = MAX_WIDTH;
         this.MAX_DISTANCE = (float) Math.sqrt(
@@ -118,6 +127,20 @@ public class Animator {
         this.headJointZCurrentRotateDegree = headJointZInitialDegree;
         this.headJointYCurrentRotateDegree = headJointYInitialDegree;
         this.LAMP_BASE_LENGTH = LAMP_BASE_LENGTH;
+
+        this.obj_1_range = obj_1_range;
+        this.range1 = generateRange(this.obj_1_range);
+        this.obj_2_range = obj_2_range;
+        this.range2 = generateRange(this.obj_2_range);
+    }
+
+    private double[] generateRange(double[] obj_range) {
+        return new double[] {
+                obj_range[0] - 0.5 * obj_range[2] - LAMP_BASE_LENGTH,
+                obj_range[0] + 0.5 * obj_range[2] + LAMP_BASE_LENGTH,
+                obj_range[1] - 0.5 * obj_range[3] - LAMP_BASE_LENGTH,
+                obj_range[1] + 0.5 * obj_range[3] + LAMP_BASE_LENGTH
+        };
     }
 
     public void generateRandomPose() {
@@ -229,8 +252,16 @@ public class Animator {
     private void generateRandomPosition() {
         double randomX = Math.random() * (MAX_LENGTH - LAMP_BASE_LENGTH) - (MAX_LENGTH - LAMP_BASE_LENGTH) / 2;
         double randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
+        while (judgeRange(range1, randomX, randomZ) | judgeRange(range2, randomX, randomZ)) {
+            randomX = Math.random() * (MAX_LENGTH - LAMP_BASE_LENGTH) - (MAX_LENGTH - LAMP_BASE_LENGTH) / 2;
+            randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
+        }
         currentPosition = new Vec3((float) randomX, 0, (float) randomZ);
         generateAngles();
+    }
+
+    private boolean judgeRange(double[] range, double randomX, double randomZ) {
+        return (randomX >= range[0] & randomX <= range[1] & randomZ >= range[2] & randomZ<= range[3]);
     }
 
     private void generateLowerJointYRotateDegree() {

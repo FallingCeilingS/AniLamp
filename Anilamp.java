@@ -29,6 +29,7 @@ public class Anilamp extends JFrame implements ActionListener {
 
     /**
      * constructor
+     *
      * @param textForTitleBar the text displays in the title bar
      */
     public Anilamp(String textForTitleBar) {
@@ -93,6 +94,7 @@ public class Anilamp extends JFrame implements ActionListener {
 
     /**
      * MAIN
+     *
      * @param args default argument in the main function
      */
     public static void main(String[] args) {

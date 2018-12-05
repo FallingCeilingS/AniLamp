@@ -33,6 +33,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     /**
      * generate current time in the format of second
+     *
      * @return time
      */
     private double getStartSecond() {
@@ -41,6 +42,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     /**
      * constructor
+     *
      * @param camera the camera from Anilamp class
      */
     public Anilamp_GLEventListener(Camera camera) {
@@ -101,6 +103,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
      * initialise objects in the scene,
      * call some other classes to build some objects: Table, TableObject, Wall, Lamp, MovingLight
      * call Animator class to initialise animation
+     *
      * @param gl3 GL3 variable
      */
     private void initialise(GL3 gl3) {
@@ -236,7 +239,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Shader shader01 = new Shader(gl3, "shader/vs_table_obj.txt", "shader/fs_table_obj.txt");
         int[] textureId_Obj1_01 = TextureLibrary.loadTexture(
                 gl3, "textures/Disney Animation Studios will present 'Cycles' , its first virtual reality (VR) short, at ACM SIGGRAPH 2018.jpg"
-                );
+        );
 
         /*
         instantiate the TableObject class to build three objects (other than lamp) on the table
@@ -569,6 +572,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
     /**
      * render the scene, which will execute 60 times a second
+     *
      * @param gl3 GL3 type parameter
      */
     private void render(GL3 gl3) {

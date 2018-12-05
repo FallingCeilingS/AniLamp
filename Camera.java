@@ -1,4 +1,7 @@
 /* This code is from exercise sheet written by Dr. Steve Maddock */
+/*
+slightly modified by Junxiang Chen
+ */
 
 import gmaths.*;
 

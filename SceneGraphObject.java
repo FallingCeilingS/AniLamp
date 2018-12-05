@@ -13,10 +13,11 @@ abstract class SceneGraphObject {
 
     /**
      * constructor
-     * @param gl3 GL3 parameter
-     * @param camera Camera parameter
-     * @param light1 Light parameter
-     * @param light2 Light parameter
+     *
+     * @param gl3         GL3 parameter
+     * @param camera      Camera parameter
+     * @param light1      Light parameter
+     * @param light2      Light parameter
      * @param movingLight MovingLight parameter
      */
     public SceneGraphObject(GL3 gl3, Camera camera, Light light1, Light light2, MovingLight movingLight) {
@@ -53,12 +54,14 @@ abstract class SceneGraphObject {
 
     /**
      * dispose buffer
+     *
      * @param gl3 GL3 element
      */
     abstract void dispose(GL3 gl3);
 
     /**
      * render the object
+     *
      * @param gl3 GL3 parameter
      */
     public abstract void draw(GL3 gl3);

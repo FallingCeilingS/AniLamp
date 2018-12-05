@@ -35,6 +35,7 @@ public class MovingLight {
 
     /**
      * set light bulb size
+     *
      * @return vertices
      */
     private float[] setLightSize() {
@@ -56,9 +57,10 @@ public class MovingLight {
 
     /**
      * constructor
-     * @param gl3 GL3 parameter
-     * @param localPosition local position (local coordinate)
-     * @param worldMatrix world matrix (transform local coordinate to world)
+     *
+     * @param gl3            GL3 parameter
+     * @param localPosition  local position (local coordinate)
+     * @param worldMatrix    world matrix (transform local coordinate to world)
      * @param localDirection local direction of light
      */
     public MovingLight(GL3 gl3, Vec3 localPosition, Mat4 worldMatrix, Vec3 localDirection) {
@@ -75,6 +77,7 @@ public class MovingLight {
 
     /**
      * fill buffers
+     *
      * @param gl3 GL3 parameter
      */
     public void fillBuffers(GL3 gl3) {
@@ -110,6 +113,7 @@ public class MovingLight {
 
     /**
      * get position in world coordinate
+     *
      * @return position in world coordinate
      */
     public Vec3 getWorldPosition() {
@@ -118,6 +122,7 @@ public class MovingLight {
 
     /**
      * set world matrix
+     *
      * @param worldMatrix Mat4 parameter
      */
     public void setWorldMatrix(Mat4 worldMatrix) {
@@ -126,6 +131,7 @@ public class MovingLight {
 
     /**
      * get matrix that transform local coordinate to world
+     *
      * @return
      */
     public Mat4 getWorldMatrix() {
@@ -145,6 +151,7 @@ public class MovingLight {
 
     /**
      * get direction in world coordination
+     *
      * @return direction under world coordination
      */
     public Vec3 getWorldDirection() {
@@ -153,6 +160,7 @@ public class MovingLight {
 
     /**
      * set material of light
+     *
      * @param material Material parameter
      */
     public void setMaterial(Material material) {
@@ -161,6 +169,7 @@ public class MovingLight {
 
     /**
      * get material information
+     *
      * @return Material parameter
      */
     public Material getMaterial() {
@@ -169,6 +178,7 @@ public class MovingLight {
 
     /**
      * set camera
+     *
      * @param camera Camera parameter
      */
     public void setCamera(Camera camera) {
@@ -177,6 +187,7 @@ public class MovingLight {
 
     /**
      * set constant
+     *
      * @param constant float parameter
      */
     public void setConstant(float constant) {
@@ -185,6 +196,7 @@ public class MovingLight {
 
     /**
      * get constant
+     *
      * @return float parameter
      */
     public float getConstant() {
@@ -193,6 +205,7 @@ public class MovingLight {
 
     /**
      * set linear
+     *
      * @param linear float parameter
      */
     public void setLinear(float linear) {
@@ -201,6 +214,7 @@ public class MovingLight {
 
     /**
      * get linear
+     *
      * @return float parameter
      */
     public float getLinear() {
@@ -209,6 +223,7 @@ public class MovingLight {
 
     /**
      * set quadratic
+     *
      * @param quadratic float parameter
      */
     public void setQuadratic(float quadratic) {
@@ -217,6 +232,7 @@ public class MovingLight {
 
     /**
      * get quadratic
+     *
      * @return float parameter
      */
     public float getQuadratic() {
@@ -225,6 +241,7 @@ public class MovingLight {
 
     /**
      * set inner cut off
+     *
      * @param cutOff float parameter
      */
     public void setCutOff(float cutOff) {
@@ -233,6 +250,7 @@ public class MovingLight {
 
     /**
      * get inner cut off
+     *
      * @return float parameter
      */
     public float getCutOff() {
@@ -241,6 +259,7 @@ public class MovingLight {
 
     /**
      * set outer cut off
+     *
      * @param outerCutOff float parameter
      */
     public void setOuterCutOff(float outerCutOff) {
@@ -249,6 +268,7 @@ public class MovingLight {
 
     /**
      * get outer cut off
+     *
      * @return float parameter
      */
     public float getOuterCutOff() {
@@ -257,6 +277,7 @@ public class MovingLight {
 
     /**
      * dispose buffer
+     *
      * @param gl3 GL3 parameter
      */
     public void dispose(GL3 gl3) {
@@ -267,6 +288,7 @@ public class MovingLight {
 
     /**
      * render light
+     *
      * @param gl3
      */
     public void render(GL3 gl3) {

@@ -97,9 +97,9 @@ public class Material {
 
     public String toString() {
         return "a: " + ambient +
-               "d: " + diffuse +
-               "s: " + specular +
-               "e: " + emission +
-               "shininess: " + shininess;
+                "d: " + diffuse +
+                "s: " + specular +
+                "e: " + emission +
+                "shininess: " + shininess;
     }
 }

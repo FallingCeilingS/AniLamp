@@ -140,6 +140,7 @@ public class Animator {
 
     /**
      * generate current time in the format of second
+     *
      * @return time
      */
     private double getCurrentSecond() {
@@ -148,18 +149,19 @@ public class Animator {
 
     /**
      * constructor
-     * @param MAX_LENGTH table length
-     * @param MAX_WIDTH table width
+     *
+     * @param MAX_LENGTH               table length
+     * @param MAX_WIDTH                table width
      * @param lowerJointZInitialDegree initial degree in Z of lower joint
      * @param upperJointZInitialDegree initial degree in Z of upper joint
      * @param lowerJointYInitialDegree initial degree in Y of lower joint
      * @param upperJointYInitialDegree initial degree in Y of upper joint
-     * @param headJointZInitialDegree initial degree in Z of head joint
-     * @param headJointYInitialDegree initial degree in Y of head joint
-     * @param LAMP_BASE_LENGTH the length of lamp base
-     * @param obj_1_range the range of 1st object on the table
-     * @param obj_2_range the range of 2nd object on the table
-     * @param obj_3_range the range of 3rd object on the table
+     * @param headJointZInitialDegree  initial degree in Z of head joint
+     * @param headJointYInitialDegree  initial degree in Y of head joint
+     * @param LAMP_BASE_LENGTH         the length of lamp base
+     * @param obj_1_range              the range of 1st object on the table
+     * @param obj_2_range              the range of 2nd object on the table
+     * @param obj_3_range              the range of 3rd object on the table
      */
     public Animator(
             float MAX_LENGTH,
@@ -207,6 +209,7 @@ public class Animator {
 
     /**
      * generate the range of coordinates that the lamp shouldn't jump in
+     *
      * @param obj_range the range of nth object on the table
      * @return the range of coordinates that the lamp shouldn't jump in
      */
@@ -372,7 +375,7 @@ public class Animator {
     }
 
     /**
-     *judge whether the random position is in the specific region that will intersect objects
+     * judge whether the random position is in the specific region that will intersect objects
      */
     private boolean judgeRange(double[] range, double randomX, double randomZ) {
         return (randomX >= range[0] & randomX <= range[1] & randomZ >= range[2] & randomZ <= range[3]);
@@ -430,6 +433,7 @@ public class Animator {
     /**
      * this function will be executed 60 times per second so we do not need loop
      * update lower joint Y rotate degree before jumping
+     *
      * @param startTime the time user press the button
      */
     public void updateLowerJointYRotateDegree(double startTime) {

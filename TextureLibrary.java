@@ -2,6 +2,7 @@
 
 import java.io.File;
 import java.io.FileInputStream;
+
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.texture.spi.JPEGImage;
 
@@ -31,8 +32,7 @@ public final class TextureLibrary {
             gl.glGenerateMipmap(GL.GL_TEXTURE_2D);
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR_MIPMAP_LINEAR);
             gl.glBindTexture(GL.GL_TEXTURE_2D, 0);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Error loading texture " + filename);
         }
         return textureId;

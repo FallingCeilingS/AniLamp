@@ -3,6 +3,7 @@
 /PSD
 /video_record
 .DS_Store
+*.db
 *.iml
 *.log
 *.class

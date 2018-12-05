@@ -1,3 +1,10 @@
+/* I declare that this code is my own work */
+/* Author <Junxiang Chen> <jchen115@sheffield.ac.uk> */
+
+/*
+the main class that will be run
+ */
+
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
@@ -11,8 +18,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Anilamp extends JFrame implements ActionListener {
-    private static final int WIDTH = 1024;
-    private static final int HEIGHT = 768;
+    private static final int WIDTH = 1280;
+    private static final int HEIGHT = 720;
     private static final Dimension dimension = new Dimension(WIDTH, HEIGHT);
     private static GLCanvas glCanvas;
     private static Anilamp_GLEventListener glEventListener;
@@ -20,6 +27,10 @@ public class Anilamp extends JFrame implements ActionListener {
     private Camera camera;
     public JButton light1Control, light2Control, lightBulbControl, randomPoseButton, resetButton, jumpButton;
 
+    /**
+     * constructor
+     * @param textForTitleBar the text displays in the title bar
+     */
     public Anilamp(String textForTitleBar) {
         super(textForTitleBar);
         GLCapabilities glCapabilities = new GLCapabilities(GLProfile.get(GLProfile.GL3));
@@ -31,6 +42,9 @@ public class Anilamp extends JFrame implements ActionListener {
         glCanvas.addMouseMotionListener(new MyMouseInput(camera));
         getContentPane().add(glCanvas, BorderLayout.CENTER);
 
+        /*
+        jMenuBar
+         */
         JMenuBar jMenuBar = new JMenuBar();
         this.setJMenuBar(jMenuBar);
         JMenu fileMenu = new JMenu("File");
@@ -39,6 +53,9 @@ public class Anilamp extends JFrame implements ActionListener {
         fileMenu.add(quitItem);
         jMenuBar.add(fileMenu);
 
+        /*
+        jPanel and jButton
+         */
         JPanel jPanel = new JPanel();
         light1Control = new JButton("Light 1 On/Off");
         light1Control.addActionListener(this);
@@ -74,6 +91,10 @@ public class Anilamp extends JFrame implements ActionListener {
         fpsAnimator.start();
     }
 
+    /**
+     * MAIN
+     * @param args default argument in the main function
+     */
     public static void main(String[] args) {
         Anilamp aniLamp = new Anilamp("ANILAMP -- Final Scene");
         aniLamp.getContentPane().setPreferredSize(dimension);
@@ -83,6 +104,9 @@ public class Anilamp extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        /*
+        buttons control lights
+         */
         if (e.getActionCommand().equalsIgnoreCase("Lamp On/Off")) {
             glEventListener.LAMP_ON = !glEventListener.LAMP_ON;
         }
@@ -93,6 +117,9 @@ public class Anilamp extends JFrame implements ActionListener {
             glEventListener.LIGHT2_ON = !glEventListener.LIGHT2_ON;
         }
 
+        /*
+        handle the disable of "Random Pose" and "Jump" button for 2.5 seconds
+         */
         int delay = 2500;
         Timer timer = new Timer(delay, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -102,6 +129,9 @@ public class Anilamp extends JFrame implements ActionListener {
         });
         timer.setRepeats(false);
 
+        /*
+        buttons control lamp poses and jump motion
+         */
         if (e.getActionCommand().equalsIgnoreCase("Random Pose")) {
             glEventListener.setRandomPoseBegin();
             randomPoseButton.setEnabled(false);

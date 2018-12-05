@@ -1,3 +1,5 @@
+/* This code is from exercise sheet written by Dr. Steve Maddock */
+
 import com.jogamp.opengl.*;
 
 public class ModelNode extends SGNode {

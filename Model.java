@@ -1,3 +1,8 @@
+/* This code is from exercise sheet written by Dr. Steve Maddock */
+/*
+slightly modified by Junxiang Chen
+ */
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import gmaths.Mat4;
@@ -79,6 +84,9 @@ public class Model {
         }
     }
 
+    /**
+     * set moving texture
+     */
     private void setOffsetTexture() {
         double elapsedTime = (System.currentTimeMillis() - programStart) * 0.00008;
         offsetX = (float) (elapsedTime - Math.floor(elapsedTime));
@@ -98,7 +106,15 @@ public class Model {
         shader.setFloatArray(gl3, "model", modelMatrix.toFloatArrayForGLSL());
         shader.setFloatArray(gl3, "mvpMatrix", mvpMatrix.toFloatArrayForGLSL());
         shader.setVec3(gl3, "viewPos", camera.getPosition());
+
+        /*
+        set offset texture coordinates
+         */
         shader.setFloat(gl3, "offset", offsetX, 0);
+
+        /*
+        set static lights attributes
+         */
         shader.setVec3(gl3, "light1.position", light1.getPosition());
         shader.setVec3(gl3, "light1.ambient", light1.getMaterial().getAmbient());
         shader.setVec3(gl3, "light1.diffuse", light1.getMaterial().getDiffuse());
@@ -107,6 +123,10 @@ public class Model {
         shader.setVec3(gl3, "light2.ambient", light2.getMaterial().getAmbient());
         shader.setVec3(gl3, "light2.diffuse", light2.getMaterial().getDiffuse());
         shader.setVec3(gl3, "light2.specular", light2.getMaterial().getSpecular());
+
+        /*
+        set spotlight effect
+         */
         shader.setVec3(gl3, "lightBulb.position", movingLight.getWorldPosition());
         shader.setVec3(gl3, "lightBulb.direction", movingLight.getWorldDirection());
         shader.setVec3(gl3, "lightBulb.ambient", movingLight.getMaterial().getAmbient());
@@ -117,6 +137,10 @@ public class Model {
         shader.setFloat(gl3, "lightBulb.quadratic", movingLight.getQuadratic());
         shader.setFloat(gl3, "lightBulb.cutOff", movingLight.getCutOff());
         shader.setFloat(gl3, "lightBulb.outerCutOff", movingLight.getOuterCutOff());
+
+        /*
+        set material
+         */
         shader.setVec3(gl3, "material.ambient", material.getAmbient());
         shader.setVec3(gl3, "material.diffuse", material.getDiffuse());
         shader.setVec3(gl3, "material.specular", material.getSpecular());

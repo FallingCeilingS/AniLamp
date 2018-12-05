@@ -1,9 +1,21 @@
+/* I declare that this code is my own work */
+/* Author <Junxiang Chen> <jchen115@sheffield.ac.uk> */
+/*
+the class control the animation of the lamp
+ */
+
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
 import gmaths.Vec3;
 
+/**
+ * constructor
+ */
 public class Animator {
     private float MAX_LENGTH, MAX_WIDTH, MAX_DISTANCE;
+    /*
+    initial degrees and lengths
+     */
     private double lowerJointZInitialDegree,
             upperJointZInitialDegree,
             lowerJointYInitialDegree,
@@ -12,15 +24,25 @@ public class Animator {
             headJointYInitialDegree,
             LAMP_BASE_LENGTH;
 
+    /*
+    positions and directions of the lamp
+     */
     private Vec3 previousPosition = new Vec3(0, 0, 0);
     private Vec3 currentPosition = new Vec3(0, 0, 0);
     private Vec3 previousDirection = new Vec3(1, 0, 0);
     private Vec3 currentDirection = new Vec3(1, 0, 0);
     private Vec3 crossProduct;
 
+    /*
+    translate matrix that will apply to the lamp for moving
+     */
     public Mat4 previousTranslateMatrix = new Mat4(1);
     public Mat4 currentTranslateMatrix = new Mat4(1);
 
+    /*
+    set the max degree that the lamp arms can rotate,
+    ensure the lamp will perform plausible poses
+     */
     private double lowerJointDeltaRotateDegree = 0;
     private double LOWER_PRESS_MAX_DELTA_DEGREE = 60;
     private double LOWER_STRETCH_MAX_DELTA_DEGREE = 45;
@@ -28,6 +50,9 @@ public class Animator {
     private double UPPER_STRETCH_MAX_DELTA_DEGREE = 75;
     private double HEAD_UP_MAX_DELTA_DEGREE = 90;
 
+    /*
+    target degrees that the arms (joints) will rotate each time
+     */
     private double lowerPressTargetDegree;
     private double lowerStretchTargetDegree;
     private double upperPressTargetDegree;
@@ -37,6 +62,9 @@ public class Animator {
     private double headJointYTargetDegree;
     private double rotateYDegreeCount = 0;
 
+    /*
+    current degree on each arm (joint)
+     */
     public double lowerJointZCurrentRotateDegree;
     public double upperJointZCurrentRotateDegree;
     public double lowerJointYCurrentRotateDegree = 0;
@@ -44,6 +72,9 @@ public class Animator {
     public double headJointZCurrentRotateDegree;
     public double headJointYCurrentRotateDegree;
 
+    /*
+    velocity of rotation and jump
+     */
     private double lowerJointRotateZVelocity = 2.4;
     private double upperJointRotateZVelocity = 2.4;
     private double lowerJointRotateYVelocity = 0;
@@ -53,10 +84,16 @@ public class Animator {
     private double tmpMaxVelocity = 0;
     private double jumpHorizonVelocity = 0.24;
 
+    /*
+    the ratio compare to the max length, height and rotate degree
+     */
     private double ratio;
     private double postLowerPressRatio = 0.6;
     private double postLowerStretchRatio = 0.8;
 
+    /*
+    animation states
+     */
     public boolean ANIMATION_GENERATION = false;
     private boolean ANIMATION_PREP_Y_ROTATE = false;
     private boolean ANIMATION_PREP_PRESS = false;
@@ -71,8 +108,14 @@ public class Animator {
     private boolean ANIMATION_RANDOM_UPPER_Z_PRESS = false;
     private boolean ANIMATION_RANDOM_UPPER_Z_STRETCH = false;
 
+    /*
+    the time that a jump starts
+     */
     private double startJumpTime;
 
+    /*
+    ranges that set to the lamp animation to ensure it will not jump to some region and intersect three other objects
+     */
     private double[] obj_1_range;
     private double[] range1;
     private double[] obj_2_range;
@@ -81,7 +124,7 @@ public class Animator {
     private double[] range3;
 
     /**
-     * some variables that never used
+     * some variables that never used, but keep there in case of the more complex animation need in the future development
      */
     private double lowerRotateZPressDegreeCount = 0;
     private double upperRotateZPressDegreeCount = 0;
@@ -95,10 +138,29 @@ public class Animator {
     private double startPressTime;
     private double startStretchTime;
 
+    /**
+     * generate current time in the format of second
+     * @return time
+     */
     private double getCurrentSecond() {
         return System.currentTimeMillis() / 1000.0;
     }
 
+    /**
+     * constructor
+     * @param MAX_LENGTH table length
+     * @param MAX_WIDTH table width
+     * @param lowerJointZInitialDegree initial degree in Z of lower joint
+     * @param upperJointZInitialDegree initial degree in Z of upper joint
+     * @param lowerJointYInitialDegree initial degree in Y of lower joint
+     * @param upperJointYInitialDegree initial degree in Y of upper joint
+     * @param headJointZInitialDegree initial degree in Z of head joint
+     * @param headJointYInitialDegree initial degree in Y of head joint
+     * @param LAMP_BASE_LENGTH the length of lamp base
+     * @param obj_1_range the range of 1st object on the table
+     * @param obj_2_range the range of 2nd object on the table
+     * @param obj_3_range the range of 3rd object on the table
+     */
     public Animator(
             float MAX_LENGTH,
             float MAX_WIDTH,
@@ -115,9 +177,13 @@ public class Animator {
     ) {
         this.MAX_LENGTH = MAX_LENGTH;
         this.MAX_WIDTH = MAX_WIDTH;
+        /*
+        the max distance a lamp can jump in the table, set as the diagonal of the table
+         */
         this.MAX_DISTANCE = (float) Math.sqrt(
                 Math.pow((double) this.MAX_LENGTH, 2) + Math.pow((double) this.MAX_WIDTH, 2)
         );
+
         this.lowerJointZInitialDegree = lowerJointZInitialDegree;
         this.upperJointZInitialDegree = upperJointZInitialDegree;
         this.lowerJointYInitialDegree = lowerJointYInitialDegree;
@@ -139,6 +205,11 @@ public class Animator {
         this.range3 = generateRange(this.obj_3_range);
     }
 
+    /**
+     * generate the range of coordinates that the lamp shouldn't jump in
+     * @param obj_range the range of nth object on the table
+     * @return the range of coordinates that the lamp shouldn't jump in
+     */
     private double[] generateRange(double[] obj_range) {
         return new double[]{
                 obj_range[0] - 0.5 * obj_range[2] - LAMP_BASE_LENGTH,
@@ -148,6 +219,9 @@ public class Animator {
         };
     }
 
+    /**
+     * generate the random pose, including different degrees on each joint
+     */
     public void generateRandomPose() {
         if (ANIMATION_RANDOM_GENERATE) {
             double randomLowerZ = Math.random() * 60;
@@ -155,10 +229,10 @@ public class Animator {
             double randomUpperY = Math.random() * 180 - 90;
             double randomHeadJY = Math.random() * 120 - 60;
             double randomHeadJZ = Math.random() * 90;
-            System.out.println("random lower rotate z" + randomLowerZ);
-            System.out.println("random upper rotate z" + randomUpperZ);
-            System.out.println("random upper rotate y" + randomUpperY);
-            System.out.println("random head joint rotate y" + randomHeadJY);
+//            System.out.println("random lower rotate z" + randomLowerZ);
+//            System.out.println("random upper rotate z" + randomUpperZ);
+//            System.out.println("random upper rotate y" + randomUpperY);
+//            System.out.println("random head joint rotate y" + randomHeadJY);
             if (lowerJointZCurrentRotateDegree <= randomLowerZ) {
                 lowerPressTargetDegree = randomLowerZ;
                 ANIMATION_RANDOM_MOTION = true;
@@ -182,6 +256,10 @@ public class Animator {
         }
     }
 
+    /**
+     * this function will be executed 60 times per second so we do not need loop
+     * generate lower joint random motion
+     */
     public void generateLowerJointRandomMotion() {
         if (ANIMATION_RANDOM_MOTION) {
             lowerJointRotateZVelocity = 0.5;
@@ -209,6 +287,9 @@ public class Animator {
         }
     }
 
+    /**
+     * control Y rotate for upper joint
+     */
     private void upperJointYRotate() {
         if (upperJointYCurrentRotateDegree >= upperJointYTargetDegree) {
             upperJointYCurrentRotateDegree = upperJointYCurrentRotateDegree - upperJointRotateYVelocity;
@@ -217,6 +298,9 @@ public class Animator {
         }
     }
 
+    /**
+     * control Y rotate for head joint
+     */
     private void headJointYRotate() {
         if (headJointYCurrentRotateDegree >= headJointYTargetDegree) {
             headJointYCurrentRotateDegree = headJointYCurrentRotateDegree - headJointRotateYVelocity;
@@ -225,6 +309,9 @@ public class Animator {
         }
     }
 
+    /**
+     * control Z rotate for head joint
+     */
     private void headJointZRotate() {
         if (headJointZCurrentRotateDegree >= headJointZTargetDegree) {
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree - headJointRotateZVelocity;
@@ -233,6 +320,9 @@ public class Animator {
         }
     }
 
+    /**
+     * reset the random pose
+     */
     public void resetRandomPose() {
         lowerJointZCurrentRotateDegree = lowerJointZInitialDegree;
         upperJointZCurrentRotateDegree = upperJointZInitialDegree;
@@ -244,6 +334,9 @@ public class Animator {
         headJointRotateZVelocity = 2;
     }
 
+    /**
+     * generate random target angle
+     */
     public void generateRandomTargetAngle() {
         if (ANIMATION_GENERATION) {
             generateRandomPosition();
@@ -254,9 +347,18 @@ public class Animator {
         }
     }
 
+    /**
+     * generate random position for jumping
+     */
     private void generateRandomPosition() {
+        /*
+        limit the lamp will jump on the table
+         */
         double randomX = Math.random() * (MAX_LENGTH - LAMP_BASE_LENGTH) - (MAX_LENGTH - LAMP_BASE_LENGTH) / 2;
         double randomZ = Math.random() * (MAX_WIDTH - LAMP_BASE_LENGTH) - (MAX_WIDTH - LAMP_BASE_LENGTH) / 2;
+        /*
+        control the lamp that will not intersect other objects in the table
+         */
         while (
                 judgeRange(range1, randomX, randomZ) |
                         judgeRange(range2, randomX, randomZ) |
@@ -269,10 +371,16 @@ public class Animator {
         generateAngles();
     }
 
+    /**
+     *judge whether the random position is in the specific region that will intersect objects
+     */
     private boolean judgeRange(double[] range, double randomX, double randomZ) {
         return (randomX >= range[0] & randomX <= range[1] & randomZ >= range[2] & randomZ <= range[3]);
     }
 
+    /**
+     * generate lower joint Y rotate degree before jumping
+     */
     private void generateLowerJointYRotateDegree() {
         if (ANIMATION_GENERATION) {
             ANIMATION_END = false;
@@ -290,6 +398,9 @@ public class Animator {
         }
     }
 
+    /*
+    generate target angles before jumping
+     */
     private void generateAngles() {
         ratio = Vec3.magnitude(Vec3.subtract(previousPosition, currentPosition)) / MAX_DISTANCE;
         lowerPressTargetDegree = LOWER_PRESS_MAX_DELTA_DEGREE * ratio + lowerJointZInitialDegree;
@@ -299,6 +410,9 @@ public class Animator {
         headJointZTargetDegree = HEAD_UP_MAX_DELTA_DEGREE * ratio + headJointZInitialDegree;
     }
 
+    /*
+    ease in and ease out of rotation
+     */
     private double easeAnimation(double startTime, double count, double delta, double ratio) {
         double v;
         if (count <= delta / 1.98888888888) {
@@ -315,8 +429,8 @@ public class Animator {
 
     /**
      * this function will be executed 60 times per second so we do not need loop
-     *
-     * @param startTime
+     * update lower joint Y rotate degree before jumping
+     * @param startTime the time user press the button
      */
     public void updateLowerJointYRotateDegree(double startTime) {
         if (ANIMATION_PREP_Y_ROTATE) {
@@ -340,11 +454,14 @@ public class Animator {
         }
     }
 
+    /**
+     * control the press (Z rotate) of lower joint
+     */
     private void lowerJointPress() {
         if (lowerJointZCurrentRotateDegree < lowerPressTargetDegree) {
             /*
              * ease in/out
-             * not used but keep codes in comments
+             * not used but keep codes in comments in case of further usage
              *             if (ANIMATION_PREP_PRESS) {
              *                 lowerJointRotateZVelocity = easeAnimation(startPressTime, lowerRotateZPressDegreeCount,LOWER_PRESS_MAX_DELTA_DEGREE * ratio, 2);
              *
@@ -368,11 +485,14 @@ public class Animator {
         }
     }
 
+    /**
+     * control the stretch (Z rotate) of lower joint
+     */
     private void lowerJointStretch() {
         if (lowerJointZCurrentRotateDegree > lowerStretchTargetDegree) {
             /*
              * ease in/out
-             * not used but keep codes in comments
+             * not used but keep codes in comments in case of further usage
              *             if (ANIMATION_PREP_STRETCH) {
              *                 lowerJointRotateZVelocity = easeAnimation(startStretchTime, lowerRotateZStretchDegreeCount,LOWER_STRETCH_MAX_DELTA_DEGREE * ratio, 2);
              *
@@ -393,11 +513,14 @@ public class Animator {
         }
     }
 
+    /**
+     * control the press (Z rotate) of upper joint
+     */
     private void upperJointPress() {
         if (upperJointZCurrentRotateDegree > upperPressTargetDegree) {
             /*
              * ease in/out
-             * not used but keep codes in comments
+             * not used but keep codes in comments in case of further usage
              *             if (ANIMATION_PREP_PRESS) {
              *                 upperJointRotateZVelocity = easeAnimation(startPressTime, upperRotateZPressDegreeCount, UPPER_PRESS_MAX_DELTA_DEGREE * ratio, 2);
              *             } else if (ANIMATION_POST_PRESS) {
@@ -419,6 +542,9 @@ public class Animator {
         }
     }
 
+    /**
+     * control the stretch (Z rotate) of upper joint
+     */
     private void upperJointStretch() {
         if (upperJointZCurrentRotateDegree < upperStretchTargetDegree) {
             if (ANIMATION_PREP_STRETCH) {
@@ -463,20 +589,30 @@ public class Animator {
         }
     }
 
+    /**
+     * control the up motion (Z rotate) of head joint
+     */
     private void headUp() {
         if (headJointZCurrentRotateDegree <= headJointZTargetDegree) {
-            System.out.println("up");
+//            System.out.println("up");
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree + headJointRotateZVelocity;
         }
     }
 
+    /**
+     * control the down motion (Z rotate) of head joint
+     */
     private void headDown() {
         if (headJointZCurrentRotateDegree >= headJointZInitialDegree) {
-            System.out.println("down");
+//            System.out.println("down");
             headJointZCurrentRotateDegree = headJointZCurrentRotateDegree - headJointRotateZVelocity;
         }
     }
 
+    /**
+     * this function will be executed 60 times per second so we do not need loop
+     * update the animation of press and stretch (Z rotate) of jumping
+     */
     public void updateJointJumpZRotateDegree() {
         if (ANIMATION_PREP_PRESS) {
             lowerJointPress();
@@ -496,6 +632,10 @@ public class Animator {
         }
     }
 
+    /**
+     * this function will be executed 60 times per second so we do not need loop
+     * update the animation of jumping
+     */
     public void updateJump() {
         if (ANIMATION_JUMP) {
             previousPosition.x = previousPosition.x + (float) jumpHorizonVelocity * currentDirection.x;

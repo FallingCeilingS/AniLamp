@@ -1,3 +1,5 @@
+/* This code is from exercise sheet written by Dr. Steve Maddock */
+
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;

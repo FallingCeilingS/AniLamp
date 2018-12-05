@@ -1,3 +1,10 @@
+/* I declare that this code is my own work */
+/* Author <Junxiang Chen> <jchen115@sheffield.ac.uk> */
+
+/*
+the event listener
+ */
+
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -24,10 +31,18 @@ public class Anilamp_GLEventListener implements GLEventListener {
     public boolean LIGHT2_ON = true;
     public boolean LAMP_ON = true;
 
+    /**
+     * generate current time in the format of second
+     * @return time
+     */
     private double getStartSecond() {
         return System.currentTimeMillis() / 1000.0;
     }
 
+    /**
+     * constructor
+     * @param camera the camera from Anilamp class
+     */
     public Anilamp_GLEventListener(Camera camera) {
         this.camera = camera;
         this.camera.setPosition(new Vec3(0f, 4f, 30f));
@@ -82,6 +97,12 @@ public class Anilamp_GLEventListener implements GLEventListener {
         camera.setPerspectiveMatrix(Mat4Transform.perspective(45, aspect));
     }
 
+    /**
+     * initialise objects in the scene,
+     * call some other classes to build some objects: Table, TableObject, Wall, Lamp, MovingLight
+     * call Animator class to initialise animation
+     * @param gl3 GL3 variable
+     */
     private void initialise(GL3 gl3) {
         // ***************************************************
         int[] textureId0 = TextureLibrary.loadTexture(gl3, "textures/chequerboard.jpg");
@@ -162,14 +183,14 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
         // ***************************************************
         /*
-         * table
+         * parameters of table
          */
         float TABLE_X_POSITION = 0;
         float TABLE_Y_POSITION = -0.328f;
         float TABLE_Z_POSITION = 0;
 
         /*
-        table body
+        parameters of table body
          */
         float TABLE_BODY_LENGTH = 20;
         float TABLE_BODY_WIDTH = 10;
@@ -178,13 +199,16 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_TableBody01 = TextureLibrary.loadTexture(gl3, "textures/table_body.jpg");
 
         /*
-        table legs
+        parameters of table legs
          */
         float TABLE_LEG_LENGTH = 0.6f;
         float TABLE_LEG_WIDTH = TABLE_LEG_LENGTH;
         float TABLE_LEG_HEIGHT = 8;
         int[] textureId_TableLeg01 = TextureLibrary.loadTexture(gl3, "textures/table_leg.jpg");
 
+        /*
+        instantiate the Table class, which is a subclass of the abstract class, SceneGraphObject, to build a table
+         */
         table = new Table(gl3, camera, light1, light2, lightBulb,
                 TABLE_X_POSITION, TABLE_Y_POSITION, TABLE_Z_POSITION,
                 TABLE_BODY_LENGTH, TABLE_BODY_WIDTH, TABLE_BODY_HEIGHT,
@@ -195,7 +219,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
 
         // ***************************************************
         /*
-        3 objects on the table
+        parameters of 1st objects on the table
          */
         float TABLE_OBJ_Y_POS = TABLE_BODY_HEIGHT / 2 + TABLE_Y_POSITION;
 
@@ -213,6 +237,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_Obj1_01 = TextureLibrary.loadTexture(
                 gl3, "textures/Disney Animation Studios will present 'Cycles' , its first virtual reality (VR) short, at ACM SIGGRAPH 2018.jpg"
                 );
+
+        /*
+        instantiate the TableObject class to build three objects (other than lamp) on the table
+         */
         object01 = new TableObject(
                 OBJ_1_SCALE_X, OBJ_1_SCALE_Y, OBJ_1_SCALE_Z, OBJ_1_X_POS, OBJ_1_Z_POS,
                 TABLE_OBJ_Y_POS + OBJ_1_SCALE_Y / 2,
@@ -220,6 +248,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
         object01.generateModel(gl3, "cube");
 
+        /*
+        parameters of 2nd objects on the table
+         */
         float OBJ_2_X_POS = 8;
         float OBJ_2_Z_POS = -4;
         float OBJ_2_SCALE_X = 2f;
@@ -232,6 +263,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
         Shader shader02 = new Shader(gl3, "shader/vs_table_obj.txt", "shader/fs_table_obj.txt");
         int[] textureId_Obj2_01 = TextureLibrary.loadTexture(gl3, "textures/flat-world-map-paint-acrylic.jpg");
+
+        /*
+        instantiate the TableObject class to build three objects (other than lamp) on the table
+         */
         object02 = new TableObject(
                 OBJ_2_SCALE_X, OBJ_2_SCALE_Y, OBJ_2_SCALE_Z, OBJ_2_X_POS, OBJ_2_Z_POS,
                 TABLE_OBJ_Y_POS + OBJ_2_SCALE_Y / 2,
@@ -239,6 +274,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
         object02.generateModel(gl3, "sphere");
 
+        /*
+        parameters of 3rd objects on the table
+         */
         float OBJ_3_X_POS = -6;
         float OBJ_3_Z_POS = 2;
         float OBJ_3_SCALE_X = 1.292f;
@@ -252,6 +290,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         Shader shader03 = new Shader(gl3, "shader/vs_table_obj.txt", "shader/fs_table_obj_spec.txt");
         int[] textureId_Obj3_01 = TextureLibrary.loadTexture(gl3, "textures/mobile.jpg");
         int[] textureId_Obj3_02 = TextureLibrary.loadTexture(gl3, "textures/mobile_highlight.jpg");
+        /*
+        note: the moving texture function is implemented in Model class
+         */
+
+        /*
+        instantiate the TableObject class to build three objects (other than lamp) on the table
+         */
         object03 = new TableObject(
                 OBJ_3_SCALE_X, OBJ_3_SCALE_Y, OBJ_3_SCALE_Z, OBJ_3_X_POS, OBJ_3_Z_POS,
                 TABLE_OBJ_Y_POS + OBJ_3_SCALE_Y / 2,
@@ -263,6 +308,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /*
          * wall
          */
+        /*
+        parameters of wall
+         */
         float WALL_LENGTH = 16;
         float WALL_HEIGHT = 0.6f + TABLE_LEG_HEIGHT + TABLE_BODY_HEIGHT;
         float WALL_WIDTH = 0.8f;
@@ -271,6 +319,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         float WALL_Z_POSITION = -(TABLE_BODY_WIDTH / 2 + WALL_WIDTH / 2);
         int[] textureId_Wall01 = TextureLibrary.loadTexture(gl3, "textures/wall.jpg");
 
+        /*
+        instantiate Wall class, which is a subclass of the abstract class, SceneGraphObject, to build a table
+         */
         wall = new Wall(
                 gl3, camera, light1, light2, lightBulb,
                 WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH, WALL_X_POSITION, WALL_Y_POSITION, WALL_Z_POSITION,
@@ -305,6 +356,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         /*
          * lamp
          */
+        /*
+        parameters of lamp
+         */
         float LAMP_POSITION_X = 0;
         float LAMP_POSITION_Y = 0;
         float LAMP_POSITION_Z = 0;
@@ -316,7 +370,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         double headJointYInitialDegree = 0;
 
         /*
-        lamp base
+        parameters of lamp base
          */
         float LAMP_BASE_LENGTH = 1.25f;
         float LAMP_BASE_WIDTH = LAMP_BASE_LENGTH;
@@ -324,13 +378,13 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_LampBase01 = TextureLibrary.loadTexture(gl3, "textures/lamp_base.jpg");
 
         /*
-         *lamp joints
+        parameters of lamp joints
          */
         float LAMP_JOINT_DIAMETER = 0.6f;
         int[] textureId_LampJoint01 = TextureLibrary.loadTexture(gl3, "textures/lamp_joint.jpg");
 
         /*
-         * lamp arms
+        parameters of lamp arms
          */
         float LAMP_ARM_LENGTH = LAMP_JOINT_DIAMETER * 0.5f;
         float LAMP_ARM_WIDTH = LAMP_ARM_LENGTH;
@@ -338,7 +392,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_LampArm01 = TextureLibrary.loadTexture(gl3, "textures/arm_metal.jpg");
 
         /*
-         * lamp head
+        parameters of lamp head
          */
         float LAMP_HEAD_JOINT_DIAMETER = 0.65f;
         float LAMP_HEAD_XZ_SCALE = 2.8f;
@@ -347,7 +401,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_LampHead01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head.jpg");
 
         /*
-        lamp tail
+        parameters of lamp tail
          */
         float LAMP_TAIL_SCALE_X = 0.65f;
         float LAMP_TAIL_SCALE_Y = 0.25f;
@@ -355,7 +409,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_LampTail01 = TextureLibrary.loadTexture(gl3, "textures/lamp_tail.jpg");
 
         /*
-        lamp head decoration
+        parameters of lamp head decoration
          */
         float LAMP_HEAD_BACK_DIAMETER = 1.15f;
         float LAMP_HEAD_BACK_Y_SCALE = 0.6f;
@@ -369,6 +423,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         int[] textureId_LampHeadBack01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_joint.jpg");
         int[] textureId_LampHeadEar01 = TextureLibrary.loadTexture(gl3, "textures/lamp_head_ear.jpg");
 
+        /*
+        instantiate Lamp class, which is a subclass of the abstract class, SceneGraphObject, to build a table
+         */
         lamp = new Lamp(
                 gl3, camera, light1, light2, lightBulb,
                 LAMP_POSITION_X, LAMP_POSITION_Y, LAMP_POSITION_Z,
@@ -420,6 +477,9 @@ public class Anilamp_GLEventListener implements GLEventListener {
         );
     }
 
+    /**
+     * control the appearance of the light when they are turned on or off
+     */
     private void setLightOnOff() {
         if (LIGHT1_ON) {
             light1.setMaterial(light1Material);
@@ -440,20 +500,32 @@ public class Anilamp_GLEventListener implements GLEventListener {
         }
     }
 
+    /**
+     * set the begin state of random pose
+     */
     public void setRandomPoseBegin() {
         animator.ANIMATION_RANDOM_GENERATE = true;
     }
 
+    /**
+     * control the reset of lamp pose
+     */
     public void resetPose() {
         animator.resetRandomPose();
     }
 
+    /**
+     * set the begin state of jump animation
+     */
     public void setAnimationBegin() {
         resetPose();
         animator.ANIMATION_GENERATION = true;
         startTime = getStartSecond();
     }
 
+    /**
+     * update parameters of lamp and light bulb to ensure they can animate in the scene
+     */
     private void updateMotion() {
         animator.generateRandomTargetAngle();
         testCube1.setModelMatrix(animator.currentTranslateMatrix);
@@ -495,6 +567,10 @@ public class Anilamp_GLEventListener implements GLEventListener {
         lamp.update();
     }
 
+    /**
+     * render the scene, which will execute 60 times a second
+     * @param gl3 GL3 type parameter
+     */
     private void render(GL3 gl3) {
         gl3.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         setLightOnOff();

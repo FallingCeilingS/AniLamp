@@ -1,3 +1,5 @@
+/* This code is from exercise sheet written by Dr. Steve Maddock */
+
 import java.io.File;
 import java.io.FileInputStream;
 import com.jogamp.opengl.*;

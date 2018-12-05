@@ -1,3 +1,5 @@
+/* This code is from exercise sheet written by Dr. Steve Maddock */
+
 import gmaths.*;
 import java.io.IOException;
 import java.nio.file.Files;

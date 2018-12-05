@@ -1,6 +1,7 @@
 /.idea
 /out
 /PSD
+/video_record
 .DS_Store
 *.iml
 *.log

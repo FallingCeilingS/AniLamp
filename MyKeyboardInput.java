@@ -1,3 +1,5 @@
+/* This code is from exercise sheet written by Dr. Steve Maddock */
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 

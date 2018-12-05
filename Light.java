@@ -1,3 +1,6 @@
+/* I declare that this code is my own work */
+/* Author <Junxiang Chen> <jchen115@sheffield.ac.uk> */
+
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;

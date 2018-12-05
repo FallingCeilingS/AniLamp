@@ -1,3 +1,9 @@
+/* I declare that this code is my own work */
+/* Author <Junxiang Chen> <jchen115@sheffield.ac.uk> */
+/*
+class that generate objects (other than lamp) on the table
+ */
+
 import com.jogamp.opengl.GL3;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;

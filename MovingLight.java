@@ -132,7 +132,7 @@ public class MovingLight {
     /**
      * get matrix that transform local coordinate to world
      *
-     * @return
+     * @return the direction in world coordinate
      */
     public Mat4 getWorldMatrix() {
         return worldMatrix;
@@ -152,7 +152,7 @@ public class MovingLight {
     /**
      * get direction in world coordination
      *
-     * @return direction under world coordination
+     * @return direction under world coordinate
      */
     public Vec3 getWorldDirection() {
         return worldDirection;

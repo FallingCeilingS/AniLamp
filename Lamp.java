@@ -17,7 +17,7 @@ public class Lamp extends SceneGraphObject {
             lampLowerJointName, lampLowerArmName, lampUpperJointName, lampUpperArmName,
             lampHeadJointName,
             lampTailName, lampHeadBackName, lampHeadEarLeftName, lampHeadEarRightName;
-    private TransformNode lampBaseScale, lampBaseScale2,
+    private TransformNode lampBaseScale, lampBaseRotate,
             lampJointScale, lampLowerJointTranslate,
             lampArmScale, lampLowerArmTranslate,
             lampUpperJointTranslate,
@@ -69,7 +69,7 @@ public class Lamp extends SceneGraphObject {
         lampBaseScale = new TransformNode("lamp base scale", lampBaseModelMatrix);
         lampBaseName = new NameNode("lamp base");
         Mat4 lampBaseModelMatrix2 = Mat4Transform.rotateAroundY(45);
-        lampBaseScale2 = new TransformNode("lamp base scale", lampBaseModelMatrix2);
+        lampBaseRotate = new TransformNode("lamp base rotate", lampBaseModelMatrix2);
         lampBaseNode_1 = new ModelNode("lamp base 1", lamp_base);
         lampBaseNode_2 = new ModelNode("lamp base 2", lamp_base);
     }
@@ -203,9 +203,9 @@ public class Lamp extends SceneGraphObject {
         lampHeadName = new NameNode("lamp head");
         Mat4 lampHeadYRotateMatrix = Mat4Transform.rotateAroundY(0);
         Mat4 lampHeadZRotateMatrix = Mat4Transform.rotateAroundZ(0);
-        lampHeadYRotate = new TransformNode("lamp head joint y rotate", lampHeadYRotateMatrix);
-        lampHeadZRotate = new TransformNode("lamp head joint z rotate", lampHeadZRotateMatrix);
-        lampHeadNode = new ModelNode("lamp head joint", lamp_head);
+        lampHeadYRotate = new TransformNode("lamp head y rotate", lampHeadYRotateMatrix);
+        lampHeadZRotate = new TransformNode("lamp head z rotate", lampHeadZRotateMatrix);
+        lampHeadNode = new ModelNode("lamp head", lamp_head);
     }
 
     public void generateTail(float LAMP_TAIL_SCALE_X, float LAMP_TAIL_SCALE_Y, float LAMP_TAIL_SCALE_Z, int[] textureId_LampTail01) {
@@ -221,7 +221,7 @@ public class Lamp extends SceneGraphObject {
         );
         Mat4 lampTailModelMatrix = Mat4Transform.scale(LAMP_TAIL_SCALE_X, LAMP_TAIL_SCALE_Y, LAMP_TAIL_SCALE_Z);
         lampTailModelMatrix = Mat4.multiply(Mat4Transform.translate(-LAMP_TAIL_SCALE_X, 0, 0), lampTailModelMatrix);
-        lampTailTransform = new TransformNode("lamp tail", lampTailModelMatrix);
+        lampTailTransform = new TransformNode("lamp tail transform", lampTailModelMatrix);
         Mat4 lampTailXRotateMatrix = Mat4Transform.rotateAroundX(0);
         Mat4 lampTailYRotateMatrix = Mat4Transform.rotateAroundY(0);
         Mat4 lampTailZRotateMatrix = Mat4Transform.rotateAroundZ(0);
@@ -316,8 +316,8 @@ public class Lamp extends SceneGraphObject {
             lampTranslate.addChild(lampBaseScale);
                 lampBaseScale.addChild(lampBaseName);
                     lampBaseName.addChild(lampBaseNode_1);
-                    lampBaseName.addChild(lampBaseScale2);
-                        lampBaseScale2.addChild(lampBaseNode_2);
+                    lampBaseName.addChild(lampBaseRotate);
+                        lampBaseRotate.addChild(lampBaseNode_2);
             lampTranslate.addChild(lampJointScale);
                 lampJointScale.addChild(lampLowerJointName);
                     lampLowerJointName.addChild(lampLowerJointTranslate);

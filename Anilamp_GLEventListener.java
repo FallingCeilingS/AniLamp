@@ -5,10 +5,7 @@
 the event listener
  */
 
-import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL3;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.*;
 import gmaths.Mat4;
 import gmaths.Mat4Transform;
 import gmaths.Vec3;
@@ -59,6 +56,7 @@ public class Anilamp_GLEventListener implements GLEventListener {
         gl3.glClearDepth(1.0f);
         gl3.glEnable(GL.GL_DEPTH_TEST);
         gl3.glDepthFunc(GL.GL_LESS);
+//        gl3.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
         gl3.glFrontFace(GL.GL_CCW);    // default is 'CCW'
         gl3.glEnable(GL.GL_CULL_FACE); // default is 'not enabled'
         gl3.glCullFace(GL.GL_BACK);   // default is 'back', assuming CCW

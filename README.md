@@ -163,7 +163,7 @@ choice.
 
 The visualised scene graph is shown below:
 
-![Scene Graph](/pics/scene-graph-node.jpg)
+![Scene Graph](/pics/scene-graph-lamp.png)
 
 ### **Interaction**
 - The lamp can change different poses plausibly by pressing the "Random Pose" button.

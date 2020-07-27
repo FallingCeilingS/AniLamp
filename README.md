@@ -6,9 +6,9 @@ The project is my previous coursework in the masters study period.
 ### **Demo**
 Click the screenshot below to view the project demo. 
 
-[![Demo](http://img.youtube.com/vi/9Z1MMNa8xEM/0.jpg)](http://www.youtube.com/watch?v=9Z1MMNa8xEM "AmiLamp")
+[![Demo](http://img.youtube.com/vi/9Z1MMNa8xEM/0.jpg)](http://www.youtube.com/watch?v=9Z1MMNa8xEM "AmiLamp Demo")
 
-Note that The animation of lamp in the video demo is not smooth, and the lamp jumped wired sometimes. It was due to system recording and would not happen when you consume the project locally.
+Note that the animation of lamp in the video demo is not smooth, and the lamp jumped wired sometimes. It was due to system recording and would not happen when you consume the project locally.
 
 ### **Scene and Scene Graph**
 The scene includes:
@@ -79,7 +79,22 @@ The angle-poise lamp is a hierarchical model, which is made up of the four basic
 - An upper arm.
 - A head which contains a protruding light bulb.
 
+![Components](/pics/lamp%20components.png)
+
+Every part of lamp
+connects at joints, so we can specify the model by giving all joint angles and positions.
 The lower arm can rotate about the base, the upper arm can rotate about the lower arm, and the head can rotate about the upper arm. The light bulb shines in the same direction that the head is pointing in. Imagine the lamp is standing on a tabletop in a room looking out of a window. The lamp can also jump around the tabletop.
+
+![Structure](/pics/lamp%20structure.png)
+
+In terms of code set up the scene graph, we are using Object-Oriented Design to construct scene graph nodes in Java.
+
+![Node Structure](/pics/node-structure.png)
+
+The diagram below shows the class structure for an `SGNode` (Scene Graph Node). The link from an `SGNode` to itself is an indicator
+that this is a recursive structure. In fact, an `SGNode` contains an `ArrayList` of child nodes, each of which is an `SGNode`.
+
+![SGNode Inheritance](/pics/scene_graph_node.jpg)
 
 ### **Interaction**
 - The lamp can change different poses plausibly by pressing the "Random Pose" button.

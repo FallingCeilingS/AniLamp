@@ -1,5 +1,5 @@
 # OpenGL Scene Graph Animated Lamp
-This is a Java program involves using [OpenGL 3.x](https://www.opengl.org/) to render a scene, which contains an animated lamp. The scene graph was using in the modelling process, and the animation controls are implemented for the hierarchical model — the lamp.
+This is a Java program involves using [OpenGL 3.x](https://www.opengl.org/) to render a 3D scene, which contains an animated lamp. The scene graph was using in the modelling process, and the animation controls are implemented for the hierarchical model — the lamp.
 
 The project is my previous coursework in the masters study period.
 
@@ -8,7 +8,7 @@ Click the screenshot below to view the project demo.
 
 [![Demo](http://img.youtube.com/vi/9Z1MMNa8xEM/0.jpg)](http://www.youtube.com/watch?v=9Z1MMNa8xEM "AmiLamp Demo")
 
-Note that the animation of lamp in the video demo is not smooth, and the lamp jumped wired sometimes. It was due to system recording and would not happen when you consume the project locally.
+From the demo, the animation of lamp in the video demo is not smooth, and the lamp jumped strangely sometimes. Note that it is due to system recording and would not happen when consuming the project locally.
 
 ### **Scene and Scene Graph**
 The scene includes:
@@ -72,7 +72,7 @@ the table below:
 </tr>
 </table>
 
-#### Scene Graph Example — Lamp
+#### Example: Lamp
 The angle-poise lamp is a hierarchical model, which is made up of the four basic parts:
 - A base.
 - A lower arm.
@@ -96,12 +96,12 @@ that this is a recursive structure. In fact, an `SGNode` contains an `ArrayList`
 
 Three other classes extend `SGNode`: a `ModelNode` contains a reference to a `Model` instance; a `NameNode` is used solely to make the
 scene graph hierarchy clearer by allowing nodes that contain nothing but a `String` to represent their name; and a `TransformNode` is used to
-represent a transformation (a `Mat4` instance) to be applied to its children in the scene graph. 
+represent a transformation (a `Mat4` (transformation matrix) instance) to be applied to its children in the scene graph. 
 
 ![SGNode Inheritance](/pics/scene-graph-node.jpg)
 
 Comparing this structure to the scene graph of lamp, we
-have a mixture of `NameNode`s (lamp base, lamp lower arm, lamp head joint, etc), `ModelNode`s (cube) and `TransformNode`s (lamp base rotate, Transform cube to make lower branch, lamp upper joint z rotate, etc). This is reflected in the
+have a mixture of `NameNode`s (lamp base, lamp lower arm, lamp head joint, etc), `ModelNode`s (cube and sphere) and `TransformNode`s (lamp base rotate, lamp upper joint z rotate, lamp tail y rotate, etc). This is reflected in the
 code in Program Listing below. `SGNode` contains a method called `addChild()` which is used to build the scene graph. I've used indentation in
 the program code to make the hierarchy clearer, although some may argue that it makes the code a little more difficult to read. It's personal
 choice.
@@ -161,23 +161,46 @@ choice.
 14                                                      Name: lamp tail
 ```
 
-The visualised scene graph is shown below:
+The visualised scene graph of the lamp is shown below:
 
 ![Scene Graph](/pics/scene-graph-lamp.png)
 
+### **Set Up Guide**
+#### Embed [JOGL](https://jogamp.org/jogl/www/) in the project
+you will need to download
+the [JOGL version 3.x files](https://jogamp.org/deployment/jogamp-current/archive/) that are relevant for your computer and operating system.
+When you use your own Windows PC, you can set up permanent environment variables. You need administrator privileges to do this. Once
+the environment variables are set up, you can open a command window at any time and the environment variables are automatically
+associated with it. This means you can immediately compile and run your Java and JOGL programs.
+
+#### Compile and Run
+The main class of the project called `Anilamp.java`. To begin with, you need to compile the project using the following command in the terminal:
+```shell script
+javac Anilamp.java
+```
+Then, use the following command to start the project:
+```shell script
+java Anilamp
+```
+It could take approximate 10 seconds to popup the window and get the scene rendered since it needs to load the scene graph and textures.
+
 ### **Interaction**
+- There are control buttons on the window bottom. You might not be able to see them as the resolution of the window might be larger than the device screen. In this case, please maximise the window.
 - The lamp can change different poses plausibly by pressing the "Random Pose" button.
 - Every time the lamp jumps, by pressing the "Jump" button, it will reset its pose at first, then jumping to a random place.
-- The buttons, "Random Pose" and "Jump", will be disabled for about 2 seconds after the action of the lamp has completed.
+- The buttons, "Random Pose" and "Jump", will be disabled for about 2 seconds after the previous action of the lamp has completed.
 - Please wait for the lamp to complete the jump (back in the table and restore the initial pose), then press the "Random Pose" or "Jump" button again, or the lamp will change the direction incorrectly in the next time.
 - The lamp can avoid intersecting other three objects on the table when jumping.
-- There are two objects on the table have a combination of specular and diffuse texture maps -- the lamp (the diffuse base and the specular arms) and the mobile phone (the diffuse frame and the specular screen).
-
-### **Set Up Guide**
-- The program displays at 1920\*1080 resolution in the video sample. I have changed the resolution to 1280\*720 to ensure the user can see the buttons below the window intuitively when the run the code in your laptop. If you still cannot see the control buttons, please maximise the window.
-- It could take a while (roughly 10 seconds) for the window to display the scene since it needs to load textures.
-
+- The program contains classes for `Keyboard` input and `Mouse` input, each of which can
+  set attributes in the `Camera` class based on user input. Holding down the left button and moving the mouse will move the direction that the
+  camera is looking in. The <kbd>A</kbd> and <kbd>Z</kbd> keys can be used to move in and out of the scene in the direction the camera is looking in. The arrow
+  keys can be used to move up, down, left and right.
+  
 ### **Limitations**
+- Shadow and ray-trace are not implemented in the project.
+- Spotlight does not track correctly with some random poses — the direction `Vec3` value was used a magic number for convenience rather than calculating from the subtraction between the position of lamp head and the light bulb.
 
 ### **License and Copyright**
-The copyright of texture images states in the *.txt file in the textures folder.
+- Some classes are implemented by Dr. @stevemaddock .
+- This project has MIT licence.
+- The copyright of texture images states in the `*.txt` file in the textures folder.

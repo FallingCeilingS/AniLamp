@@ -10,6 +10,8 @@ Click the screenshot below to view the project demo.
 
 From the demo, the animation of lamp in the video demo is not smooth, and the lamp jumped strangely sometimes. Note that it is due to system recording and would not happen when consuming the project locally.
 
+---
+
 ### **Scene and Scene Graph**
 The scene includes:
 - A plot of floor.
@@ -165,6 +167,8 @@ The visualised scene graph of the lamp is shown below:
 
 ![Scene Graph](/pics/scene-graph-lamp.png)
 
+---
+
 ### **Set Up Guide**
 #### Embed [JOGL](https://jogamp.org/jogl/www/) in the project
 you will need to download
@@ -184,6 +188,8 @@ java Anilamp
 ```
 It could take approximate 10 seconds to popup the window and get the scene rendered since it needs to load the scene graph and textures.
 
+---
+
 ### **Interaction**
 - There are control buttons on the window bottom. You might not be able to see them as the resolution of the window might be larger than the device screen. In this case, please maximise the window.
 - The lamp can change different poses plausibly by pressing the "Random Pose" button.
@@ -191,16 +197,21 @@ It could take approximate 10 seconds to popup the window and get the scene rende
 - The buttons, "Random Pose" and "Jump", will be disabled for about 2 seconds after the previous action of the lamp has completed.
 - Please wait for the lamp to complete the jump (back in the table and restore the initial pose), then press the "Random Pose" or "Jump" button again, or the lamp will change the direction incorrectly in the next time.
 - The lamp can avoid intersecting other three objects on the table when jumping.
+- There are three buttons that enable users to switch on/off two global lights and the light bulb.
 - The program contains classes for `Keyboard` input and `Mouse` input, each of which can
   set attributes in the `Camera` class based on user input. Holding down the left button and moving the mouse will move the direction that the
   camera is looking in. The <kbd>A</kbd> and <kbd>Z</kbd> keys can be used to move in and out of the scene in the direction the camera is looking in. The arrow
   keys can be used to move up, down, left and right.
   
+---
+  
 ### **Limitations**
 - Shadow and ray-trace are not implemented in the project.
 - Spotlight does not track correctly with some random poses — the direction `Vec3` value was used a magic number for convenience rather than calculating from the subtraction between the position of lamp head and the light bulb.
 
+---
+
 ### **License and Copyright**
-- Some classes are implemented by Dr. @stevemaddock .
+- Some classes are implemented by [Dr. Steve Maddock](https://github.com/stevemaddock).
 - This project has MIT licence.
 - The copyright of texture images states in the `*.txt` file in the textures folder.

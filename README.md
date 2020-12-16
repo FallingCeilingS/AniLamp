@@ -4,9 +4,7 @@ This is a Java program involves using [OpenGL 3.x](https://www.opengl.org/) to r
 The project is my previous coursework in the masters study period.
 
 ### **Demo**
-Click the screenshot below to view the project demo. 
-
-[![Demo](http://img.youtube.com/vi/9Z1MMNa8xEM/0.jpg)](http://www.youtube.com/watch?v=9Z1MMNa8xEM "AmiLamp Demo")
+Click the [link](https://1drv.ms/v/s!AlDzguC50g3BrzbOaQYOnwVj4kA8?e=VLXs6W) to view the project demo. 
 
 From the demo, the animation of lamp in the video demo is not smooth, and the lamp jumped strangely sometimes. Note that it is due to system recording and would not happen when consuming the project locally.
 
